@@ -5,6 +5,8 @@ using StrategyGame.MODEL.FilterParameters;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +21,17 @@ namespace StrategyGame.DAL.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task<User> FindAsync(string id)
-        {
-            return await dbContext.Users.FindAsync(id);
-        }
-
         public async Task<PagedList<User>> GetUsersAsync(PagingParameters pagingParameters)
         {
             return await dbContext.Users.ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
         }
+
+        public async Task<PagedList<User>> GetFilteredUseresAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters)
+        {
+            return await dbContext.Users
+                .Where(filter)
+                .ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
+        }
+        
     }
 }

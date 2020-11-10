@@ -15,4 +15,8 @@
     <PackageReference Include="TwoFactorAuth.Net" Version="1.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StrategyGame.MODEL\StrategyGame.MODEL.csproj" />
+  </ItemGroup>
+
 </Project>

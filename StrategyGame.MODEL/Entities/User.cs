@@ -7,6 +7,7 @@ namespace StrategyGame.MODEL.Entities
 {
     public class User: IdentityUser
     {
+        public int Score { get; set; }
         public List<Kingdom> Kingdoms { get; set; }
     }
 }

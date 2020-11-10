@@ -10,7 +10,8 @@ namespace StrategyGame.BLL.Interfaces
     {
         Task<UserDto> CreateUserAsync(UserCreateDto userDto);
         Task<PagedListDto<UserDto>> GetUsersAsync(PagingParametersDto pagingParametersDto);
-        Task<UserDto> GetUserAsync(Guid id);
-        Task DeleteUserAsync(Guid id);
+        Task<PagedListDto<UserDto>> GetFilteredUsersAsync(PagingParametersDto pagingParametersDto, UserParametersDto parameters);
+        Task<UserDto> GetUserAsync(string id);
+        Task DeleteUserAsync(string id);
     }
 }
