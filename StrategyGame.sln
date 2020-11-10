@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.API", "StrategyGame.API\StrategyGame.API.csproj", "{C5E78FF8-667F-475E-883E-2FB929C373B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.API", "StrategyGame.API\StrategyGame.API.csproj", "{C5E78FF8-667F-475E-883E-2FB929C373B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.DAL", "StrategyGame.DAL\StrategyGame.DAL.csproj", "{F64E822B-A93E-4D3D-8845-8EF3762C489E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.DAL", "StrategyGame.DAL\StrategyGame.DAL.csproj", "{F64E822B-A93E-4D3D-8845-8EF3762C489E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.MODEL", "StrategyGame.MODEL\StrategyGame.MODEL.csproj", "{9D1853E8-B75C-4137-B5FD-B863451BF3C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.MODEL", "StrategyGame.MODEL\StrategyGame.MODEL.csproj", "{9D1853E8-B75C-4137-B5FD-B863451BF3C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.BLL", "StrategyGame.BLL\StrategyGame.BLL.csproj", "{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.BLL", "StrategyGame.BLL\StrategyGame.BLL.csproj", "{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
