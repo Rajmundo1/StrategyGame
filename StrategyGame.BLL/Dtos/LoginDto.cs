@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrategyGame.BLL.ValidationDtos
+namespace StrategyGame.BLL.Dtos
 {
     public class LoginDto
     {
-        public string Email { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
     }
 }

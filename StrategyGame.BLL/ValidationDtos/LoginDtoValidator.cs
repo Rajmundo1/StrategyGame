@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using StrategyGame.BLL.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace StrategyGame.BLL.ValidationDtos
     {
         public LoginDtoValidator()
         {
-            RuleFor(ent => ent.Email)
+            RuleFor(ent => ent.UserName)
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Invalid email format");
             RuleFor(ent => ent.Password)
