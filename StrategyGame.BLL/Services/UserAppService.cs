@@ -19,14 +19,14 @@ using System.Threading.Tasks;
 
 namespace StrategyGame.BLL.Services
 {
-    public class UsersAppService : IUsersAppService
+    public class UserAppService : IUserAppService
     {
         private readonly IUserRepository userRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
 
-        public UsersAppService(IUserRepository userRepository,
+        public UserAppService(IUserRepository userRepository,
                                 IUnitOfWork unitOfWork,
                                 UserManager<User> userManager,
                                 IMapper mapper)
@@ -61,9 +61,9 @@ namespace StrategyGame.BLL.Services
             await unitOfWork.SaveAsync();
         }
 
-        public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync(PagingParametersDto pagingParametersDto, UserParametersDto parameters)
+        public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync(UserParametersDto parameters)
         {
-            var pagingParameters = mapper.Map<PagingParameters>(pagingParametersDto);
+            var pagingParameters = mapper.Map<PagingParameters>(parameters);
             var userParameters = mapper.Map<UserParameters>(parameters);
             var filter = BuildFilterExpression(userParameters);
 
