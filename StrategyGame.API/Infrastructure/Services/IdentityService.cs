@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Interfaces;
 using System;
@@ -12,19 +13,19 @@ namespace StrategyGame.API.Infrastructure.Services
     public class IdentityService : IIdentityService
     {
         private readonly HttpContext context;
-        private readonly IUserRepository userRepository;
+        private readonly UserManager<User> userManager;
 
         public IdentityService(IHttpContextAccessor httpContextAccessor,
-                                IUserRepository userRepository)
+                                UserManager<User> userManager)
         {
             this.context = httpContextAccessor.HttpContext;
-            this.userRepository = userRepository;
+            this.userManager = userManager;
         }
 
         public async Task<User> GetCurrentUser()
         {
             var id = context.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            return await userRepository.FindAsync(id);
+            return await userManager.FindByIdAsync(id);
         }
 
         public async Task<string> GetCurrentUserId()
