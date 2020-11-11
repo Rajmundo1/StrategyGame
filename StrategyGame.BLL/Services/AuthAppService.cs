@@ -16,12 +16,12 @@ namespace StrategyGame.BLL.Services
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private readonly ITokenService tokenService;
+        private readonly ITokenAppService tokenService;
         private readonly IUnitOfWork unitOfWork;
 
         public AuthAppService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
-                                ITokenService tokenService,
+                                ITokenAppService tokenService,
                                 IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;

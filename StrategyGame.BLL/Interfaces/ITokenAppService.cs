@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StrategyGame.BLL.Interfaces
 {
-    public interface ITokenService
+    public interface ITokenAppService
     {
         Task<string> CreateAccessToken(User user);
     }

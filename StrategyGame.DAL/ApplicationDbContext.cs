@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.Entities.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace StrategyGame.DAL
     public class ApplicationDbContext: IdentityDbContext<User>
     {
         public override DbSet<User> Users { get; set; }
+        public DbSet<Building> Buildings { get; set; } 
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

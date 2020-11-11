@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace StrategyGame.BLL.Services
 {
-    public class TokenService : ITokenService
+    public class TokenAppService : ITokenAppService
     {
         private readonly IConfiguration configuration;
 
-        public TokenService(IConfiguration configuration)
+        public TokenAppService(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
