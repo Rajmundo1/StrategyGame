@@ -8,5 +8,6 @@ namespace StrategyGame.MODEL.Entities
     {
         public int Id { get; set; }
         public IEnumerable<User> Users { get; set; }
+        public int Round { get; set; }
     }
 }
