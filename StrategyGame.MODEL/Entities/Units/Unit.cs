@@ -7,13 +7,11 @@ namespace StrategyGame.MODEL.Entities.Units
 {
     public class Unit
     {
-        public int Id { get; set; }
-        [ForeignKey("Attack")]
-        public int? AttackId { get; set; }
-        [ForeignKey("County")]
-        public int CountyId { get; set; }
+        public Guid Id { get; set; }
+        [ForeignKey("UnitGroup")]
+        public Guid UnitGroupId { get; set; }
         [ForeignKey("UnitSpecifics")]
-        public int UnitSpecificsId { get; set; }
+        public Guid UnitSpecificsId { get; set; }
         public UnitSpecifics UnitSpecifics { get; set; }
     }
 }

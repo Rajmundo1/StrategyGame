@@ -10,9 +10,9 @@ namespace StrategyGame.MODEL.Entities
 {
     public class Kingdom
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public IEnumerable<County> Counties { get; set; }
         public int Gold { get; set; }
         public IEnumerable<Technology> Technologies { get; set; }

@@ -6,7 +6,7 @@ namespace StrategyGame.MODEL.Entities
 {
     public class Game
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public IEnumerable<User> Users { get; set; }
         public int Round { get; set; }
     }

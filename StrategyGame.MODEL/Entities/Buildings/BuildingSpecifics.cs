@@ -9,9 +9,7 @@ namespace StrategyGame.MODEL.Entities.Buildings
 {
     public class BuildingSpecifics
     {
-        public int Id { get; set; }
-        [ForeignKey("Building")]
-        public int BuildingId { get; set; }
+        public Guid Id { get; set; }
         public int Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }

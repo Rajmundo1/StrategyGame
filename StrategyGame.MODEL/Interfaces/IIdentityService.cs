@@ -8,7 +8,7 @@ namespace StrategyGame.MODEL.Interfaces
 {
     public interface IIdentityService
     {
-        Task<string> GetCurrentUserId();
+        Task<Guid> GetCurrentUserId();
         Task<User> GetCurrentUser();
     }
 }

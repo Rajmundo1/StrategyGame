@@ -12,9 +12,9 @@ namespace StrategyGame.MODEL.Entities
 {
     public class County
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("Kingdom")]
-        public int KingdomId { get; set; }
+        public Guid KingdomId { get; set; }
         public string Name { get; set; }
 
 
@@ -53,7 +53,7 @@ namespace StrategyGame.MODEL.Entities
         public int Score => Population + Buildings.Sum(building => building.Status == BuildingStatus.Built ? 2 : 0);
 
         public IEnumerable<Building> Buildings { get; set; }
-        public IEnumerable<Unit> Units { get; set; }
+        public UnitGroup Units { get; set; }
 
     }
 }

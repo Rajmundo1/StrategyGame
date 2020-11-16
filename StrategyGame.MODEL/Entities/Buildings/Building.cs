@@ -8,11 +8,11 @@ namespace StrategyGame.MODEL.Entities.Buildings
 {
     public class Building
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("County")]
-        public int CountyId { get; set; }
+        public Guid CountyId { get; set; }
         [ForeignKey("BuildingSpecifics")]
-        public int BuildingSpecificsId { get; set; }
+        public Guid BuildingSpecificsId { get; set; }
         public BuildingSpecifics BuildingSpecifics { get; set; }
         public BuildingStatus Status { get; set; }
     }

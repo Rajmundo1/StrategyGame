@@ -8,9 +8,11 @@ namespace StrategyGame.MODEL.Entities.Technologies
 {
     public class Technology
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("Kingdom")]
-        public int KingdomId { get; set; }
+        public Guid KingdomId { get; set; }
+        [ForeignKey("TechnologySpecifics")]
+        public Guid TechnologySpecificsId { get; set; }
         public TechnologySpecifics Specifics { get; set; }
         public ResearchStatus Status { get; set; }
     }

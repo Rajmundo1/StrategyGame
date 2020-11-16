@@ -8,12 +8,12 @@ namespace StrategyGame.MODEL.Entities
 {
     public class Attack
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("County")]
         public County Attacker { get; set; }
         [ForeignKey("County")]
         public County Defender { get; set; }
-        public IEnumerable<Unit> AttackerUnits { get; set; }
+        public UnitGroup AttackerUnits { get; set; }
         public DateTime TimeStamp { get; set; }
     }
 }

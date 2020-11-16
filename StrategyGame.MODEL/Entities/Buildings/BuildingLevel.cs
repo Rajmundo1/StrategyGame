@@ -7,9 +7,9 @@ namespace StrategyGame.MODEL.Entities.Buildings
 {
     public class BuildingLevel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("BuildingSpecifics")]
-        public int BuildingSpecificsId { get; set; }
+        public Guid BuildingSpecificsId { get; set; }
         public int Level { get; set; }
 
         public int PopulationBonus { get; set; }
