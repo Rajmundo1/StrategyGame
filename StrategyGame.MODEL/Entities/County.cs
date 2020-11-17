@@ -20,7 +20,8 @@ namespace StrategyGame.MODEL.Entities
 
         [NotMapped]
         public int PopulationGrowth => Convert.ToInt32(Math.Floor(Population * Morale));
-        public int ResearchOutput { get; set; }
+        [NotMapped]
+        public int ResearchOutput => Buildings.Sum(building => building.CurrentLevel.ResearchOutPut);
         public double TaxRate { get; set; }
         [NotMapped]
         public double Morale => 1.25 - Math.Log10(Population)/10 + TavernMorale - (1 - TaxRate);
@@ -30,23 +31,23 @@ namespace StrategyGame.MODEL.Entities
 
         public int Wood { get; set; }
         [NotMapped]
-        public int WoodProduction => Buildings.Sum(building => building.BuildingSpecifics.CurrentLevel.WoodProduction);
+        public int WoodProduction => Buildings.Sum(building => building.CurrentLevel.WoodProduction);
         public int Marble { get; set; }
         [NotMapped]
-        public int MarbleProduction => Buildings.Sum(building => building.BuildingSpecifics.CurrentLevel.MarbleProduction);
+        public int MarbleProduction => Buildings.Sum(building => building.CurrentLevel.MarbleProduction);
         public int Wine { get; set; }
         [NotMapped]
-        public int WineProduction => Buildings.Sum(building => building.BuildingSpecifics.CurrentLevel.WineProduction);
+        public int WineProduction => Buildings.Sum(building => building.CurrentLevel.WineProduction);
         public int Sulfur { get; set; }
         [NotMapped]
-        public int SulfurProduction => Buildings.Sum(building => building.BuildingSpecifics.CurrentLevel.SulfurProduction);
+        public int SulfurProduction => Buildings.Sum(building => building.CurrentLevel.SulfurProduction);
         [NotMapped]
-        public int Population => Buildings.Sum(building => building.BuildingSpecifics.CurrentLevel.PopulationBonus);
+        public int Population => Buildings.Sum(building => building.CurrentLevel.PopulationBonus);
         public int taxPerPop { get; set; }
         [NotMapped]
         public int GoldIncome => Convert.ToInt32(Math.Floor(Population * TaxRate));
         [NotMapped]
-        public int ForceLimit => Buildings.Sum(bulding => bulding.BuildingSpecifics.CurrentLevel.ForceLimitBonus);
+        public int ForceLimit => Buildings.Sum(bulding => bulding.CurrentLevel.ForceLimitBonus);
         public int ResearchRoundLeft { get; set; }
         public int BuildingRoundLeft { get; set; }
         [NotMapped]

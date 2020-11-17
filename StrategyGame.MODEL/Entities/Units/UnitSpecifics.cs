@@ -13,10 +13,7 @@ namespace StrategyGame.MODEL.Entities.Units
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
-        public int Level { get; set; }
         public int MaxLevel { get; set; }
-        [NotMapped]
-        public UnitLevel CurrentLevel => UnitLevels.First(x => x.Level == Level);
         public IEnumerable<UnitLevel> UnitLevels { get; set; }
     }
 }

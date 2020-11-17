@@ -10,13 +10,10 @@ namespace StrategyGame.MODEL.Entities.Buildings
     public class BuildingSpecifics
     {
         public Guid Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
-        public int Level { get; set; }
         public int MaxLevel { get; set; }
-        [NotMapped]
-        public BuildingLevel CurrentLevel => BuildingLevels.First(x => x.Level == Level);
         public IEnumerable<BuildingLevel> BuildingLevels { get; set; }
     }
 }

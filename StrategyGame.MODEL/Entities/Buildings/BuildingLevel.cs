@@ -18,6 +18,7 @@ namespace StrategyGame.MODEL.Entities.Buildings
         public int MarbleProduction { get; set; }
         public int WineProduction { get; set; }
         public int SulfurProduction { get; set; }
+        public int ResearchOutPut { get; set; }
 
         public int WoodCost { get; set; }
         public int MarbleCost { get; set; }

@@ -28,9 +28,9 @@ namespace StrategyGame.API.Infrastructure.Services
             return await userManager.FindByIdAsync(id);
         }
 
-        public async Task<string> GetCurrentUserId()
+        public async Task<Guid> GetCurrentUserId()
         {
-            return await Task.Run(() => context.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            return await Task.Run(() => Guid.Parse(context.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value));
         }
     }
 }

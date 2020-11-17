@@ -13,14 +13,13 @@ namespace StrategyGame.MODEL.Entities.Technologies
         public string Description { get; set; }
         public string PictureUrl { get; set; }
 
-        public int WoodBonus { get; set; }
-        public int StoneBonus { get; set; }
-        public int WineBonus { get; set; }
-        public int SulfurBonus { get; set; }
-        public int GoldBonus { get; set; }
-        public int ResearchBonus { get; set; }
-        public int BuildingTimeBonus { get; set; }
-        public int AttackPowerBonus { get; set; }
-        public int DefensePowerBonus { get; set; }
+        public double WoodBonus { get; set; }
+        public double StoneBonus { get; set; }
+        public double WineBonus { get; set; }
+        public double SulfurBonus { get; set; }
+        public double GoldBonus { get; set; }
+        public double ResearchBonus { get; set; }
+        public double AttackPowerBonus { get; set; }
+        public double DefensePowerBonus { get; set; }
     }
 }

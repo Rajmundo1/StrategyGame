@@ -7,7 +7,7 @@ namespace StrategyGame.MODEL.Entities.Units
 {
     public class UnitLevel
     {
-        public int Guid { get; set; }
+        public Guid Id { get; set; }
         [ForeignKey("UnitSpecifics")]
         public Guid UnitSpecificsId { get; set; }
         public int Level { get; set; }

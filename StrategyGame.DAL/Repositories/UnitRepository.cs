@@ -46,7 +46,7 @@ namespace StrategyGame.DAL.Repositories
                  .Units.ToList()
                  .Where(x => unitsToDevelop.Contains(x))
                  .ToList()
-                 .ForEach(unit => unit.UnitSpecifics.Level++);
+                 .ForEach(unit => unit.Level++);
             });
         }
 
