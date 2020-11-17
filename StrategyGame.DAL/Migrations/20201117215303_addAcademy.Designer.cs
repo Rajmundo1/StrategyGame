@@ -10,8 +10,8 @@ using StrategyGame.DAL;
 namespace StrategyGame.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201117211634_init1")]
-    partial class init1
+    [Migration("20201117215303_addAcademy")]
+    partial class addAcademy
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -609,6 +609,60 @@ namespace StrategyGame.DAL.Migrations
                             WineProduction = 0,
                             WoodCost = 10000,
                             WoodProduction = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("34cdbb37-be23-4867-b1f9-4e3bdcec10d9"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            ForceLimitBonus = 0,
+                            GoldCost = 0,
+                            Level = 1,
+                            MarbleCost = 0,
+                            MarbleProduction = 0,
+                            PopulationBonus = 0,
+                            ResearchOutPut = 100,
+                            SulfurCost = 0,
+                            SulfurProduction = 0,
+                            WineCost = 100,
+                            WineProduction = 0,
+                            WoodCost = 250,
+                            WoodProduction = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("59cd37b0-dc91-432f-9e1f-cc54547eb807"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            ForceLimitBonus = 0,
+                            GoldCost = 0,
+                            Level = 2,
+                            MarbleCost = 200,
+                            MarbleProduction = 0,
+                            PopulationBonus = 0,
+                            ResearchOutPut = 500,
+                            SulfurCost = 0,
+                            SulfurProduction = 0,
+                            WineCost = 800,
+                            WineProduction = 0,
+                            WoodCost = 1500,
+                            WoodProduction = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("b0c9c409-5a66-4e7d-9eb5-17b5ce5ced17"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            ForceLimitBonus = 0,
+                            GoldCost = 0,
+                            Level = 3,
+                            MarbleCost = 1500,
+                            MarbleProduction = 0,
+                            PopulationBonus = 0,
+                            ResearchOutPut = 1000,
+                            SulfurCost = 0,
+                            SulfurProduction = 0,
+                            WineCost = 2500,
+                            WineProduction = 0,
+                            WoodCost = 10000,
+                            WoodProduction = 0
                         });
                 });
 
@@ -663,9 +717,17 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                             Description = "A sulfur mine that produces sulfur",
-                            ImageUrl = "/images/sulfur",
+                            ImageUrl = "/images/sulfurMine",
                             MaxLevel = 3,
-                            Name = "Sulfur"
+                            Name = "Sulfur Mine"
+                        },
+                        new
+                        {
+                            Id = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            Description = "An academy that produces research points",
+                            ImageUrl = "/images/academy",
+                            MaxLevel = 3,
+                            Name = "Academy"
                         });
                 });
 
@@ -938,6 +1000,9 @@ namespace StrategyGame.DAL.Migrations
                     b.Property<double>("ResearchBonus")
                         .HasColumnType("float");
 
+                    b.Property<int>("ResearchPointCost")
+                        .HasColumnType("int");
+
                     b.Property<double>("StoneBonus")
                         .HasColumnType("float");
 
@@ -965,6 +1030,7 @@ namespace StrategyGame.DAL.Migrations
                             Name = "Production Booster",
                             PictureUrl = "/images/productionBooster",
                             ResearchBonus = 0.0,
+                            ResearchPointCost = 1000,
                             StoneBonus = 1.1000000000000001,
                             SulfurBonus = 1.1000000000000001,
                             WineBonus = 1.1000000000000001,
@@ -980,6 +1046,7 @@ namespace StrategyGame.DAL.Migrations
                             Name = "Science Booster",
                             PictureUrl = "/images/scienceBooster",
                             ResearchBonus = 1.2,
+                            ResearchPointCost = 1000,
                             StoneBonus = 0.0,
                             SulfurBonus = 0.0,
                             WineBonus = 0.0,
@@ -995,6 +1062,7 @@ namespace StrategyGame.DAL.Migrations
                             Name = "Gold Production Booster",
                             PictureUrl = "/images/goldProductionBooster",
                             ResearchBonus = 0.0,
+                            ResearchPointCost = 1000,
                             StoneBonus = 0.0,
                             SulfurBonus = 0.0,
                             WineBonus = 0.0,
@@ -1010,6 +1078,7 @@ namespace StrategyGame.DAL.Migrations
                             Name = "Unit Booster",
                             PictureUrl = "/images/unitBooster",
                             ResearchBonus = 0.0,
+                            ResearchPointCost = 1000,
                             StoneBonus = 0.0,
                             SulfurBonus = 0.0,
                             WineBonus = 0.0,
@@ -1521,14 +1590,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3adaee4d-cc31-46e6-9e4c-c09aa9a625a3",
+                            ConcurrencyStamp = "f5a0a39d-752a-4287-8c3c-22454fcdb426",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEEHF15ubqbIJKD6L3uYgaWRiFjUcs562pwdRB6CPGiAEz2AOieTZhatQnhIdGJCL/w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPyIcvMHyk7XAnVN4BHjq164hQG9XWCsYGlQoHDrOWID/ybQGoV9Xh4FfffaYwmofQ==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 1,
-                            SecurityStamp = "ae20c1cd-284f-4bdf-aab0-170fbff5adcf",
+                            SecurityStamp = "9194c772-4fb6-4ecd-8951-5aad9551711b",
                             TwoFactorEnabled = false,
                             UserName = "Rajmundo1"
                         },
@@ -1536,14 +1605,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "59797d43-d959-452c-a5b2-314285cdb2e8",
+                            ConcurrencyStamp = "5d37b6c9-c0cc-48cb-9409-e715cf08ea68",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEABl9pjtf/nZNyb8BQywSXSlnRJl/NqMn85/eDIO15H4LT12xLOVMUD8Kkd+O0QV6A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG8vXBsVTj0rRH1f1juNCWCkFjUP+NAzB5v9SWr5xmtqF+ULHYSyOKjPjlX9r1aWQQ==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 2,
-                            SecurityStamp = "f47914dd-3137-473a-86bf-4567e2063217",
+                            SecurityStamp = "cc364013-ad7e-48df-8c30-aa6f193c1611",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         });

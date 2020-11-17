@@ -35,6 +35,11 @@ namespace StrategyGame.DAL
 
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -169,6 +174,38 @@ namespace StrategyGame.DAL
                     MarbleCost = 1500
                 }
             };
+            var academyLevels = new List<BuildingLevel>
+            {
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("34cdbb37-be23-4867-b1f9-4e3bdcec10d9"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    Level = 1,
+                    ResearchOutPut = 100,
+                    WoodCost = 250,
+                    WineCost = 100
+                },
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("59cd37b0-dc91-432f-9e1f-cc54547eb807"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    Level = 2,
+                    ResearchOutPut = 500,
+                    WoodCost = 1500,
+                    MarbleCost = 200,
+                    WineCost = 800
+                },
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("b0c9c409-5a66-4e7d-9eb5-17b5ce5ced17"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    Level = 3,
+                    ResearchOutPut = 1000,
+                    WoodCost = 10000,
+                    MarbleCost = 1500,
+                    WineCost = 2500
+                }
+            };
 
             var sawMillSpecifics = new BuildingSpecifics
             {
@@ -201,10 +238,17 @@ namespace StrategyGame.DAL
             {
                 Id = Guid.Parse("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                 Description = "A sulfur mine that produces sulfur",
-                Name = "Sulfur",
-                ImageUrl = "/images/sulfur",
+                Name = "Sulfur Mine",
+                ImageUrl = "/images/sulfurMine",
                 MaxLevel = 3
-
+            };
+            var academySpecifics = new BuildingSpecifics
+            {
+                Id = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                Description = "An academy that produces research points",
+                Name = "Academy",
+                ImageUrl = "/images/academy",
+                MaxLevel = 3
             };
 
             var hopliteLevels = new List<UnitLevel>
@@ -394,7 +438,8 @@ namespace StrategyGame.DAL
                 StoneBonus = 1.1,
                 SulfurBonus = 1.1,
                 WineBonus = 1.1,
-                WoodBonus = 1.1
+                WoodBonus = 1.1,
+                ResearchPointCost = 1000
             };
             var scienceBoosterResearch = new TechnologySpecifics
             {
@@ -402,7 +447,8 @@ namespace StrategyGame.DAL
                 Description = "Boosts research output",
                 Name = "Science Booster",
                 PictureUrl = "/images/scienceBooster",
-                ResearchBonus = 1.2
+                ResearchBonus = 1.2,
+                ResearchPointCost = 1000
             };
             var goldBoosterResearch = new TechnologySpecifics
             {
@@ -410,7 +456,8 @@ namespace StrategyGame.DAL
                 Description = "Boosts gold production",
                 Name = "Gold Production Booster",
                 PictureUrl = "/images/goldProductionBooster",
-                GoldBonus = 1.3
+                GoldBonus = 1.3,
+                ResearchPointCost = 1000
             };
             var unitBoosterResearch = new TechnologySpecifics
             {
@@ -419,7 +466,8 @@ namespace StrategyGame.DAL
                 Name = "Unit Booster",
                 PictureUrl = "/images/unitBooster",
                 AttackPowerBonus = 1.15,
-                DefensePowerBonus = 1.1
+                DefensePowerBonus = 1.1,
+                ResearchPointCost = 1000
             };
 
             var technology11 = new Technology
@@ -479,21 +527,6 @@ namespace StrategyGame.DAL
                 Status = ResearchStatus.UnResearched
             };
 
-            var technologies1 = new List<Technology>
-            {
-                technology11,
-                technology12,
-                technology13,
-                technology14,
-            };
-            var technologies2 = new List<Technology>
-            {
-                technology21,
-                technology22,
-                technology23,
-                technology24,
-            };
-
             var buildings11 = new List<Building>
             {
                 new Building
@@ -527,7 +560,15 @@ namespace StrategyGame.DAL
                     CountyId = Guid.Parse("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
                     Level = 1,
                     Status = BuildingStatus.Built
-                }
+                },
+                new Building
+                {
+                    Id = Guid.Parse("219bd5e9-e20e-4393-adb3-b40d97eb276e"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    CountyId = Guid.Parse("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
+                    Level = 1,
+                    Status = BuildingStatus.Built
+                },
             };
             var buildings12 = new List<Building>
             {
@@ -559,6 +600,14 @@ namespace StrategyGame.DAL
                 {
                     Id = Guid.Parse("cff226fd-aa32-4942-a489-0d0dcb82cbae"),
                     BuildingSpecificsId = Guid.Parse("d02e3c9c-f26c-4136-a904-27ad074fa456"),
+                    CountyId = Guid.Parse("9160fe49-2966-4fb6-94d7-6999c7351368"),
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.Parse("1bda65c2-81c2-40cd-abd4-a022ef6ae658"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
                     CountyId = Guid.Parse("9160fe49-2966-4fb6-94d7-6999c7351368"),
                     Level = 1,
                     Status = BuildingStatus.NotBuilt
@@ -597,6 +646,14 @@ namespace StrategyGame.DAL
                     CountyId = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
                     Level = 1,
                     Status = BuildingStatus.Built
+                },
+                new Building
+                {
+                    Id = Guid.Parse("37819138-f604-42bb-9b7d-90f954da0ce2"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    CountyId = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
+                    Level = 1,
+                    Status = BuildingStatus.Built
                 }
             };
             var buildings22 = new List<Building>
@@ -629,6 +686,14 @@ namespace StrategyGame.DAL
                 {
                     Id = Guid.Parse("19d2606c-9e43-45a8-8631-2dfa58361822"),
                     BuildingSpecificsId = Guid.Parse("d02e3c9c-f26c-4136-a904-27ad074fa456"),
+                    CountyId = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.Parse("bab4441b-58f3-450d-869b-17a89b990ffa"),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
                     CountyId = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                     Level = 1,
                     Status = BuildingStatus.NotBuilt
@@ -804,12 +869,6 @@ namespace StrategyGame.DAL
             };
             user2.PasswordHash = passwordHasher.HashPassword(user2, "Password1");
 
-            var users = new List<User>
-            {
-                user1,
-                user2
-            };
-
             var game = new Game
             {
                 Id = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
@@ -840,7 +899,10 @@ namespace StrategyGame.DAL
                     wineryLevels[2],
                     sulfurMineLevels[0],
                     sulfurMineLevels[1],
-                    sulfurMineLevels[2]
+                    sulfurMineLevels[2],
+                    academyLevels[0],
+                    academyLevels[1],
+                    academyLevels[2]
                 });
 
             builder.Entity<BuildingSpecifics>()
@@ -849,7 +911,8 @@ namespace StrategyGame.DAL
                     sawMillSpecifics,
                     quarrySpecifics,
                     winerySpecifics,
-                    sulfurMineSpecifics
+                    sulfurMineSpecifics,
+                    academySpecifics
                 });
 
             builder.Entity<TechnologySpecifics>()
