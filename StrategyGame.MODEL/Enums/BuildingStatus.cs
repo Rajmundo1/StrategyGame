@@ -7,7 +7,6 @@ namespace StrategyGame.MODEL.Enums
     public enum BuildingStatus
     {
         Built = 1,
-        UnderConstruction = 2,
-        NotBuilt = 3
+        NotBuilt = 2
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace StrategyGame.MODEL.Entities
@@ -15,20 +16,18 @@ namespace StrategyGame.MODEL.Entities
         public Guid Id { get; set; }
         [ForeignKey("Kingdom")]
         public Guid KingdomId { get; set; }
+        public Kingdom Kingdom {get;set;}
         public string Name { get; set; }
-
-
         [NotMapped]
-        public int PopulationGrowth => Convert.ToInt32(Math.Floor(Population * Morale));
+        public int PopulationGrowth => Convert.ToInt32(Math.Floor(BasePopulation * Morale));
         [NotMapped]
         public int ResearchOutput => Buildings.Sum(building => building.CurrentLevel.ResearchOutPut);
         public double TaxRate { get; set; }
         [NotMapped]
-        public double Morale => 1.25 - Math.Log10(Population)/10 + TavernMorale - (1 - TaxRate);
+        public double Morale => 1.25 - Math.Log10(OverallPopulation)/10 + TavernMorale - (1 - TaxRate);
         [NotMapped]
         public double TavernMorale => Math.Log10(WineConsumption)/10;
         public int WineConsumption { get; set; }
-
         public int Wood { get; set; }
         [NotMapped]
         public int WoodProduction => Buildings.Sum(building => building.CurrentLevel.WoodProduction);
@@ -41,18 +40,20 @@ namespace StrategyGame.MODEL.Entities
         public int Sulfur { get; set; }
         [NotMapped]
         public int SulfurProduction => Buildings.Sum(building => building.CurrentLevel.SulfurProduction);
+        public int BasePopulation { get; set; }
         [NotMapped]
-        public int Population => Buildings.Sum(building => building.CurrentLevel.PopulationBonus);
+        public int Populationbonus => Buildings.Sum(building => building.CurrentLevel.PopulationBonus);
+        [NotMapped]
+        public int OverallPopulation => Populationbonus + BasePopulation;
         public int taxPerPop { get; set; }
         [NotMapped]
-        public int GoldIncome => Convert.ToInt32(Math.Floor(Population * TaxRate));
+        public int GoldIncome => Convert.ToInt32(Math.Floor(OverallPopulation * TaxRate));
+        [NotMapped]
+        public int ForceLimitUsed => Units.Units.Sum(x => x.CurrentLevel.ForceLimit);
         [NotMapped]
         public int ForceLimit => Buildings.Sum(bulding => bulding.CurrentLevel.ForceLimitBonus);
-        public int ResearchRoundLeft { get; set; }
-        public int BuildingRoundLeft { get; set; }
         [NotMapped]
-        public int Score => Population + Buildings.Sum(building => building.Status == BuildingStatus.Built ? 2 : 0);
-
+        public int Score => OverallPopulation + Buildings.Sum(building => building.Status == BuildingStatus.Built ? 2 : 0);
         public IEnumerable<Building> Buildings { get; set; }
         public UnitGroup Units { get; set; }
 

@@ -4,6 +4,7 @@ using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,27 @@ namespace StrategyGame.DAL.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task DevelopUnits(int count, Guid countyId, Guid unitSpecificsId)
+        public async Task HireUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
+        {
+            var county = await dbContext.Counties.SingleAsync(x => x.Id.Equals(countyId));
+
+            var unitsToAdd = new List<Unit>();
+
+            for(int i = 0; i<count; i++)
+            {
+                unitsToAdd.Add(new Unit
+                {
+                    Id = Guid.NewGuid(),
+                    Level = 1,
+                    UnitSpecificsId = unitSpecificsId,
+                    UnitGroupId = county.Units.Id
+                });
+            }
+
+            await dbContext.Units.AddRangeAsync(unitsToAdd);
+        }
+
+        public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
         {
             var specificUnits = new List<Unit>();
 
@@ -50,7 +71,7 @@ namespace StrategyGame.DAL.Repositories
             });
         }
 
-        public async Task<IEnumerable<Unit>> GetUnits(Guid countyId)
+        public async Task<IEnumerable<Unit>> GetUnitsAsync(Guid countyId)
         {
             return await Task.Run(() =>
             {
@@ -60,7 +81,7 @@ namespace StrategyGame.DAL.Repositories
             });
         }
 
-        public async Task RemoveUnits(int count, Guid countyId, Guid unitSpecificsId)
+        public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
         {
             var specificUnits = new List<Unit>();
 
@@ -87,6 +108,28 @@ namespace StrategyGame.DAL.Repositories
                  .Single(unitGroup => unitGroup.CountyId.Equals(countyId))
                  .Units.ToList()
                  .RemoveAll(x => unitsToRemove.Contains(x));
+            });
+        }
+
+        public async Task<UnitSpecifics> GetUnitSpecificsAsync(Guid unitSpecificsId)
+        {
+            return await dbContext.UnitSpecifics.SingleAsync(x => x.Id.Equals(unitSpecificsId));
+        }
+
+        public async Task RemoveUnitByIdAsync(Guid unitId)
+        {
+            var unitToRemove = await dbContext.Units.SingleAsync(x => x.Id.Equals(unitId));
+            dbContext.Units.Remove(unitToRemove);
+        }
+
+        public async Task MoveToUnitGroup(Guid unitId, Guid unitGroupId)
+        {
+            await dbContext.Units.ForEachAsync(unit =>
+            {
+                if (unit.Id.Equals(unitId))
+                {
+                    unit.UnitGroupId = unitGroupId;
+                }
             });
         }
     }

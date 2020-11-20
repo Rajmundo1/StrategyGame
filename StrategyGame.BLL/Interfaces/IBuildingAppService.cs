@@ -9,6 +9,10 @@ namespace StrategyGame.BLL.Interfaces
 {
     public interface IBuildingAppService
     {
-        Task<IEnumerable<BuildingDto>> GetBuildings();
+        Task<IEnumerable<BuildingDto>> GetBuildingsAsync(Guid countyId);
+        Task<BuildingDetailDto> GetBuildingDetailAsync(Guid buildingId);
+        Task<BuildingNextLevelDto> GetNextLevelDetailAsync(Guid buildingId);
+        Task DevelopBuildingAsync(Guid buildingId);
+
     }
 }

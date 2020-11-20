@@ -15,13 +15,12 @@ namespace StrategyGame.MODEL.Entities
         public Guid UserId { get; set; }
         public IEnumerable<County> Counties { get; set; }
         public int Gold { get; set; }
+        public int ResearchPoint { get; set; }
         public IEnumerable<Technology> Technologies { get; set; }
         [NotMapped]
         public int GlobalGoldIncome => Counties.Sum(county => county.GoldIncome);
         [NotMapped]
         public int GlobalResearchOutput => Counties.Sum(county => county.ResearchOutput);
-        [NotMapped]
-        public int GlobalResearchPopulation => Counties.Sum(county => county.Population);
         [NotMapped]
         public int GlobalScore => Counties.Sum(county => county.Score) + Technologies.Sum(technology => technology.Status == ResearchStatus.Researched ? 3 : 0);
     }

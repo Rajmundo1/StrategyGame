@@ -35,6 +35,11 @@ namespace StrategyGame.DAL.Repositories
             });
         }
 
+        public async Task<IEnumerable<Attack>> GetAllAttacks()
+        {
+            return await dbContext.Attacks.ToListAsync();
+        }
+
         public async Task<IEnumerable<Attack>> GetAttacks(Guid countyId)
         {
             return await dbContext.Attacks

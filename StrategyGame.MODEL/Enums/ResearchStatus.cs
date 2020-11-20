@@ -7,7 +7,6 @@ namespace StrategyGame.MODEL.Enums
     public enum ResearchStatus
     {
         Researched = 1,
-        UnderResearch = 2,
-        UnResearched = 3
+        UnResearched = 2
     }
 }

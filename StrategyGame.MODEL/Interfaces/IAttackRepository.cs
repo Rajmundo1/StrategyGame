@@ -11,5 +11,6 @@ namespace StrategyGame.MODEL.Interfaces
     {
         Task<IEnumerable<Attack>> GetAttacks(Guid countyId);
         Task Attack(Guid attackerCountyId, Guid defenderCountyId, UnitGroup units);
+        Task<IEnumerable<Attack>> GetAllAttacks();
     }
 }
