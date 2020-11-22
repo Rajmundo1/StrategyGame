@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL;
@@ -10,9 +12,9 @@ using System.Threading.Tasks;
 namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     [Produces("application/json")]
-    public class UserController : ControllerBase
+    [Authorize]
+    public class UserController : StrategyGameControllerBase
     {
         private readonly IUserAppService userAppService;
 

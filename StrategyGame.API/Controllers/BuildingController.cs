@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.Entities;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [Produces("application/json")]
     [Authorize]
-    public class BuildingController: ControllerBase
+    public class BuildingController: StrategyGameControllerBase
     {
         private readonly IBuildingAppService buildingService;
 

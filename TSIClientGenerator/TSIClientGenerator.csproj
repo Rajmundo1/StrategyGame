@@ -11,4 +11,8 @@
     <PackageReference Include="NSwag.SwaggerGeneration.WebApi" Version="12.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StrategyGame.API\StrategyGame.API.csproj" />
+  </ItemGroup>
+
 </Project>

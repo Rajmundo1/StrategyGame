@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.BLL.ValidationDtos;
@@ -12,8 +13,8 @@ using System.Threading.Tasks;
 namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController: ControllerBase
+    [Produces("application/json")]
+    public class AuthController: StrategyGameControllerBase
     {
         private readonly IAuthAppService authService;
 

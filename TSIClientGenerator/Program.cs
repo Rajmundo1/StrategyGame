@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NJsonSchema;
+using StrategyGame.API.Common;
 
 namespace TSIClientGenerator
 {
@@ -18,7 +19,8 @@ namespace TSIClientGenerator
         {
             try
             {
-                GenerateTypeScriptClients(GenerateSwaggerDoc(), args[0]);
+                var swaggerDoc = GenerateSwaggerDoc();
+                GenerateTypeScriptClients(swaggerDoc, args[0]);
             }
             catch (Exception e)
             {
@@ -36,8 +38,8 @@ namespace TSIClientGenerator
                 DefaultPropertyNameHandling = PropertyNameHandling.CamelCase
             });
 
-            var assembly = typeof(ControllerBase).Assembly;
-            var baseClass = typeof(ControllerBase);
+            var assembly = typeof(StrategyGameControllerBase).Assembly;
+            var baseClass = typeof(StrategyGameControllerBase);
             var types = assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(baseClass))
                 .ToArray();
