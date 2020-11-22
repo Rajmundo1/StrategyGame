@@ -48,9 +48,9 @@ namespace StrategyGame.API.Controllers
         }
 
         [HttpPut("develop/{countyId}/{unitSpecificsId}")]
-        public async Task DevelopUnitsAsync([FromRoute] Guid countyId, [FromRoute] Guid unitSpecificsId, [FromQuery] int lvl, [FromQuery] int count)
+        public async Task DevelopUnitsAsync([FromRoute] Guid countyId, [FromRoute] Guid unitSpecificsId, [FromQuery] int currentLvl, [FromQuery] int count)
         {
-            await unitAppService.DevelopUnitsAsync(count, countyId, unitSpecificsId, lvl);
+            await unitAppService.DevelopUnitsAsync(count, countyId, unitSpecificsId, currentLvl);
         }
 
         [HttpPost("hire/{countyId}/{unitSpecificsId}")]

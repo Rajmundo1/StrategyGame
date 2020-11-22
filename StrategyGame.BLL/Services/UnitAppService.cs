@@ -32,21 +32,27 @@ namespace StrategyGame.BLL.Services
             this.kingdomRepository = kingdomRepository;
         }
 
-        public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl)
+        public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl)
         {
             var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(unitSpecificsId);
-            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == lvl);
+            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == currentLvl++);
 
             if(unitLevel == null)
             {
                 throw new AppException("Unavailable LVL");
             }
 
+            var unitsToDevelop = await unitRepository.GetUnitsBySpecificsAndLevelAsync(countyId, unitSpecificsId, currentLvl);
+            if(unitsToDevelop.Count() < count)
+            {
+                throw new AppException("You don't have enough units for that upgrade");
+            }
+
             //check if it has enough  resources + forcelimit
-            if (await CheckAndSpendResources(count, countyId, unitSpecificsId, lvl))
+            if (await CheckAndSpendResources(count, countyId, unitSpecificsId, currentLvl++))
             {
                 //+units
-                await unitRepository.HireUnitsAsync(count, countyId, unitSpecificsId);
+                await unitRepository.DevelopUnitsAsync(count, countyId, unitSpecificsId, currentLvl);
             }
         }
 
@@ -167,7 +173,7 @@ namespace StrategyGame.BLL.Services
             }
 
             //force limit check
-            if ((county.ForceLimit - county.ForceLimitUsed) <=
+            if ((county.MaxForceLimit - county.UsedForceLimit) <=
                     unitLvl.ForceLimit * count)
             {
                 throw new AppException("You don't have enough room for the units");

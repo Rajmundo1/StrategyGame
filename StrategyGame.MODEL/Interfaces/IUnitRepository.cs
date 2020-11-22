@@ -9,7 +9,8 @@ namespace StrategyGame.MODEL.Interfaces
     public interface IUnitRepository
     {
         Task<IEnumerable<Unit>> GetUnitsAsync(Guid countyId);
-        Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId);
+        Task<IEnumerable<Unit>> GetUnitsBySpecificsAndLevelAsync(Guid countyId, Guid unitSpecificsId, int currentlvl);
+        Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentlvl);
         Task HireUnitsAsync(int count, Guid countyId, Guid unitSpecificsId);
         Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl);
         Task RemoveUnitByIdAsync(Guid unitId);

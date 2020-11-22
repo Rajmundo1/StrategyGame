@@ -39,7 +39,7 @@ namespace StrategyGame.DAL.Repositories
             await dbContext.Units.AddRangeAsync(unitsToAdd);
         }
 
-        public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
+        public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl)
         {
             var specificUnits = new List<Unit>();
 
@@ -48,7 +48,7 @@ namespace StrategyGame.DAL.Repositories
                 specificUnits = dbContext.UnitGroups
                 .Single(unitGroup => unitGroup.CountyId.Equals(countyId))
                 .Units
-                .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId))
+                .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId) && units.Level == currentLvl)
                 .ToList();
             });
 
@@ -130,6 +130,18 @@ namespace StrategyGame.DAL.Repositories
                 {
                     unit.UnitGroupId = unitGroupId;
                 }
+            });
+        }
+
+        public async Task<IEnumerable<Unit>> GetUnitsBySpecificsAndLevelAsync(Guid countyId, Guid unitSpecificsId, int currentlvl)
+        {
+            return await Task.Run(() =>
+            {
+                return dbContext.UnitGroups
+                    .Single(unit => unit.CountyId.Equals(countyId))
+                    .Units
+                    .Where(unit => unit.UnitSpecificsId.Equals(unitSpecificsId) && unit.Level.Equals(currentlvl))
+                    .ToList();
             });
         }
     }

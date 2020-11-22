@@ -10,8 +10,8 @@ using StrategyGame.DAL;
 namespace StrategyGame.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201117215303_addAcademy")]
-    partial class addAcademy
+    [Migration("20201122132510_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -247,7 +247,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -255,7 +255,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -263,7 +263,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -271,7 +271,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -311,7 +311,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -319,7 +319,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -327,7 +327,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         },
                         new
                         {
@@ -335,7 +335,7 @@ namespace StrategyGame.DAL.Migrations
                             BuildingSpecificsId = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             Level = 1,
-                            Status = 3
+                            Status = 2
                         });
                 });
 
@@ -737,7 +737,7 @@ namespace StrategyGame.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BuildingRoundLeft")
+                    b.Property<int>("BasePopulation")
                         .HasColumnType("int");
 
                     b.Property<Guid>("KingdomId")
@@ -748,9 +748,6 @@ namespace StrategyGame.DAL.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResearchRoundLeft")
-                        .HasColumnType("int");
 
                     b.Property<int>("Sulfur")
                         .HasColumnType("int");
@@ -780,11 +777,10 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
-                            BuildingRoundLeft = 0,
+                            BasePopulation = 0,
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             Marble = 5000,
                             Name = "Kingdom1 County1",
-                            ResearchRoundLeft = 0,
                             Sulfur = 1000,
                             TaxRate = 1.0,
                             Wine = 2000,
@@ -795,11 +791,10 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
-                            BuildingRoundLeft = 0,
+                            BasePopulation = 0,
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             Marble = 5000,
                             Name = "Kingdom1 County2",
-                            ResearchRoundLeft = 0,
                             Sulfur = 1000,
                             TaxRate = 1.0,
                             Wine = 2000,
@@ -810,11 +805,10 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
-                            BuildingRoundLeft = 0,
+                            BasePopulation = 0,
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             Marble = 5000,
                             Name = "Kingdom2 County1",
-                            ResearchRoundLeft = 0,
                             Sulfur = 1000,
                             TaxRate = 1.0,
                             Wine = 2000,
@@ -825,11 +819,10 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
-                            BuildingRoundLeft = 0,
+                            BasePopulation = 0,
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             Marble = 5000,
                             Name = "Kingdom2 County2",
-                            ResearchRoundLeft = 0,
                             Sulfur = 1000,
                             TaxRate = 1.0,
                             Wine = 2000,
@@ -869,6 +862,9 @@ namespace StrategyGame.DAL.Migrations
                     b.Property<int>("Gold")
                         .HasColumnType("int");
 
+                    b.Property<int>("ResearchPoint")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -881,12 +877,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             Gold = 3000,
+                            ResearchPoint = 0,
                             UserId = new Guid("ff5e4b7f-c83d-4070-a91a-a33de1b19405")
                         },
                         new
                         {
                             Id = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
                             Gold = 3000,
+                            ResearchPoint = 0,
                             UserId = new Guid("b63d4aee-70d2-4d84-93a6-56c9db32aa11")
                         });
                 });
@@ -947,28 +945,28 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("0d5fa209-cd89-4f26-bf6c-2f915a661226"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
-                            Status = 3,
+                            Status = 2,
                             TechnologySpecificsId = new Guid("a6336474-fa17-43ba-a5c6-7fee92ab15b7")
                         },
                         new
                         {
                             Id = new Guid("67648201-cb7a-4904-8622-b2863444eb82"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
-                            Status = 3,
+                            Status = 2,
                             TechnologySpecificsId = new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c")
                         },
                         new
                         {
                             Id = new Guid("605b6d6a-40dd-415d-8726-46ef8c0592bf"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
-                            Status = 3,
+                            Status = 2,
                             TechnologySpecificsId = new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da")
                         },
                         new
                         {
                             Id = new Guid("e12a9bfd-1847-4e43-ae91-bcce2c5545a3"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
-                            Status = 3,
+                            Status = 2,
                             TechnologySpecificsId = new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae")
                         });
                 });
@@ -1210,6 +1208,12 @@ namespace StrategyGame.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AttackPower")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefensePower")
+                        .HasColumnType("int");
+
                     b.Property<int>("ForceLimit")
                         .HasColumnType("int");
 
@@ -1226,18 +1230,6 @@ namespace StrategyGame.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("MarbleUpkeep")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MeleeAttackPower")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MeleeDefensePower")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RangedAttackPower")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RangedDefensePower")
                         .HasColumnType("int");
 
                     b.Property<int>("SulfurCost")
@@ -1271,16 +1263,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("3e1869eb-f12a-40e7-bec3-0b3ae410370a"),
+                            AttackPower = 3,
+                            DefensePower = 5,
                             ForceLimit = 1,
                             GoldCost = 10,
                             GoldUpkeep = 5,
                             Level = 1,
                             MarbleCost = 0,
                             MarbleUpkeep = 0,
-                            MeleeAttackPower = 5,
-                            MeleeDefensePower = 5,
-                            RangedAttackPower = 0,
-                            RangedDefensePower = 3,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"),
@@ -1292,16 +1282,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("26f967a9-44b9-4aa9-88ae-b3af7ac0ad09"),
+                            AttackPower = 5,
+                            DefensePower = 8,
                             ForceLimit = 2,
                             GoldCost = 15,
                             GoldUpkeep = 10,
                             Level = 2,
                             MarbleCost = 5,
                             MarbleUpkeep = 0,
-                            MeleeAttackPower = 6,
-                            MeleeDefensePower = 6,
-                            RangedAttackPower = 0,
-                            RangedDefensePower = 7,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"),
@@ -1313,16 +1301,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("15ec08c3-a2e0-42a9-bd5a-37381e121dcb"),
+                            AttackPower = 8,
+                            DefensePower = 12,
                             ForceLimit = 3,
                             GoldCost = 30,
                             GoldUpkeep = 15,
                             Level = 3,
                             MarbleCost = 50,
                             MarbleUpkeep = 0,
-                            MeleeAttackPower = 12,
-                            MeleeDefensePower = 12,
-                            RangedAttackPower = 0,
-                            RangedDefensePower = 10,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"),
@@ -1334,16 +1320,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("2e560b5e-f626-4b25-8957-0337f385c2be"),
+                            AttackPower = 7,
+                            DefensePower = 2,
                             ForceLimit = 2,
                             GoldCost = 10,
                             GoldUpkeep = 5,
                             Level = 1,
                             MarbleCost = 10,
                             MarbleUpkeep = 5,
-                            MeleeAttackPower = 1,
-                            MeleeDefensePower = 1,
-                            RangedAttackPower = 5,
-                            RangedDefensePower = 2,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("489e9070-f6f6-4130-8979-89e54b140835"),
@@ -1355,16 +1339,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("2c944d6f-a2ea-448a-a4f8-7756ef115263"),
+                            AttackPower = 10,
+                            DefensePower = 4,
                             ForceLimit = 3,
                             GoldCost = 20,
                             GoldUpkeep = 10,
                             Level = 2,
                             MarbleCost = 15,
                             MarbleUpkeep = 10,
-                            MeleeAttackPower = 2,
-                            MeleeDefensePower = 2,
-                            RangedAttackPower = 10,
-                            RangedDefensePower = 4,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("489e9070-f6f6-4130-8979-89e54b140835"),
@@ -1376,16 +1358,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("b0563dec-ae9a-49df-bbc2-4db74bf5e2ec"),
+                            AttackPower = 15,
+                            DefensePower = 6,
                             ForceLimit = 4,
                             GoldCost = 35,
                             GoldUpkeep = 20,
                             Level = 3,
                             MarbleCost = 20,
                             MarbleUpkeep = 15,
-                            MeleeAttackPower = 3,
-                            MeleeDefensePower = 3,
-                            RangedAttackPower = 15,
-                            RangedDefensePower = 6,
                             SulfurCost = 0,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("489e9070-f6f6-4130-8979-89e54b140835"),
@@ -1397,16 +1377,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("e8cfbc91-d0c7-4ee4-a123-ce3e554026f8"),
+                            AttackPower = 10,
+                            DefensePower = 10,
                             ForceLimit = 5,
                             GoldCost = 100,
                             GoldUpkeep = 20,
                             Level = 1,
                             MarbleCost = 50,
                             MarbleUpkeep = 20,
-                            MeleeAttackPower = 0,
-                            MeleeDefensePower = 0,
-                            RangedAttackPower = 20,
-                            RangedDefensePower = 2,
                             SulfurCost = 50,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"),
@@ -1418,16 +1396,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("cc847345-0747-45ee-ab9b-60a97873d9b1"),
+                            AttackPower = 20,
+                            DefensePower = 20,
                             ForceLimit = 10,
                             GoldCost = 200,
                             GoldUpkeep = 50,
                             Level = 2,
                             MarbleCost = 100,
                             MarbleUpkeep = 40,
-                            MeleeAttackPower = 0,
-                            MeleeDefensePower = 0,
-                            RangedAttackPower = 40,
-                            RangedDefensePower = 2,
                             SulfurCost = 100,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"),
@@ -1439,16 +1415,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("9946dd5f-078a-4029-9ba1-0a3b22d8dfdc"),
+                            AttackPower = 30,
+                            DefensePower = 30,
                             ForceLimit = 15,
                             GoldCost = 400,
                             GoldUpkeep = 100,
                             Level = 3,
                             MarbleCost = 200,
                             MarbleUpkeep = 80,
-                            MeleeAttackPower = 0,
-                            MeleeDefensePower = 0,
-                            RangedAttackPower = 80,
-                            RangedDefensePower = 2,
                             SulfurCost = 200,
                             SulfurUpkeep = 0,
                             UnitSpecificsId = new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"),
@@ -1590,14 +1564,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f5a0a39d-752a-4287-8c3c-22454fcdb426",
+                            ConcurrencyStamp = "5e99039b-d595-4cf0-979f-b0cb36e48d0b",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEPyIcvMHyk7XAnVN4BHjq164hQG9XWCsYGlQoHDrOWID/ybQGoV9Xh4FfffaYwmofQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPGYszrgA5tB8JUmIs4B9iiR66XqQGrHlRxgqJuDUB8tGyT3paxZ45y2zc/T8xHi2w==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 1,
-                            SecurityStamp = "9194c772-4fb6-4ecd-8951-5aad9551711b",
+                            SecurityStamp = "f497199e-63ff-4adb-9857-b23691fe0b93",
                             TwoFactorEnabled = false,
                             UserName = "Rajmundo1"
                         },
@@ -1605,14 +1579,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5d37b6c9-c0cc-48cb-9409-e715cf08ea68",
+                            ConcurrencyStamp = "e317eb93-10ef-4386-a9b0-d005598c61dc",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEG8vXBsVTj0rRH1f1juNCWCkFjUP+NAzB5v9SWr5xmtqF+ULHYSyOKjPjlX9r1aWQQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKw3CEN8SBwDzQSEqp8ZKiihuyinm7oKuIPZKKvdeGYhhBoCvyG0FdWSM0+sPeDhJg==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 2,
-                            SecurityStamp = "cc364013-ad7e-48df-8c30-aa6f193c1611",
+                            SecurityStamp = "f21eaa4e-c9f7-4b87-a20c-25f8883515b9",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         });
@@ -1708,7 +1682,7 @@ namespace StrategyGame.DAL.Migrations
 
             modelBuilder.Entity("StrategyGame.MODEL.Entities.County", b =>
                 {
-                    b.HasOne("StrategyGame.MODEL.Entities.Kingdom", null)
+                    b.HasOne("StrategyGame.MODEL.Entities.Kingdom", "Kingdom")
                         .WithMany("Counties")
                         .HasForeignKey("KingdomId")
                         .OnDelete(DeleteBehavior.NoAction)

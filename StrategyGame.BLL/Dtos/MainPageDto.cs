@@ -9,17 +9,32 @@ namespace StrategyGame.BLL.Dtos
         public int Round { get; set; }
 
         public int Gold { get; set; }
+        public int GoldIncome { get; set; }
+        public int GoldIncomeBonus { get; set; }
+
+        public int ResearchPoint { get; set; }
+        public int ResearchOutput { get; set; }
+        public int ResearchOutputBonus { get; set; }
 
         public int Wood { get; set; }
-        public int Marble { get; set; }
-        public int Wine { get; set; }
-        public int Sulfur { get; set; }
-
         public int WoodProduction { get; set; }
-        public int MarbleProduction { get; set; }
-        public int WineProduction { get; set; }
-        public int SulfurProduction { get; set; }
+        public int WoodProductionBonus { get; set; }
 
-        public IEnumerable<BuildingDto> Buildings { get; set; }
+        public int Marble { get; set; }
+        public int MarbleProduction { get; set; }
+        public int MarbleProductionBonus { get; set; }
+
+        public int Wine { get; set; }
+        public int WineProduction { get; set; }
+        public int WineProductionBonus { get; set; }
+
+        public int Sulfur { get; set; }
+        public int SulfurProduction { get; set; }
+        public int SulfurProductionBonus { get; set; }
+
+        public int UsedForceLimit { get; set; }
+        public int MaxForceLimit { get; set; }
+
+        public IEnumerable<BuildingViewDto> Buildings { get; set; }
     }
 }

@@ -20,24 +20,76 @@ namespace StrategyGame.BLL.Services
         private readonly ICountyRepository countyRepository;
         private readonly IUnitRepository unitRepository;
         private readonly IAttackRepository attackRepository;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IGameRepository gameRepository;
 
         public GameAppService(IMapper mapper,
                                 IKingdomRepository kingdomRepository,
                                 ICountyRepository countyRepository,
                                 IUnitRepository unitRepository,
-                                IAttackRepository attackRepository)
+                                IAttackRepository attackRepository,
+                                IUnitOfWork unitOfWork,
+                                IGameRepository gameRepository)
         {
             this.mapper = mapper;
             this.kingdomRepository = kingdomRepository;
             this.countyRepository = countyRepository;
             this.unitRepository = unitRepository;
             this.attackRepository = attackRepository;
+            this.unitOfWork = unitOfWork;
+            this.gameRepository = gameRepository;
         }
 
-        public Task<MainPageDto> GetMainPage(Guid kingdomId)
+        public async Task<MainPageDto> GetCountyPage(Guid countyId)
         {
             //TODO
-            throw new NotImplementedException();
+            var county = await countyRepository.GetCountyAsync(countyId);
+            var kingdom = await kingdomRepository.GetKingdomAsync(county.KingdomId);
+
+            var result = mapper.Map<MainPageDto>(county);
+
+            var game = await gameRepository.GetGameByKingdomIdAsync(kingdom.Id);
+
+            result.Round = game.Round;
+            result.Gold = kingdom.Gold;
+            result.ResearchPoint = kingdom.ResearchPoint;
+
+            var buildingViewDtos = new List<BuildingViewDto>();
+
+            foreach (var building in county.Buildings)
+            {
+                buildingViewDtos.Add(mapper.Map<BuildingViewDto>(building));
+            }
+
+            result.Buildings = buildingViewDtos;
+
+            return result;
+        }
+
+        public async Task<MainPageDto> GetMainPage(Guid kingdomId)
+        {
+            //TODO
+            var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
+            var county = await countyRepository.GetCountyAsync(kingdom.Counties.ElementAt(0).Id);
+
+            var result = mapper.Map<MainPageDto>(county);
+
+            var game = await gameRepository.GetGameByKingdomIdAsync(kingdom.Id);
+
+            result.Round = game.Round;
+            result.Gold = kingdom.Gold;
+            result.ResearchPoint = kingdom.ResearchPoint;
+
+            var buildingViewDtos = new List<BuildingViewDto>();
+
+            foreach(var building in county.Buildings)
+            {
+                buildingViewDtos.Add(mapper.Map<BuildingViewDto>(building));
+            }
+
+            result.Buildings = buildingViewDtos;
+
+            return result;
         }
 
         public async Task NewRound()
@@ -117,21 +169,30 @@ namespace StrategyGame.BLL.Services
                 {
                     county.BasePopulation += county.PopulationGrowth;
 
-                    county.Wood += county.WoodProduction;
-                    county.Marble += county.MarbleProduction;
-                    county.Wine += county.WineProduction;
-                    county.Sulfur += county.SulfurProduction;
+                    county.Wood += county.WoodProduction + county.WoodProductionBonus;
+                    county.Marble += county.MarbleProduction + county.MarbleProductionBonus;
+                    county.Wine += county.WineProduction + county.WineProductionBonus;
+                    county.Sulfur += county.SulfurProduction + county.SulfurProductionBonus;
 
-                    kingdom.Gold += county.GoldIncome;
+                    kingdom.Gold += county.GoldIncome + county.GoldIncomeBonus;
                 }
 
                 kingdom.ResearchPoint += kingdom.GlobalResearchOutput;
             }
-            //unit költségek levonása
+            //költségek levonása
             foreach (var kingdom in kingdoms)
             {
                 foreach (var county in kingdom.Counties)
                 {
+                    if(county.Wine - county.WineConsumption < 0)
+                    {
+                        county.WineConsumption = 0;
+                    }
+                    else
+                    {
+                        county.Wine -= county.WineConsumption;
+                    }
+
                     foreach(var unit in county.Units.Units)
                     {
                         if (kingdom.Gold - unit.CurrentLevel.GoldUpkeep < 0 ||
@@ -154,6 +215,8 @@ namespace StrategyGame.BLL.Services
                     }
                 }
             }
+
+            await unitOfWork.SaveAsync();
         }
     }
 }

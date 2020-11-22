@@ -77,6 +77,10 @@ namespace StrategyGame.BLL
 
             CreateMap<UnitLevel, UnitNextLevelDto>();
             CreateMap<UnitLevel, UnitDetailsDto>();
+
+            CreateMap<County, MainPageDto>();
+            CreateMap<Building, BuildingViewDto>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.BuildingSpecifics.ImageUrl));
         }
     }
 }

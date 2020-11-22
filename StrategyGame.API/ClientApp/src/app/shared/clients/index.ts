@@ -1059,7 +1059,7 @@ export class ApiUnitDevelopClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    developUnits(countyId: string, unitSpecificsId: string, lvl: number, count: number): Observable<void> {
+    developUnits(countyId: string, unitSpecificsId: string, currentLvl: number, count: number): Observable<void> {
         let url_ = this.baseUrl + "/api/Unit/develop/{countyId}/{unitSpecificsId}?";
         if (countyId === undefined || countyId === null)
             throw new Error("The parameter 'countyId' must be defined.");
@@ -1067,10 +1067,10 @@ export class ApiUnitDevelopClient {
         if (unitSpecificsId === undefined || unitSpecificsId === null)
             throw new Error("The parameter 'unitSpecificsId' must be defined.");
         url_ = url_.replace("{unitSpecificsId}", encodeURIComponent("" + unitSpecificsId)); 
-        if (lvl === undefined || lvl === null)
-            throw new Error("The parameter 'lvl' must be defined and cannot be null.");
+        if (currentLvl === undefined || currentLvl === null)
+            throw new Error("The parameter 'currentLvl' must be defined and cannot be null.");
         else
-            url_ += "lvl=" + encodeURIComponent("" + lvl) + "&"; 
+            url_ += "currentLvl=" + encodeURIComponent("" + currentLvl) + "&"; 
         if (count === undefined || count === null)
             throw new Error("The parameter 'count' must be defined and cannot be null.");
         else
@@ -1878,15 +1878,26 @@ export interface IBuildingNextLevelDto {
 export class MainPageDto implements IMainPageDto {
     round!: number;
     gold!: number;
+    goldIncome!: number;
+    goldIncomeBonus!: number;
+    researchPoint!: number;
+    researchOutput!: number;
+    researchOutputBonus!: number;
     wood!: number;
-    marble!: number;
-    wine!: number;
-    sulfur!: number;
     woodProduction!: number;
+    woodProductionBonus!: number;
+    marble!: number;
     marbleProduction!: number;
+    marbleProductionBonus!: number;
+    wine!: number;
     wineProduction!: number;
+    wineProductionBonus!: number;
+    sulfur!: number;
     sulfurProduction!: number;
-    buildings?: BuildingDto[] | undefined;
+    sulfurProductionBonus!: number;
+    usedForceLimit!: number;
+    maxForceLimit!: number;
+    buildings?: BuildingViewDto[] | undefined;
 
     constructor(data?: IMainPageDto) {
         if (data) {
@@ -1901,18 +1912,29 @@ export class MainPageDto implements IMainPageDto {
         if (data) {
             this.round = data["round"];
             this.gold = data["gold"];
+            this.goldIncome = data["goldIncome"];
+            this.goldIncomeBonus = data["goldIncomeBonus"];
+            this.researchPoint = data["researchPoint"];
+            this.researchOutput = data["researchOutput"];
+            this.researchOutputBonus = data["researchOutputBonus"];
             this.wood = data["wood"];
-            this.marble = data["marble"];
-            this.wine = data["wine"];
-            this.sulfur = data["sulfur"];
             this.woodProduction = data["woodProduction"];
+            this.woodProductionBonus = data["woodProductionBonus"];
+            this.marble = data["marble"];
             this.marbleProduction = data["marbleProduction"];
+            this.marbleProductionBonus = data["marbleProductionBonus"];
+            this.wine = data["wine"];
             this.wineProduction = data["wineProduction"];
+            this.wineProductionBonus = data["wineProductionBonus"];
+            this.sulfur = data["sulfur"];
             this.sulfurProduction = data["sulfurProduction"];
+            this.sulfurProductionBonus = data["sulfurProductionBonus"];
+            this.usedForceLimit = data["usedForceLimit"];
+            this.maxForceLimit = data["maxForceLimit"];
             if (data["buildings"] && data["buildings"].constructor === Array) {
                 this.buildings = [];
                 for (let item of data["buildings"])
-                    this.buildings.push(BuildingDto.fromJS(item));
+                    this.buildings.push(BuildingViewDto.fromJS(item));
             }
         }
     }
@@ -1928,14 +1950,25 @@ export class MainPageDto implements IMainPageDto {
         data = typeof data === 'object' ? data : {};
         data["round"] = this.round;
         data["gold"] = this.gold;
+        data["goldIncome"] = this.goldIncome;
+        data["goldIncomeBonus"] = this.goldIncomeBonus;
+        data["researchPoint"] = this.researchPoint;
+        data["researchOutput"] = this.researchOutput;
+        data["researchOutputBonus"] = this.researchOutputBonus;
         data["wood"] = this.wood;
-        data["marble"] = this.marble;
-        data["wine"] = this.wine;
-        data["sulfur"] = this.sulfur;
         data["woodProduction"] = this.woodProduction;
+        data["woodProductionBonus"] = this.woodProductionBonus;
+        data["marble"] = this.marble;
         data["marbleProduction"] = this.marbleProduction;
+        data["marbleProductionBonus"] = this.marbleProductionBonus;
+        data["wine"] = this.wine;
         data["wineProduction"] = this.wineProduction;
+        data["wineProductionBonus"] = this.wineProductionBonus;
+        data["sulfur"] = this.sulfur;
         data["sulfurProduction"] = this.sulfurProduction;
+        data["sulfurProductionBonus"] = this.sulfurProductionBonus;
+        data["usedForceLimit"] = this.usedForceLimit;
+        data["maxForceLimit"] = this.maxForceLimit;
         if (this.buildings && this.buildings.constructor === Array) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -1948,15 +1981,70 @@ export class MainPageDto implements IMainPageDto {
 export interface IMainPageDto {
     round: number;
     gold: number;
+    goldIncome: number;
+    goldIncomeBonus: number;
+    researchPoint: number;
+    researchOutput: number;
+    researchOutputBonus: number;
     wood: number;
-    marble: number;
-    wine: number;
-    sulfur: number;
     woodProduction: number;
+    woodProductionBonus: number;
+    marble: number;
     marbleProduction: number;
+    marbleProductionBonus: number;
+    wine: number;
     wineProduction: number;
+    wineProductionBonus: number;
+    sulfur: number;
     sulfurProduction: number;
-    buildings?: BuildingDto[] | undefined;
+    sulfurProductionBonus: number;
+    usedForceLimit: number;
+    maxForceLimit: number;
+    buildings?: BuildingViewDto[] | undefined;
+}
+
+export class BuildingViewDto implements IBuildingViewDto {
+    id!: string;
+    imageUrl?: string | undefined;
+    status!: BuildingStatus;
+
+    constructor(data?: IBuildingViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.imageUrl = data["imageUrl"];
+            this.status = data["status"];
+        }
+    }
+
+    static fromJS(data: any): BuildingViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new BuildingViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["imageUrl"] = this.imageUrl;
+        data["status"] = this.status;
+        return data; 
+    }
+}
+
+export interface IBuildingViewDto {
+    id: string;
+    imageUrl?: string | undefined;
+    status: BuildingStatus;
 }
 
 export class TechnologyDto implements ITechnologyDto {

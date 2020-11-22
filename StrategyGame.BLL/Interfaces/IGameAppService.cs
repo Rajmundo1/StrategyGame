@@ -9,6 +9,7 @@ namespace StrategyGame.BLL.Interfaces
     public interface IGameAppService
     {
         Task<MainPageDto> GetMainPage(Guid kingdomId);
+        Task<MainPageDto> GetCountyPage(Guid countyId);
         Task NewRound();
     }
 }
