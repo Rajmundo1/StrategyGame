@@ -10,7 +10,7 @@ using StrategyGame.DAL;
 namespace StrategyGame.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201122132510_init")]
+    [Migration("20201122151242_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,6 +243,14 @@ namespace StrategyGame.DAL.Migrations
                         },
                         new
                         {
+                            Id = new Guid("219bd5e9-e20e-4393-adb3-b40d97eb276e"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            CountyId = new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
+                            Level = 1,
+                            Status = 1
+                        },
+                        new
+                        {
                             Id = new Guid("326740fa-a052-4b34-9038-b825d9d3d5cb"),
                             BuildingSpecificsId = new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
@@ -269,6 +277,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("cff226fd-aa32-4942-a489-0d0dcb82cbae"),
                             BuildingSpecificsId = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
+                            CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
+                            Level = 1,
+                            Status = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("1bda65c2-81c2-40cd-abd4-a022ef6ae658"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
                             CountyId = new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"),
                             Level = 1,
                             Status = 2
@@ -307,6 +323,14 @@ namespace StrategyGame.DAL.Migrations
                         },
                         new
                         {
+                            Id = new Guid("37819138-f604-42bb-9b7d-90f954da0ce2"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                            CountyId = new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
+                            Level = 1,
+                            Status = 1
+                        },
+                        new
+                        {
                             Id = new Guid("8a6390d8-abbe-4f41-ba33-ffbae69bb183"),
                             BuildingSpecificsId = new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
@@ -333,6 +357,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("19d2606c-9e43-45a8-8631-2dfa58361822"),
                             BuildingSpecificsId = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
+                            CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
+                            Level = 1,
+                            Status = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("bab4441b-58f3-450d-869b-17a89b990ffa"),
+                            BuildingSpecificsId = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
                             CountyId = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             Level = 1,
                             Status = 2
@@ -806,7 +838,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
                             BasePopulation = 0,
-                            KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
+                            KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
                             Marble = 5000,
                             Name = "Kingdom2 County1",
                             Sulfur = 1000,
@@ -820,7 +852,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                             BasePopulation = 0,
-                            KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
+                            KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
                             Marble = 5000,
                             Name = "Kingdom2 County2",
                             Sulfur = 1000,
@@ -1564,14 +1596,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e99039b-d595-4cf0-979f-b0cb36e48d0b",
+                            ConcurrencyStamp = "ef6edfcb-32f3-4ee9-a687-3546ff1a8cb5",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEPGYszrgA5tB8JUmIs4B9iiR66XqQGrHlRxgqJuDUB8tGyT3paxZ45y2zc/T8xHi2w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHsDN1wgGMFlxxnViIbjc5AuRZ6Q0OfFAvSKdM+II5eSeDq7Uj5clRbBtkE8/mHebg==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 1,
-                            SecurityStamp = "f497199e-63ff-4adb-9857-b23691fe0b93",
+                            SecurityStamp = "77bd5bdd-7f6c-48d5-b47a-c15671bc8427",
                             TwoFactorEnabled = false,
                             UserName = "Rajmundo1"
                         },
@@ -1579,14 +1611,14 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e317eb93-10ef-4386-a9b0-d005598c61dc",
+                            ConcurrencyStamp = "0e6d2326-13d4-4ffd-be8b-05d157082335",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEKw3CEN8SBwDzQSEqp8ZKiihuyinm7oKuIPZKKvdeGYhhBoCvyG0FdWSM0+sPeDhJg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPRan4hLHeNnuHcLVpfM14LKjBoXZiG5cAd+rb7s57V1qu5FtpuhKpqpaH6xj4vTBQ==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 2,
-                            SecurityStamp = "f21eaa4e-c9f7-4b87-a20c-25f8883515b9",
+                            SecurityStamp = "e806fd36-29e9-49cf-ad3e-7ddc83c1c7e9",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         });

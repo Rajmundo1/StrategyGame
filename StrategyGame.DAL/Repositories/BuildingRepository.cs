@@ -23,13 +23,18 @@ namespace StrategyGame.DAL.Repositories
         public async Task<IEnumerable<Building>> GetBuildingsAsync(Guid countyId)
         {
             return await dbContext.Buildings
+                .Include(building => building.BuildingSpecifics)
+                .ThenInclude(specifics => specifics.BuildingLevels)
                 .Where(building => building.CountyId.Equals(countyId))
                 .ToListAsync();
         }
 
         public async Task<Building> GetBuildingAsync(Guid buildingId)
         {
-            return await dbContext.Buildings.SingleAsync(building => building.Id.Equals(buildingId));
+            return await dbContext.Buildings.
+                Include(building => building.BuildingSpecifics)
+                .ThenInclude(spec => spec.BuildingLevels)
+                .SingleAsync(building => building.Id.Equals(buildingId));
         }
 
         public async Task<Building> DevelopBuildingAsync(Guid buildingId)
@@ -56,7 +61,10 @@ namespace StrategyGame.DAL.Repositories
                 });
             }
 
-            return await dbContext.Buildings.SingleAsync(building => building.Id.Equals(buildingId));
+            return await dbContext.Buildings
+                .Include(building => building.BuildingSpecifics)
+                .ThenInclude(spec => spec.BuildingLevels)
+                .SingleAsync(building => building.Id.Equals(buildingId));
         }
     }
 }

@@ -20,7 +20,9 @@ namespace StrategyGame.DAL.Repositories
 
         public async Task<Game> GetGameByKingdomIdAsync(Guid kingdomId)
         {
-            var user = await dbContext.Users.SingleAsync(user => user.Kingdom.Id.Equals(kingdomId));
+            var user = await dbContext.Users
+                .Include(user => user.Kingdom)
+                .SingleAsync(user => user.Kingdom.Id.Equals(kingdomId));
 
             return await dbContext.Game.SingleAsync(game => 
                 game.Id.Equals(

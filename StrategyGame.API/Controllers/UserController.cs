@@ -13,7 +13,7 @@ namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [Authorize]
+    //[Authorize]
     public class UserController : StrategyGameControllerBase
     {
         private readonly IUserAppService userAppService;

@@ -56,7 +56,7 @@ namespace StrategyGame.DAL
         private void SeedData(ModelBuilder builder)
         {
             #region Creating Entities
-            var passwordHasher = new PasswordHasher<User>();
+            var passwordHasher = new PasswordHasher<IdentityUser>();
 
             var sawMillLevels = new List<BuildingLevel>
             {
@@ -790,7 +790,7 @@ namespace StrategyGame.DAL
             var county21 = new County
             {
                 Id = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
-                KingdomId = Guid.Parse("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
+                KingdomId = Guid.Parse("a37de913-486d-4df3-9025-1e5d4f881220"),
                 Name = "Kingdom2 County1",
                 TaxRate = 1.0,
                 WineConsumption = 0,
@@ -803,7 +803,7 @@ namespace StrategyGame.DAL
             var county22 = new County
             {
                 Id = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
-                KingdomId = Guid.Parse("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
+                KingdomId = Guid.Parse("a37de913-486d-4df3-9025-1e5d4f881220"),
                 Name = "Kingdom2 County2",
                 TaxRate = 1.0,
                 WineConsumption = 0,
@@ -985,18 +985,22 @@ namespace StrategyGame.DAL
                     buildings11[1],
                     buildings11[2],
                     buildings11[3],
+                    buildings11[4],
                     buildings12[0],
                     buildings12[1],
                     buildings12[2],
                     buildings12[3],
+                    buildings12[4],
                     buildings21[0],
                     buildings21[1],
                     buildings21[2],
                     buildings21[3],
+                    buildings21[4],
                     buildings22[0],
                     buildings22[1],
                     buildings22[2],
-                    buildings22[3]
+                    buildings22[3],
+                    buildings22[4]
                 });
 #endregion
         }

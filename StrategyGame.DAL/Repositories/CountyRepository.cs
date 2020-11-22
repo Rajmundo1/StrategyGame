@@ -20,7 +20,17 @@ namespace StrategyGame.DAL.Repositories
 
         public async Task<County> GetCountyAsync(Guid countyId)
         {
-            return await dbContext.Counties.SingleAsync(x => x.Id.Equals(countyId));
+            return await dbContext.Counties
+                .Include(county => county.Kingdom)
+                .ThenInclude(kingdom => kingdom.Technologies)
+                .ThenInclude(tech => tech.Specifics)
+                .Include(county => county.Buildings)
+                .ThenInclude(b => b.BuildingSpecifics)
+                .ThenInclude(sp => sp.BuildingLevels)
+                .Include(county => county.Units)
+                .ThenInclude(u => u.Units)
+                .ThenInclude(u => u.UnitSpecifics)
+                .SingleAsync(x => x.Id.Equals(countyId));
         }
 
         public async Task SpendResourcesAsync(Guid countyId, ResourcesDto resources)

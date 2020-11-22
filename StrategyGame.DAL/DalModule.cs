@@ -14,6 +14,10 @@ namespace StrategyGame.DAL
                 .Where(type => type.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(type => type.Name.Equals("UnitOfWork"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
             base.Load(builder);
         }
     }

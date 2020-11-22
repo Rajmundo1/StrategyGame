@@ -1,4 +1,5 @@
-﻿using StrategyGame.DAL.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.DAL.Extensions;
 using StrategyGame.MODEL;
 using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.FilterParameters;
@@ -23,12 +24,15 @@ namespace StrategyGame.DAL.Repositories
 
         public async Task<PagedList<User>> GetUsersAsync(PagingParameters pagingParameters)
         {
-            return await dbContext.Users.ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
+            return await dbContext.Users
+                .Include(u => u.Kingdom)
+                .ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
         }
 
         public async Task<PagedList<User>> GetFilteredUseresAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters)
         {
             return await dbContext.Users
+                .Include(u => u.Kingdom)
                 .Where(filter)
                 .ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
         }

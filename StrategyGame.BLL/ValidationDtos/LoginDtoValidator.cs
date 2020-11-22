@@ -11,8 +11,7 @@ namespace StrategyGame.BLL.ValidationDtos
         public LoginDtoValidator()
         {
             RuleFor(ent => ent.UserName)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Invalid email format");
+                .NotEmpty().WithMessage("Email is required");
             RuleFor(ent => ent.Password)
                 .NotEmpty().WithMessage("Password is required");
         }

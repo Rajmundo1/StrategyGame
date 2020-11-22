@@ -3,6 +3,7 @@ using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,12 +18,36 @@ namespace StrategyGame.DAL.Repositories
         }
         public async Task<Kingdom> GetKingdomAsync(Guid kingdomId)
         {
-            return await dbContext.Kingdoms.SingleAsync(x => x.Id.Equals(kingdomId));
+            return await dbContext.Kingdoms
+                .Include(k => k.Counties)
+                .ThenInclude(c => c.Buildings)
+                .ThenInclude(b => b.BuildingSpecifics)
+                .ThenInclude(bsp => bsp.BuildingLevels)
+                .Include(k => k.Counties)
+                .ThenInclude(c => c.Units)
+                .ThenInclude(u => u.Units)
+                .ThenInclude(u => u.UnitSpecifics)
+                .ThenInclude(usp => usp.UnitLevels)
+                .Include(k => k.Technologies)
+                .ThenInclude(t => t.Specifics)
+                .SingleAsync(x => x.Id.Equals(kingdomId));
         }
 
         public async Task<IEnumerable<Kingdom>> GetKingdomsAsync()
         {
-            return await dbContext.Kingdoms.ToListAsync();
+            return await dbContext.Kingdoms
+                .Include(k => k.Counties)
+                .ThenInclude(c => c.Buildings)
+                .ThenInclude(b => b.BuildingSpecifics)
+                .ThenInclude(bsp => bsp.BuildingLevels)
+                .Include(k => k.Counties)
+                .ThenInclude(c => c.Units)
+                .ThenInclude(u => u.Units)
+                .ThenInclude(u => u.UnitSpecifics)
+                .ThenInclude(usp => usp.UnitLevels)
+                .Include(k => k.Technologies)
+                .ThenInclude(t => t.Specifics)
+                .ToListAsync();
         }
 
         public async Task SpendGoldAsync(Guid kingdomId, int amount)

@@ -7,6 +7,7 @@ using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +33,10 @@ namespace StrategyGame.BLL.Services
 
         public async Task<TokenDto> Login(LoginDto loginDto)
         {
+            var users = userManager.Users;
+            var userCheck = await userManager.FindByNameAsync(loginDto.UserName);
+
+            var check = await signInManager.CheckPasswordSignInAsync(userCheck, loginDto.Password, false);
             var result = await signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, true, false);
             if (result.Succeeded)
             {

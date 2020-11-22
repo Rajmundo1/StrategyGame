@@ -12,7 +12,7 @@ namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [Authorize]
+    //[Authorize]
     public class TechnologyController : StrategyGameControllerBase
     {
         private readonly ITechnologyAppService technologyAppService;

@@ -5,6 +5,7 @@ using StrategyGame.MODEL.Enums;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,17 +31,24 @@ namespace StrategyGame.DAL.Repositories
                     technology.Status = ResearchStatus.Researched;
             });
 
-            return await dbContext.Technologies.SingleAsync(x => x.Id.Equals(technologyId));
+            return await dbContext.Technologies
+                .Include(t => t.Specifics)
+                .SingleAsync(x => x.Id.Equals(technologyId));
         }
 
         public async Task<IEnumerable<Technology>> GetTechnologiesAsync(Guid kingdomId)
         {
-            return (await kingdomRepository.GetKingdomAsync(kingdomId)).Technologies;
+            return await dbContext.Technologies
+                .Include(t => t.Specifics)
+                .Where(t => t.KingdomId.Equals(kingdomId))
+                .ToListAsync();
         }
 
         public async Task<Technology> GetTechnologyAsync(Guid technologyId)
         {
-            return await dbContext.Technologies.SingleAsync(x => x.Id.Equals(technologyId));
+            return await dbContext.Technologies
+                .Include(t => t.Specifics)
+                .SingleAsync(x => x.Id.Equals(technologyId));
         }
     }
 }
