@@ -13,6 +13,6 @@ namespace StrategyGame.BLL.Interfaces
         Task<UnitNextLevelDto> GetNextLevelDetailAsync(Guid unitSpecificsId, int currentLvl);
         Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl);
         Task HireUnitsAsync(int count, Guid countyId, Guid unitSpecificsId);
-        Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId);
+        Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl);
     }
 }

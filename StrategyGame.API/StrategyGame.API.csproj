@@ -76,4 +76,8 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(SolutionDir)') And '$(ConfigurationName)'!='' ">
+    <Exec Command="dotnet $(SolutionDir)TSIClientGenerator\bin\$(ConfigurationName)\netcoreapp3.1\TSIClientGenerator.dll &quot;$(SolutionDir)StrategyGame.API\ClientApp\src\app\shared\clients\index.ts&quot;" />
+  </Target>
+
 </Project>

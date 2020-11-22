@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.MODEL", "Strat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.BLL", "StrategyGame.BLL\StrategyGame.BLL.csproj", "{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSIClientGenerator", "TSIClientGenerator\TSIClientGenerator.csproj", "{4AF9C1BA-0A79-48B5-BE22-D02F417FF1ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2A55A19-A52D-472A-AE1A-81FD98BC9EB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF9C1BA-0A79-48B5-BE22-D02F417FF1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF9C1BA-0A79-48B5-BE22-D02F417FF1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF9C1BA-0A79-48B5-BE22-D02F417FF1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF9C1BA-0A79-48B5-BE22-D02F417FF1ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,13 +21,13 @@ namespace StrategyGame.API.Controllers
             this.userAppService = userAppService;
         }
 
-        [HttpGet("/users")]
+        [HttpGet("users")]
         public async Task<PagedListDto<UserDto>> GetUsersAsync([FromQuery] PagingParametersDto pagingParametersDto)
         {
             return await userAppService.GetUsersAsync(pagingParametersDto);
         }
 
-        [HttpGet("/filteredUsers")]
+        [HttpGet("filteredUsers")]
         public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync([FromQuery] UserParametersDto userParametersDto)
         {
             return await userAppService.GetFilteredUsersAsync(userParametersDto);
@@ -45,7 +45,7 @@ namespace StrategyGame.API.Controllers
             await userAppService.DeleteUserAsync(id);
         }
 
-        [HttpPost("/newUser")]
+        [HttpPost("newUser")]
         public async Task<UserDto> CreateUserAsync([FromBody] UserCreateDto userCreateDto)
         {
             return await userAppService.CreateUserAsync(userCreateDto);

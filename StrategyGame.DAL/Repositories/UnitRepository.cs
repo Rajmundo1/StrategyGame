@@ -81,7 +81,7 @@ namespace StrategyGame.DAL.Repositories
             });
         }
 
-        public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
+        public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl)
         {
             var specificUnits = new List<Unit>();
 
@@ -90,7 +90,7 @@ namespace StrategyGame.DAL.Repositories
                 specificUnits = dbContext.UnitGroups
                 .Single(unitGroup => unitGroup.CountyId.Equals(countyId))
                 .Units
-                .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId))
+                .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId) && units.Level == lvl)
                 .ToList();
             });
 

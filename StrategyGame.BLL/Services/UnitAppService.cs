@@ -137,16 +137,16 @@ namespace StrategyGame.BLL.Services
             }
         }
 
-        public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
+        public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl)
         {
-            var units = (await unitRepository.GetUnitsAsync(countyId)).Where(x => x.UnitSpecificsId.Equals(unitSpecificsId)).ToList();
+            var units = (await unitRepository.GetUnitsAsync(countyId)).Where(x => x.UnitSpecificsId.Equals(unitSpecificsId) && x.Level == lvl).ToList();
 
             if(units.Count - count < 0)
             {
                 throw new AppException("You don't have enough units to delete");
             }
 
-            await unitRepository.RemoveUnitsAsync(count, countyId, unitSpecificsId);
+            await unitRepository.RemoveUnitsAsync(count, countyId, unitSpecificsId, lvl);
         }
 
         private async Task<bool> CheckAndSpendResources(int count, Guid countyId, Guid unitSpecificsId, int lvl)

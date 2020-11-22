@@ -161,7 +161,7 @@ namespace StrategyGame.API
             // Register the Swagger generator, defining 1 Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SRD2 API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "STRATEGYGAME API", Version = "v1" });
 
                 c.AddSecurityDefinition("basicAuth", new OpenApiSecurityScheme
                 {
@@ -221,7 +221,7 @@ namespace StrategyGame.API
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SRD2 API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "STRATEGYGAME API V1");
             });
 
             app.UseMiddleware<SpaConfigMiddleware>();

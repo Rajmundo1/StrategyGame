@@ -23,7 +23,7 @@ namespace StrategyGame.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("/login")]
         public async Task<TokenDto> Login([FromBody] LoginDto loginDto)
         {
             return await authService.Login(loginDto);
