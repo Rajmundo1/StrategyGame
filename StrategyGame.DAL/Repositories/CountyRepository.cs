@@ -30,6 +30,7 @@ namespace StrategyGame.DAL.Repositories
                 .Include(county => county.Units)
                 .ThenInclude(u => u.Units)
                 .ThenInclude(u => u.UnitSpecifics)
+                .ThenInclude(usp => usp.UnitLevels)
                 .SingleAsync(x => x.Id.Equals(countyId));
         }
 
@@ -46,6 +47,8 @@ namespace StrategyGame.DAL.Repositories
                 }
                     
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task TransferResourcesAsync(Guid sourceCountyId, Guid targetCountyId, ResourcesDto resources)
@@ -67,6 +70,8 @@ namespace StrategyGame.DAL.Repositories
                     x.Sulfur += resources.Sulfur;
                 }
             });
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

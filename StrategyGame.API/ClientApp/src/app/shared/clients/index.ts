@@ -405,7 +405,7 @@ export class ApiBuildingBuildingNextLevelDetailClient {
 @Injectable({
     providedIn: 'root'
 })
-export class ApiBuildingClient {
+export class ApiBuildingDevelopClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -415,8 +415,8 @@ export class ApiBuildingClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    developBuilding(buildingId: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Building";
+    developBuilding(buildingId: string): Observable<BuildingDetailDto | null> {
+        let url_ = this.baseUrl + "/api/Building/develop/{buildingId}";
         if (buildingId === undefined || buildingId === null)
             throw new Error("The parameter 'buildingId' must be defined.");
         url_ = url_.replace("{buildingId}", encodeURIComponent("" + buildingId)); 
@@ -426,6 +426,7 @@ export class ApiBuildingClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -436,14 +437,14 @@ export class ApiBuildingClient {
                 try {
                     return this.processDevelopBuilding(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<BuildingDetailDto | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<BuildingDetailDto | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processDevelopBuilding(response: HttpResponseBase): Observable<void> {
+    protected processDevelopBuilding(response: HttpResponseBase): Observable<BuildingDetailDto | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -452,14 +453,17 @@ export class ApiBuildingClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? BuildingDetailDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<BuildingDetailDto | null>(<any>null);
     }
 }
 
@@ -589,6 +593,71 @@ export class ApiGameMainPageClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiGameCountyPageClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getCountyPage(countyId: string): Observable<MainPageDto | null> {
+        let url_ = this.baseUrl + "/api/Game/countyPage/{countyId}";
+        if (countyId === undefined || countyId === null)
+            throw new Error("The parameter 'countyId' must be defined.");
+        url_ = url_.replace("{countyId}", encodeURIComponent("" + countyId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCountyPage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCountyPage(<any>response_);
+                } catch (e) {
+                    return <Observable<MainPageDto | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MainPageDto | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCountyPage(response: HttpResponseBase): Observable<MainPageDto | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? MainPageDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MainPageDto | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiTechnologyTechnologiesClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -653,9 +722,23 @@ export class ApiTechnologyTechnologiesClient {
         }
         return _observableOf<TechnologyDto[] | null>(<any>null);
     }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiTechnologyTechnologyDetailClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
 
     getTechnologyDetail(technologyId: string): Observable<TechnologyDetailDto | null> {
-        let url_ = this.baseUrl + "/api/Technology/technologies/{technologyId}";
+        let url_ = this.baseUrl + "/api/Technology/technologyDetail/{technologyId}";
         if (technologyId === undefined || technologyId === null)
             throw new Error("The parameter 'technologyId' must be defined.");
         url_ = url_.replace("{technologyId}", encodeURIComponent("" + technologyId)); 
@@ -1265,14 +1348,12 @@ export class ApiUserFilteredUsersClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getFilteredUsers(name: string | null | undefined, minScore: number | null | undefined, maxScore: number | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined): Observable<PagedListDtoOfUserDto | null> {
+    getFilteredUsers(name: string | null | undefined, scoreboardPlace: number | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined): Observable<PagedListDtoOfUserDto | null> {
         let url_ = this.baseUrl + "/api/User/filteredUsers?";
         if (name !== undefined)
             url_ += "name=" + encodeURIComponent("" + name) + "&"; 
-        if (minScore !== undefined)
-            url_ += "minScore=" + encodeURIComponent("" + minScore) + "&"; 
-        if (maxScore !== undefined)
-            url_ += "maxScore=" + encodeURIComponent("" + maxScore) + "&"; 
+        if (scoreboardPlace !== undefined)
+            url_ += "scoreboardPlace=" + encodeURIComponent("" + scoreboardPlace) + "&"; 
         if (pageNumber !== undefined)
             url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&"; 
         if (pageSize !== undefined)
@@ -1327,7 +1408,7 @@ export class ApiUserFilteredUsersClient {
 @Injectable({
     providedIn: 'root'
 })
-export class ApiUserClient {
+export class ApiUserUserClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1338,7 +1419,7 @@ export class ApiUserClient {
     }
 
     getUser(id: string): Observable<UserDto | null> {
-        let url_ = this.baseUrl + "/api/User/{id}";
+        let url_ = this.baseUrl + "/api/User/user/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -1387,9 +1468,23 @@ export class ApiUserClient {
         }
         return _observableOf<UserDto | null>(<any>null);
     }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiUserDeleteClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
 
     deleteUser(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/User/{id}";
+        let url_ = this.baseUrl + "/api/User/delete/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -2523,6 +2618,8 @@ export interface IPagedListDtoOfUserDto {
 export class UserDto implements IUserDto {
     id?: string | undefined;
     userName?: string | undefined;
+    score!: number;
+    scoreboardPlace!: number;
 
     constructor(data?: IUserDto) {
         if (data) {
@@ -2537,6 +2634,8 @@ export class UserDto implements IUserDto {
         if (data) {
             this.id = data["id"];
             this.userName = data["userName"];
+            this.score = data["score"];
+            this.scoreboardPlace = data["scoreboardPlace"];
         }
     }
 
@@ -2551,6 +2650,8 @@ export class UserDto implements IUserDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["userName"] = this.userName;
+        data["score"] = this.score;
+        data["scoreboardPlace"] = this.scoreboardPlace;
         return data; 
     }
 }
@@ -2558,6 +2659,8 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     id?: string | undefined;
     userName?: string | undefined;
+    score: number;
+    scoreboardPlace: number;
 }
 
 export class PaginationHeader implements IPaginationHeader {

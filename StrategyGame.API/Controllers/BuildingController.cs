@@ -41,10 +41,10 @@ namespace StrategyGame.API.Controllers
             return await buildingService.GetNextLevelDetailAsync(buildingId);
         }
 
-        [HttpPost]
-        public async Task DevelopBuildingAsync([FromRoute] Guid buildingId)
+        [HttpPost("develop/{buildingId}")]
+        public async Task<BuildingDetailDto> DevelopBuildingAsync([FromRoute] Guid buildingId)
         {
-           await buildingService.DevelopBuildingAsync(buildingId);
+           return await buildingService.DevelopBuildingAsync(buildingId);
         }
     }
 }

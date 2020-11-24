@@ -31,6 +31,8 @@ namespace StrategyGame.DAL.Repositories
                     technology.Status = ResearchStatus.Researched;
             });
 
+            await dbContext.SaveChangesAsync();
+
             return await dbContext.Technologies
                 .Include(t => t.Specifics)
                 .SingleAsync(x => x.Id.Equals(technologyId));

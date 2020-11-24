@@ -58,8 +58,9 @@ namespace StrategyGame.DAL.Repositories
                 {
                     kingdom.Gold -= amount;
                 }
-
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task SpendResearchPointAsync(Guid kingdomId, int amount)
@@ -71,6 +72,8 @@ namespace StrategyGame.DAL.Repositories
                     kingdom.ResearchPoint -= amount;
                 }
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task TranferGold(Guid sourceKingdomId, Guid targetKingdomId, int amount)
@@ -86,6 +89,8 @@ namespace StrategyGame.DAL.Repositories
                     x.Gold += amount;
                 }
             });
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

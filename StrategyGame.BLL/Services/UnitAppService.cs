@@ -35,7 +35,7 @@ namespace StrategyGame.BLL.Services
         public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl)
         {
             var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(unitSpecificsId);
-            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == currentLvl++);
+            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == (currentLvl + 1));
 
             if(unitLevel == null)
             {
@@ -49,7 +49,7 @@ namespace StrategyGame.BLL.Services
             }
 
             //check if it has enough  resources + forcelimit
-            if (await CheckAndSpendResources(count, countyId, unitSpecificsId, currentLvl++))
+            if (await CheckAndSpendResources(count, countyId, unitSpecificsId, currentLvl + 1))
             {
                 //+units
                 await unitRepository.DevelopUnitsAsync(count, countyId, unitSpecificsId, currentLvl);
@@ -59,7 +59,7 @@ namespace StrategyGame.BLL.Services
         public async Task<UnitNextLevelDto> GetNextLevelDetailAsync(Guid unitSpecificsId, int currentLvl)
         {
             var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(unitSpecificsId);
-            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == currentLvl++);
+            var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == (currentLvl + 1));
 
             if (unitLevel == null)
             {
@@ -95,38 +95,40 @@ namespace StrategyGame.BLL.Services
         public async Task<IEnumerable<UnitDto>> GetUnitsAsync(Guid countyId)
         {
             var units = await unitRepository.GetUnitsAsync(countyId);
-            var unitDictionary = new Dictionary<UnitSpecificAndLevel, int>();
-            var dummy = new UnitSpecificAndLevel();
+            var unitDic = new List<UnitSpecificAndLevel>();
 
             foreach(var unit in units)
             {
+                var dummy = new UnitSpecificAndLevel();
                 dummy.Level = unit.Level;
                 dummy.UnitSpecificsId = unit.UnitSpecificsId;
 
-                if (unitDictionary.ContainsKey(dummy))
+                var special = unitDic.SingleOrDefault(x => x.Level == dummy.Level && x.UnitSpecificsId.Equals(dummy.UnitSpecificsId));
+                if (special != null)
                 {
-                    unitDictionary[dummy]++;
+                    special.Count += 1;
                 }
                 else
                 {
-                    unitDictionary.Add(dummy, 1);
+                    dummy.Count = 1;
+                    unitDic.Add(dummy);
                 }
             }
 
             var result = new List<UnitDto>();
 
-            foreach(var key in unitDictionary.Keys)
+            foreach(var element in unitDic)
             {
-                var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(key.UnitSpecificsId);
+                var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(element.UnitSpecificsId);
 
                 result.Add(new UnitDto
                 {
-                    UnitSpecificsId = key.UnitSpecificsId,
-                    Count = unitDictionary[key],
+                    UnitSpecificsId = element.UnitSpecificsId,
+                    Count = element.Count,
                     ImageUrl = unitSpecifics.ImageUrl,
                     MaxLevel = unitSpecifics.MaxLevel,
                     Name = unitSpecifics.Name,
-                    Level = key.Level
+                    Level = element.Level
                 });
             }
 
@@ -195,6 +197,7 @@ namespace StrategyGame.BLL.Services
         {
             public Guid UnitSpecificsId { get; set; }
             public int Level { get; set; }
+            public int Count { get; set; }
         }
     }
 }

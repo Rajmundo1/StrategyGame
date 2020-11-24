@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StrategyGame.DAL.Migrations
 {
-    public partial class init : Migration
+    public partial class init1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,6 @@ namespace StrategyGame.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
                     Gold = table.Column<int>(nullable: false),
                     ResearchPoint = table.Column<int>(nullable: false)
                 },
@@ -170,7 +169,7 @@ namespace StrategyGame.DAL.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ScoreboardPlace = table.Column<int>(nullable: false),
-                    KingdomId = table.Column<Guid>(nullable: true),
+                    KingdomId = table.Column<Guid>(nullable: false),
                     GameId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -201,8 +200,7 @@ namespace StrategyGame.DAL.Migrations
                     Marble = table.Column<int>(nullable: false),
                     Wine = table.Column<int>(nullable: false),
                     Sulfur = table.Column<int>(nullable: false),
-                    BasePopulation = table.Column<int>(nullable: false),
-                    taxPerPop = table.Column<int>(nullable: false)
+                    BasePopulation = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -456,7 +454,8 @@ namespace StrategyGame.DAL.Migrations
                     { new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), "A marble quarry that produces marble", "/images/quarry", 3, "Quarry" },
                     { new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), "A winery that produces wine", "/images/winery", 3, "Winery" },
                     { new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), "A sulfur mine that produces sulfur", "/images/sulfurMine", 3, "Sulfur Mine" },
-                    { new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), "An academy that produces research points", "/images/academy", 3, "Academy" }
+                    { new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), "An academy that produces research points", "/images/academy", 3, "Academy" },
+                    { new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), "A garrison that accomodate units", "/images/garrison", 3, "Garrison" }
                 });
 
             migrationBuilder.InsertData(
@@ -466,11 +465,11 @@ namespace StrategyGame.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Kingdoms",
-                columns: new[] { "Id", "Gold", "ResearchPoint", "UserId" },
+                columns: new[] { "Id", "Gold", "ResearchPoint" },
                 values: new object[,]
                 {
-                    { new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 3000, 0, new Guid("ff5e4b7f-c83d-4070-a91a-a33de1b19405") },
-                    { new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 3000, 0, new Guid("b63d4aee-70d2-4d84-93a6-56c9db32aa11") }
+                    { new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 3000, 2000 },
+                    { new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 3000, 2000 }
                 });
 
             migrationBuilder.InsertData(
@@ -499,8 +498,8 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GameId", "KingdomId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ScoreboardPlace", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "0e6d2326-13d4-4ffd-be8b-05d157082335", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), null, false, null, null, null, "AQAAAAEAACcQAAAAEPRan4hLHeNnuHcLVpfM14LKjBoXZiG5cAd+rb7s57V1qu5FtpuhKpqpaH6xj4vTBQ==", null, false, 2, "e806fd36-29e9-49cf-ad3e-7ddc83c1c7e9", false, "TestUser" },
-                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "ef6edfcb-32f3-4ee9-a687-3546ff1a8cb5", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), null, false, null, null, null, "AQAAAAEAACcQAAAAEHsDN1wgGMFlxxnViIbjc5AuRZ6Q0OfFAvSKdM+II5eSeDq7Uj5clRbBtkE8/mHebg==", null, false, 1, "77bd5bdd-7f6c-48d5-b47a-c15671bc8427", false, "Rajmundo1" }
+                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "6cce09b6-19a0-4227-9daa-dbb099a35f81", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), false, null, null, null, "AQAAAAEAACcQAAAAED+3/0nf7+6jSaLGmLVQaDBWe7ZBryjNnwBCRWHUxzVv4nk0ql7YcuBmdJpqbaDC0g==", null, false, 1, "68328f3d-9600-4b85-9b57-902fe37ce33a", false, "Rajmundo1" },
+                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "b566eb3e-9b1d-438e-91dd-231767591ee9", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), false, null, null, null, "AQAAAAEAACcQAAAAEALwYwLoUqTpmZ3X3kWg4zBhQigiJ2TXimw3h0oLTzBvKzPETXmeez6+2ewe+4KPvA==", null, false, 2, "6b9194d2-1d72-43ae-bfe8-cee836927298", false, "TestUser" }
                 });
 
             migrationBuilder.InsertData(
@@ -508,32 +507,35 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "BuildingSpecificsId", "ForceLimitBonus", "GoldCost", "Level", "MarbleCost", "MarbleProduction", "PopulationBonus", "ResearchOutPut", "SulfurCost", "SulfurProduction", "WineCost", "WineProduction", "WoodCost", "WoodProduction" },
                 values: new object[,]
                 {
-                    { new Guid("c1221e4f-d781-405b-9944-9e18fc765fe8"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 250, 100 },
+                    { new Guid("00f807d6-9017-4f80-80ab-8544d9343f72"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), 1000, 0, 3, 1500, 0, 0, 0, 2000, 0, 2500, 0, 10000, 0 },
+                    { new Guid("205d6189-4fef-4777-afb8-9f73a835724e"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), 500, 0, 2, 200, 0, 0, 0, 0, 0, 800, 0, 1500, 0 },
+                    { new Guid("547ad002-b237-474e-b68c-0018ddf4b77a"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), 100, 0, 1, 0, 0, 0, 0, 0, 0, 100, 0, 250, 0 },
                     { new Guid("b0c9c409-5a66-4e7d-9eb5-17b5ce5ced17"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), 0, 0, 3, 1500, 0, 0, 1000, 0, 0, 2500, 0, 10000, 0 },
                     { new Guid("59cd37b0-dc91-432f-9e1f-cc54547eb807"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), 0, 0, 2, 200, 0, 0, 500, 0, 0, 800, 0, 1500, 0 },
                     { new Guid("34cdbb37-be23-4867-b1f9-4e3bdcec10d9"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), 0, 0, 1, 0, 0, 0, 100, 0, 0, 100, 0, 250, 0 },
                     { new Guid("6bb9b1c6-b0ca-4a61-9b99-4efc86f92558"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), 0, 0, 3, 1500, 0, 0, 0, 0, 1000, 0, 0, 10000, 0 },
                     { new Guid("95805848-ee97-4496-8cb7-9cdaa55af49a"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), 0, 0, 2, 200, 0, 0, 0, 0, 500, 0, 0, 1500, 0 },
-                    { new Guid("7906db1c-8193-4e27-aa30-8a30e5426eea"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), 0, 0, 1, 0, 0, 0, 0, 0, 100, 0, 0, 250, 0 },
+                    { new Guid("c1221e4f-d781-405b-9944-9e18fc765fe8"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 250, 100 },
+                    { new Guid("5d9746c5-bc3d-4164-850a-4778a6652c6e"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), 0, 0, 3, 1500, 0, 0, 0, 0, 0, 0, 1000, 10000, 0 },
                     { new Guid("a80feb0d-0e00-42ba-9b34-731376693a6b"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), 0, 0, 2, 200, 0, 0, 0, 0, 0, 0, 500, 1500, 0 },
                     { new Guid("f747608e-aafb-49c8-8912-e2e23ed98e3f"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 100, 250, 0 },
                     { new Guid("b7bc3554-98d4-419c-a656-74b81cd33dfa"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 3, 1500, 1000, 0, 0, 0, 0, 0, 0, 10000, 0 },
                     { new Guid("e8268211-0c57-49c3-b88d-821876b372a5"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 2, 200, 500, 0, 0, 0, 0, 0, 0, 1500, 0 },
                     { new Guid("16da0e13-b4dd-4221-a755-5746605f9331"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 1, 0, 100, 0, 0, 0, 0, 0, 0, 250, 0 },
-                    { new Guid("770206ed-5f86-4ea9-a6cc-8b0a1083aa9b"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 3, 1500, 0, 0, 0, 0, 0, 0, 0, 10000, 1000 },
-                    { new Guid("73b692f5-591e-42a5-9f6f-d5b382cc5ccd"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 2, 200, 0, 0, 0, 0, 0, 0, 0, 1500, 500 },
-                    { new Guid("5d9746c5-bc3d-4164-850a-4778a6652c6e"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), 0, 0, 3, 1500, 0, 0, 0, 0, 0, 0, 1000, 10000, 0 }
+                    { new Guid("770206ed-5f86-4ea9-a6cc-8b0a1083aa9b"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 3, 15, 0, 0, 0, 0, 0, 0, 0, 10, 1000 },
+                    { new Guid("7906db1c-8193-4e27-aa30-8a30e5426eea"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), 0, 0, 1, 0, 0, 0, 0, 0, 100, 0, 0, 250, 0 },
+                    { new Guid("73b692f5-591e-42a5-9f6f-d5b382cc5ccd"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 15, 500 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Counties",
-                columns: new[] { "Id", "BasePopulation", "KingdomId", "Marble", "Name", "Sulfur", "TaxRate", "Wine", "WineConsumption", "Wood", "taxPerPop" },
+                columns: new[] { "Id", "BasePopulation", "KingdomId", "Marble", "Name", "Sulfur", "TaxRate", "Wine", "WineConsumption", "Wood" },
                 values: new object[,]
                 {
-                    { new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 0, new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 5000, "Kingdom2 County2", 1000, 1.0, 2000, 0, 5000, 5 },
-                    { new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 0, new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 5000, "Kingdom2 County1", 1000, 1.0, 2000, 0, 5000, 5 },
-                    { new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 0, new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 5000, "Kingdom1 County2", 1000, 1.0, 2000, 0, 5000, 5 },
-                    { new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 0, new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 5000, "Kingdom1 County1", 1000, 1.0, 2000, 0, 5000, 5 }
+                    { new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 200, new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 5000, "Kingdom2 County2", 1000, 1.0, 2000, 0, 5000 },
+                    { new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 200, new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 5000, "Kingdom1 County2", 1000, 1.0, 2000, 0, 5000 },
+                    { new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 200, new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 5000, "Kingdom1 County1", 1000, 1.0, 2000, 0, 5000 },
+                    { new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 200, new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 5000, "Kingdom2 County1", 1000, 1.0, 2000, 0, 5000 }
                 });
 
             migrationBuilder.InsertData(
@@ -541,12 +543,12 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "KingdomId", "Status", "TechnologySpecificsId" },
                 values: new object[,]
                 {
-                    { new Guid("fce4e719-9a94-4a29-b9da-3ab5b87a910e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae") },
-                    { new Guid("605b6d6a-40dd-415d-8726-46ef8c0592bf"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 2, new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da") },
-                    { new Guid("3444c5c0-db00-49fa-a0be-676e4d05864a"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da") },
                     { new Guid("e12a9bfd-1847-4e43-ae91-bcce2c5545a3"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 2, new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae") },
-                    { new Guid("fb6408b3-d806-43f1-9ee4-ffefc885e9ce"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c") },
+                    { new Guid("605b6d6a-40dd-415d-8726-46ef8c0592bf"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 2, new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da") },
+                    { new Guid("fce4e719-9a94-4a29-b9da-3ab5b87a910e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae") },
+                    { new Guid("3444c5c0-db00-49fa-a0be-676e4d05864a"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da") },
                     { new Guid("0d5fa209-cd89-4f26-bf6c-2f915a661226"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 2, new Guid("a6336474-fa17-43ba-a5c6-7fee92ab15b7") },
+                    { new Guid("fb6408b3-d806-43f1-9ee4-ffefc885e9ce"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c") },
                     { new Guid("0bfc558f-e32b-463e-9e74-06696bd7877a"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), 1, new Guid("a6336474-fa17-43ba-a5c6-7fee92ab15b7") },
                     { new Guid("67648201-cb7a-4904-8622-b2863444eb82"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), 2, new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c") }
                 });
@@ -573,25 +575,29 @@ namespace StrategyGame.DAL.Migrations
                 values: new object[,]
                 {
                     { new Guid("a3cf5dd1-478a-4ea2-a049-6bbb7f965863"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 1, 1 },
-                    { new Guid("2f7b1592-f75f-461b-a497-6344b64737a4"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
-                    { new Guid("9be0efdd-f662-4c7e-8ae3-6cb576f3ea9e"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
                     { new Guid("8a6390d8-abbe-4f41-ba33-ffbae69bb183"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
+                    { new Guid("19d2606c-9e43-45a8-8631-2dfa58361822"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
+                    { new Guid("b1a4a941-00d1-4655-b96f-3fcd6ccff69c"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
                     { new Guid("37819138-f604-42bb-9b7d-90f954da0ce2"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
                     { new Guid("cd118d28-dc24-44ca-97c7-af2c6f53aa58"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
                     { new Guid("61156095-4f2f-4d44-8fc4-e15b278557a2"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
                     { new Guid("e52bd2ac-c58e-4277-a622-545c257fd1d9"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
                     { new Guid("fbcc61c5-8886-4703-ae57-8406be7c0713"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6"), 1, 1 },
-                    { new Guid("19d2606c-9e43-45a8-8631-2dfa58361822"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
+                    { new Guid("0a4b02fa-ea0a-469a-8695-7c3ff01534dd"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 1 },
+                    { new Guid("76698e37-4e57-4405-895d-39812a0000b9"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 1 },
                     { new Guid("1bda65c2-81c2-40cd-abd4-a022ef6ae658"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
+                    { new Guid("cff226fd-aa32-4942-a489-0d0dcb82cbae"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
                     { new Guid("ac2dbc91-0163-4064-a6a9-a13afaad7ced"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
                     { new Guid("9dbb0a30-8b47-4843-9c03-06e7b4c501cf"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
                     { new Guid("326740fa-a052-4b34-9038-b825d9d3d5cb"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
+                    { new Guid("bab4441b-58f3-450d-869b-17a89b990ffa"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
+                    { new Guid("042767db-2f76-4fdd-99b7-fa0b3054ba3a"), new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 3, 1 },
                     { new Guid("219bd5e9-e20e-4393-adb3-b40d97eb276e"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 1, 1 },
                     { new Guid("50c2da0b-43a4-42ae-97ab-c89009f7dd8d"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 1, 1 },
                     { new Guid("5b24eb70-9a6e-40de-b620-96f6dca50fab"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 1, 1 },
                     { new Guid("06ebbbb8-7154-4419-aea5-46d327594517"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2"), 1, 1 },
-                    { new Guid("cff226fd-aa32-4942-a489-0d0dcb82cbae"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), new Guid("9160fe49-2966-4fb6-94d7-6999c7351368"), 1, 2 },
-                    { new Guid("bab4441b-58f3-450d-869b-17a89b990ffa"), new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 }
+                    { new Guid("9be0efdd-f662-4c7e-8ae3-6cb576f3ea9e"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 },
+                    { new Guid("2f7b1592-f75f-461b-a497-6344b64737a4"), new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"), 1, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -599,8 +605,10 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "AttackId", "CountyId" },
                 values: new object[,]
                 {
+                    { new Guid("739dbea4-c91c-4ba2-9ea5-62115d317e46"), null, new Guid("9160fe49-2966-4fb6-94d7-6999c7351368") },
                     { new Guid("05926428-3186-4730-85c6-31b740cd9e5d"), null, new Guid("217f6d72-a33e-4612-b164-f1bbd5db94c2") },
-                    { new Guid("1a4b7681-b373-420d-aaa0-c5ec80e00b16"), null, new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6") }
+                    { new Guid("1a4b7681-b373-420d-aaa0-c5ec80e00b16"), null, new Guid("610fb8b0-386e-4b0d-9a51-59403fd686b6") },
+                    { new Guid("b32e83be-34f0-4bed-b225-966887eb13e4"), null, new Guid("01ef4de3-61c4-4671-bcd3-4b5009dea2d2") }
                 });
 
             migrationBuilder.InsertData(

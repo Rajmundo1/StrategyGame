@@ -53,9 +53,9 @@ namespace StrategyGame.BLL.Services
             return mapper.Map<UserDto>(storedUser);
         }
 
-        public async Task DeleteUserAsync(string id)
+        public async Task DeleteUserAsync(Guid id)
         {
-            var userToDelete = await userManager.FindByIdAsync(id);
+            var userToDelete = await userManager.FindByIdAsync(id.ToString());
             await userManager.DeleteAsync(userToDelete);
 
             await unitOfWork.SaveAsync();
@@ -67,7 +67,7 @@ namespace StrategyGame.BLL.Services
             var userParameters = mapper.Map<UserParameters>(parameters);
             var filter = BuildFilterExpression(userParameters);
 
-            var result = await userRepository.GetFilteredUseresAsync(filter, pagingParameters);
+            var result = await userRepository.GetFilteredPagedUsersAsync(filter, pagingParameters);
 
             var list = new List<UserDto>();
             foreach (var item in result)
@@ -90,9 +90,9 @@ namespace StrategyGame.BLL.Services
             };
         }
 
-        public async Task<UserDto> GetUserAsync(string id)
+        public async Task<UserDto> GetUserAsync(Guid id)
         {
-            var userToReturn = await userManager.FindByIdAsync(id);
+            var userToReturn = await userRepository.GetUserAsync(id);
             return mapper.Map<UserDto>(userToReturn);
         }
 
@@ -100,7 +100,7 @@ namespace StrategyGame.BLL.Services
         {
             var pagingParameters = mapper.Map<PagingParameters>(pagingParametersDto);
 
-            var result = await userRepository.GetUsersAsync(pagingParameters);
+            var result = await userRepository.GetPagedUsersAsync(pagingParameters);
 
             var list = new List<UserDto>();
             foreach(var item in result)
@@ -131,13 +131,9 @@ namespace StrategyGame.BLL.Services
             {
                 filter = filter.And(user => user.UserName.Contains(userParameters.Name));
             }
-            if(userParameters.MinScore != null)
+            if(userParameters.ScoreboardPlace != null)
             {
-                filter = filter.And(user => user.Score >= userParameters.MinScore);
-            }
-            if(userParameters.MaxScore != null)
-            {
-                filter = filter.And(user => user.Score <= userParameters.MaxScore);
+                filter = filter.And(user => user.ScoreboardPlace == userParameters.ScoreboardPlace);
             }
 
             return filter;

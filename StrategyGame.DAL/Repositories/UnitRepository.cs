@@ -39,6 +39,8 @@ namespace StrategyGame.DAL.Repositories
             }
 
             await dbContext.Units.AddRangeAsync(unitsToAdd);
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl)
@@ -49,9 +51,8 @@ namespace StrategyGame.DAL.Repositories
             {
                 specificUnits = dbContext.UnitGroups
                 .Include(ug => ug.Units)
-                .Where(unitGroup => unitGroup.CountyId.Equals(countyId))
-                .Select(ug => ug.Units)
-                .ElementAt(0)
+                .Single(unitGroup => unitGroup.CountyId.Equals(countyId))
+                .Units
                 .Where(units => units.UnitSpecificsId.Equals(unitSpecificsId) && units.Level == currentLvl)
                 .ToList();
             });
@@ -68,26 +69,27 @@ namespace StrategyGame.DAL.Repositories
             {
                 dbContext.UnitGroups
                  .Include(ug => ug.Units)
-                 .Where(unitGroup => unitGroup.CountyId.Equals(countyId))
-                 .Select(ug => ug.Units)
-                 .ElementAt(0)
+                 .Single(unitGroup => unitGroup.CountyId.Equals(countyId))
+                 .Units
                  .Where(x => unitsToDevelop.Contains(x))
                  .ToList()
-                 .ForEach(unit => unit.Level++);
+                 .ForEach(unit => unit.Level += 1);
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Unit>> GetUnitsAsync(Guid countyId)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                return dbContext.UnitGroups
+                var unitGroup =  await dbContext.UnitGroups
                     .Include(ug => ug.Units)
                     .ThenInclude(u => u.UnitSpecifics)
                     .ThenInclude(usp => usp.UnitLevels)
-                    .Where(unitGroup => unitGroup.CountyId.Equals(countyId))
-                    .Select(ug => ug.Units)
-                    .ElementAt(0);
+                    .SingleAsync(unitGroup => unitGroup.CountyId.Equals(countyId));
+
+                return unitGroup.Units;
             });
         }
 
@@ -95,17 +97,19 @@ namespace StrategyGame.DAL.Repositories
         {
             var specificUnits = new List<Unit>();
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                specificUnits = dbContext.UnitGroups
+                var unitGroup = await dbContext.UnitGroups
                 .Include(ug => ug.Units)
                 .ThenInclude(u => u.UnitSpecifics)
                 .ThenInclude(usp => usp.UnitLevels)
-                .Where(unitGroup => unitGroup.CountyId.Equals(countyId))
-                .Select(ug => ug.Units)
-                .ElementAt(0)
-                .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId) && units.Level == lvl)
-                .ToList();
+                .SingleAsync(unitGroup => unitGroup.CountyId.Equals(countyId));
+
+                specificUnits =
+                    unitGroup
+                    .Units
+                    .Where(units => units.UnitSpecifics.Id.Equals(unitSpecificsId) && units.Level == lvl)
+                    .ToList();
             });
 
             var unitsToRemove = new List<Unit>();
@@ -118,14 +122,12 @@ namespace StrategyGame.DAL.Repositories
 
             await Task.Run(() =>
             {
-                dbContext.UnitGroups
-                 .Include(ug => ug.Units)
-                 .Where(unitGroup => unitGroup.CountyId.Equals(countyId))
-                 .Select(ug => ug.Units)
-                 .ElementAt(0)
-                 .ToList()
-                 .RemoveAll(x => unitsToRemove.Contains(x));
+                dbContext.Units
+                    .RemoveRange(unitsToRemove);
+
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<UnitSpecifics> GetUnitSpecificsAsync(Guid unitSpecificsId)
@@ -139,6 +141,8 @@ namespace StrategyGame.DAL.Repositories
         {
             var unitToRemove = await dbContext.Units.SingleAsync(x => x.Id.Equals(unitId));
             dbContext.Units.Remove(unitToRemove);
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task MoveToUnitGroup(Guid unitId, Guid unitGroupId)
@@ -150,19 +154,22 @@ namespace StrategyGame.DAL.Repositories
                     unit.UnitGroupId = unitGroupId;
                 }
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Unit>> GetUnitsBySpecificsAndLevelAsync(Guid countyId, Guid unitSpecificsId, int currentlvl)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                return dbContext.UnitGroups
+                var unitGorup = await dbContext.UnitGroups
                     .Include(ug => ug.Units)
                     .ThenInclude(u => u.UnitSpecifics)
                     .ThenInclude(usp => usp.UnitLevels)
-                    .Where(unit => unit.CountyId.Equals(countyId))
-                    .Select(ug => ug.Units)
-                    .ElementAt(0)
+                    .SingleAsync(unit => unit.CountyId.Equals(countyId));
+
+                return unitGorup
+                    .Units
                     .Where(unit => unit.UnitSpecificsId.Equals(unitSpecificsId) && unit.Level.Equals(currentlvl))
                     .ToList();
             });

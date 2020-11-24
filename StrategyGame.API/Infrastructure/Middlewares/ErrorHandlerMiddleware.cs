@@ -9,6 +9,7 @@ using StrategyGame.BLL.Dtos;
 using StrategyGame.MODEL.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -52,6 +53,19 @@ namespace StrategyGame.API.Infrastructure.Middlewares
                     });
             }
             catch (DomainException e)
+            {
+                logger.LogError($"Unhandled {e.GetType()} caught.");
+
+                await WriteAsJsonAsync(
+                    httpContext,
+                    (int)HttpStatusCode.BadRequest,
+                    new ErrorDto
+                    {
+                        Message = e.Message,
+                        StackTrace = e.StackTrace
+                    });
+            }
+            catch (SqlException e)
             {
                 logger.LogError($"Unhandled {e.GetType()} caught.");
 

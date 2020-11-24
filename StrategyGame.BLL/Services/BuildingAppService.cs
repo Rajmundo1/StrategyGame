@@ -62,10 +62,10 @@ namespace StrategyGame.BLL.Services
                 throw new AppException("The building is already on max LVL");
             }
 
-            return mapper.Map<BuildingNextLevelDto>(building.BuildingSpecifics.BuildingLevels.First(x => x.Level == building.Level++));
+            return mapper.Map<BuildingNextLevelDto>(building.BuildingSpecifics.BuildingLevels.First(x => x.Level == (building.Level + 1)));
         }
 
-        public async Task DevelopBuildingAsync(Guid buildingId)
+        public async Task<BuildingDetailDto> DevelopBuildingAsync(Guid buildingId)
         {
             var building = await buildingRepository.GetBuildingAsync(buildingId);
 
@@ -74,15 +74,17 @@ namespace StrategyGame.BLL.Services
                 throw new AppException("The building is already on max LVL");
             }
 
-            var nextLvl = building.BuildingSpecifics.BuildingLevels.First(x => x.Level == building.Level++);
+            var nextLvl = building.BuildingSpecifics.BuildingLevels.First(x => x.Level == (building.Level + 1));
             var county = await countyRepository.GetCountyAsync(building.CountyId);
             var kingdom = await kingdomRepository.GetKingdomAsync(county.KingdomId);
 
             if(CheckResources(nextLvl, county, kingdom))
             {
                 await SpendResources(nextLvl, county, kingdom);
-                await buildingRepository.DevelopBuildingAsync(buildingId);
+                return mapper.Map<BuildingDetailDto>(await buildingRepository.DevelopBuildingAsync(buildingId));
             }
+
+            throw new AppException("You don't have enough resources");
         }
 
         private bool CheckResources(BuildingLevel nxtLvl, County county, Kingdom kingdom)
@@ -96,7 +98,7 @@ namespace StrategyGame.BLL.Services
                 return true;
             }
 
-            throw new AppException("You don't have enough resources");
+            return false;
         } 
 
         private async Task SpendResources(BuildingLevel nxtLvl, County county, Kingdom kingdom)

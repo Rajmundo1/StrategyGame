@@ -57,9 +57,11 @@ namespace StrategyGame.DAL.Repositories
                 await dbContext.Buildings.ForEachAsync(building =>
                 {
                     if (building.Id.Equals(buildingId))
-                        building.Level++;
+                        building.Level = building.Level + 1;
                 });
             }
+
+            await dbContext.SaveChangesAsync();
 
             return await dbContext.Buildings
                 .Include(building => building.BuildingSpecifics)

@@ -34,6 +34,8 @@ namespace StrategyGame.DAL.Repositories
 
             await dbContext.UnitGroups.AddAsync(unitGroup);
 
+            await dbContext.SaveChangesAsync();
+
             await dbContext.Attacks.AddAsync(new Attack
             {
                 AttackerCountyId = attackerCountyId,
@@ -42,6 +44,8 @@ namespace StrategyGame.DAL.Repositories
                 TimeStamp = DateTime.Now,
                 Id = attackId
             });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Attack>> GetAllAttacks()

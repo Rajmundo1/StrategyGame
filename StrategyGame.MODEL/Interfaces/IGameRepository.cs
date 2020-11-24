@@ -9,5 +9,6 @@ namespace StrategyGame.MODEL.Interfaces
     public interface IGameRepository
     {
         Task<Game> GetGameByKingdomIdAsync(Guid kingdomId);
+        Task<IEnumerable<Game>> GetAllGames();
     }
 }

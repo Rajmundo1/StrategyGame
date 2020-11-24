@@ -15,9 +15,9 @@ namespace StrategyGame.BLL
     {
         public MapperProfiles()
         {
-            CreateMap<UserDto, User>();
-            CreateMap<PagingParameters, PagingParametersDto>();
-            CreateMap<UserParameters, UserParametersDto>();
+            CreateMap<User, UserDto>();
+            CreateMap<PagingParametersDto, PagingParameters>();
+            CreateMap<UserParametersDto, UserParameters>();
             CreateMap<Building, BuildingDto>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.BuildingSpecifics.Description))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.BuildingSpecifics.ImageUrl))
@@ -78,7 +78,8 @@ namespace StrategyGame.BLL
             CreateMap<UnitLevel, UnitNextLevelDto>();
             CreateMap<UnitLevel, UnitDetailsDto>();
 
-            CreateMap<County, MainPageDto>();
+            CreateMap<County, MainPageDto>()
+                .ForMember(dest => dest.CurrentCountyName, opt => opt.MapFrom(src => src.Name));
             CreateMap<Building, BuildingViewDto>()
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.BuildingSpecifics.ImageUrl));
         }

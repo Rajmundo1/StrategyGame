@@ -3,10 +3,12 @@ using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.FilterParameters;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +24,7 @@ namespace StrategyGame.BLL.Services
         private readonly IAttackRepository attackRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IGameRepository gameRepository;
+        private readonly IUserRepository userRepository;
 
         public GameAppService(IMapper mapper,
                                 IKingdomRepository kingdomRepository,
@@ -29,7 +32,8 @@ namespace StrategyGame.BLL.Services
                                 IUnitRepository unitRepository,
                                 IAttackRepository attackRepository,
                                 IUnitOfWork unitOfWork,
-                                IGameRepository gameRepository)
+                                IGameRepository gameRepository,
+                                IUserRepository userRepository)
         {
             this.mapper = mapper;
             this.kingdomRepository = kingdomRepository;
@@ -38,11 +42,11 @@ namespace StrategyGame.BLL.Services
             this.attackRepository = attackRepository;
             this.unitOfWork = unitOfWork;
             this.gameRepository = gameRepository;
+            this.userRepository = userRepository;
         }
 
         public async Task<MainPageDto> GetCountyPage(Guid countyId)
         {
-            //TODO
             var county = await countyRepository.GetCountyAsync(countyId);
             var kingdom = await kingdomRepository.GetKingdomAsync(county.KingdomId);
 
@@ -68,9 +72,9 @@ namespace StrategyGame.BLL.Services
 
         public async Task<MainPageDto> GetMainPage(Guid kingdomId)
         {
-            //TODO
             var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
-            var county = await countyRepository.GetCountyAsync(kingdom.Counties.ElementAt(0).Id);
+            var countiesOfKingdom = kingdom.Counties.ToList();
+            var county = await countyRepository.GetCountyAsync(countiesOfKingdom[0].Id);
 
             var result = mapper.Map<MainPageDto>(county);
 
@@ -82,7 +86,7 @@ namespace StrategyGame.BLL.Services
 
             var buildingViewDtos = new List<BuildingViewDto>();
 
-            foreach(var building in county.Buildings)
+            foreach (var building in county.Buildings)
             {
                 buildingViewDtos.Add(mapper.Map<BuildingViewDto>(building));
             }
@@ -214,6 +218,25 @@ namespace StrategyGame.BLL.Services
                         
                     }
                 }
+            }
+
+            //scoreboard placement
+
+            var users = (await userRepository
+                .GetAllUsersAsync())
+                .OrderByDescending(user => user.Score);
+
+            var place = 1;
+
+            foreach(var user in users)
+            {
+                user.ScoreboardPlace = place++;
+            }
+
+            var games = await gameRepository.GetAllGames();
+            foreach(var game in games)
+            {
+                game.Round += 1;
             }
 
             await unitOfWork.SaveAsync();

@@ -11,8 +11,6 @@ namespace StrategyGame.MODEL.Entities
     public class Kingdom
     {
         public Guid Id { get; set; }
-        [ForeignKey("User")]
-        public Guid UserId { get; set; }
         public IEnumerable<County> Counties { get; set; }
         public IEnumerable<Technology> Technologies { get; set; }
 

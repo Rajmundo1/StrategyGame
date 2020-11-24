@@ -28,7 +28,7 @@ namespace StrategyGame.API.Controllers
             return await technologyAppService.GetTechnologies(kingdomId);
         }
 
-        [HttpGet("technologies/{technologyId}")]
+        [HttpGet("technologyDetail/{technologyId}")]
         public async Task<TechnologyDetailDto> GetTechnologyDetail([FromRoute] Guid technologyId)
         {
             return await technologyAppService.GetTechnologyDetail(technologyId);

@@ -6,6 +6,7 @@ namespace StrategyGame.BLL.Dtos
 {
     public class MainPageDto
     {
+        public string CurrentCountyName { get; set; }
         public int Round { get; set; }
 
         public int Gold { get; set; }

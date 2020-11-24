@@ -18,6 +18,12 @@ namespace StrategyGame.DAL.Repositories
             this.dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<Game>> GetAllGames()
+        {
+            return await dbContext.Game
+                .ToListAsync();
+        }
+
         public async Task<Game> GetGameByKingdomIdAsync(Guid kingdomId)
         {
             var user = await dbContext.Users

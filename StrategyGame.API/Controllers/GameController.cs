@@ -34,5 +34,11 @@ namespace StrategyGame.API.Controllers
         {
             return await gameAppService.GetMainPage(kingdomId);
         }
+
+        [HttpGet("countyPage/{countyId}")]
+        public async Task<MainPageDto> GetCountyPage([FromRoute]Guid countyId)
+        {
+            return await gameAppService.GetCountyPage(countyId);
+        }
     }
 }

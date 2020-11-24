@@ -27,9 +27,9 @@ namespace StrategyGame.MODEL.Entities
 
         public double TaxRate { get; set; }
         [NotMapped]
-        public double Morale => 1.25 - Math.Log10(OverallPopulation)/10 + TavernMorale - (1 - TaxRate);
+        public double Morale => 1.25 - ( OverallPopulation == 0 ? 0 : Math.Log10(OverallPopulation)/10)    + TavernMorale - (1 - TaxRate);
         [NotMapped]
-        public double TavernMorale => Math.Log10(WineConsumption)/10;
+        public double TavernMorale => WineConsumption == 0 ? 0 : Math.Log10(WineConsumption + 1)/10;
         public int WineConsumption { get; set; }
 
         public int Wood { get; set; }
@@ -66,11 +66,9 @@ namespace StrategyGame.MODEL.Entities
         public int Populationbonus => Buildings.Sum(building => building.CurrentLevel.PopulationBonus);
 
         [NotMapped]
-        public int PopulationGrowth => Convert.ToInt32(Math.Floor(BasePopulation * Morale));
+        public int PopulationGrowth => Convert.ToInt32(Math.Floor(BasePopulation * (Morale / 10)));
         [NotMapped]
         public int OverallPopulation => Populationbonus + BasePopulation;
-        public int taxPerPop { get; set; }
-
 
         [NotMapped]
         public int UsedForceLimit => Units.Units.Sum(x => x.CurrentLevel.ForceLimit);

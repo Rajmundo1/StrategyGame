@@ -12,7 +12,7 @@ namespace StrategyGame.BLL.Interfaces
         Task<IEnumerable<BuildingDto>> GetBuildingsAsync(Guid countyId);
         Task<BuildingDetailDto> GetBuildingDetailAsync(Guid buildingId);
         Task<BuildingNextLevelDto> GetNextLevelDetailAsync(Guid buildingId);
-        Task DevelopBuildingAsync(Guid buildingId);
+        Task<BuildingDetailDto> DevelopBuildingAsync(Guid buildingId);
 
     }
 }

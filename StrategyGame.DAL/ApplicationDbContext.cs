@@ -58,6 +58,7 @@ namespace StrategyGame.DAL
             #region Creating Entities
             var passwordHasher = new PasswordHasher<IdentityUser>();
 
+            //TODO COST CHANGE
             var sawMillLevels = new List<BuildingLevel>
             {
                 new BuildingLevel
@@ -74,8 +75,8 @@ namespace StrategyGame.DAL
                     BuildingSpecificsId = Guid.Parse("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                     Level = 2,
                     WoodProduction = 500,
-                    WoodCost = 1500,
-                    MarbleCost = 200
+                    WoodCost = 15,//00,
+                    MarbleCost = 2,//00
                 },
                 new BuildingLevel
                 {
@@ -83,8 +84,8 @@ namespace StrategyGame.DAL
                     BuildingSpecificsId = Guid.Parse("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                     Level = 3,
                     WoodProduction = 1000,
-                    WoodCost = 10000,
-                    MarbleCost = 1500
+                    WoodCost = 10,//000,
+                    MarbleCost = 15, //00,
                 }
             };
             var quarryLevels = new List<BuildingLevel>
@@ -206,6 +207,39 @@ namespace StrategyGame.DAL
                     WineCost = 2500
                 }
             };
+            var garrisonLevels = new List<BuildingLevel> 
+            {
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("547ad002-b237-474e-b68c-0018ddf4b77a"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    Level = 1,
+                    ForceLimitBonus = 100,
+                    WoodCost = 250,
+                    WineCost = 100
+                },
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("205d6189-4fef-4777-afb8-9f73a835724e"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    Level = 2,
+                    ForceLimitBonus = 500,
+                    WoodCost = 1500,
+                    MarbleCost = 200,
+                    WineCost = 800
+                },
+                new BuildingLevel
+                {
+                    Id = Guid.Parse("00f807d6-9017-4f80-80ab-8544d9343f72"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    Level = 3,
+                    ForceLimitBonus = 1000,
+                    WoodCost = 10000,
+                    MarbleCost = 1500,
+                    WineCost = 2500,
+                    SulfurCost = 2000
+                }
+            };
 
             var sawMillSpecifics = new BuildingSpecifics
             {
@@ -248,6 +282,14 @@ namespace StrategyGame.DAL
                 Description = "An academy that produces research points",
                 Name = "Academy",
                 ImageUrl = "/images/academy",
+                MaxLevel = 3
+            };
+            var garrisonSpecifics = new BuildingSpecifics
+            {
+                Id = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                Description = "A garrison that accomodate units",
+                Name = "Garrison",
+                ImageUrl = "/images/garrison",
                 MaxLevel = 3
             };
 
@@ -554,6 +596,14 @@ namespace StrategyGame.DAL
                     Level = 1,
                     Status = BuildingStatus.Built
                 },
+                new Building
+                {
+                    Id = Guid.Parse("042767db-2f76-4fdd-99b7-fa0b3054ba3a"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    CountyId = Guid.Parse("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
+                    Level = 3,
+                    Status = BuildingStatus.Built
+                },
             };
             var buildings12 = new List<Building>
             {
@@ -596,6 +646,14 @@ namespace StrategyGame.DAL
                     CountyId = Guid.Parse("9160fe49-2966-4fb6-94d7-6999c7351368"),
                     Level = 1,
                     Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.Parse("76698e37-4e57-4405-895d-39812a0000b9"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    CountyId = Guid.Parse("9160fe49-2966-4fb6-94d7-6999c7351368"),
+                    Level = 1,
+                    Status = BuildingStatus.Built
                 }
             };
             var buildings21 = new List<Building>
@@ -636,6 +694,14 @@ namespace StrategyGame.DAL
                 {
                     Id = Guid.Parse("37819138-f604-42bb-9b7d-90f954da0ce2"),
                     BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    CountyId = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
+                    Level = 1,
+                    Status = BuildingStatus.Built
+                },
+                new Building
+                {
+                    Id = Guid.Parse("b1a4a941-00d1-4655-b96f-3fcd6ccff69c"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
                     CountyId = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
                     Level = 1,
                     Status = BuildingStatus.Built
@@ -682,6 +748,14 @@ namespace StrategyGame.DAL
                     CountyId = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
                     Level = 1,
                     Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.Parse("0a4b02fa-ea0a-469a-8695-7c3ff01534dd"),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    CountyId = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
+                    Level = 1,
+                    Status = BuildingStatus.Built
                 }
             };
 
@@ -748,17 +822,29 @@ namespace StrategyGame.DAL
                 }
             };
 
-            var units11 = new UnitGroup
+            var unitGroup11 = new UnitGroup
             {
                 Id = Guid.Parse("05926428-3186-4730-85c6-31b740cd9e5d"),
                 AttackId = null,
                 CountyId = Guid.Parse("217f6d72-a33e-4612-b164-f1bbd5db94c2"),
             };
-            var units21 = new UnitGroup
+            var unitGroup12 = new UnitGroup
+            {
+                Id = Guid.Parse("739dbea4-c91c-4ba2-9ea5-62115d317e46"),
+                AttackId = null,
+                CountyId = Guid.Parse("9160fe49-2966-4fb6-94d7-6999c7351368"),
+            };
+            var unitGroup21 = new UnitGroup
             {
                 Id = Guid.Parse("1a4b7681-b373-420d-aaa0-c5ec80e00b16"),
                 AttackId = null,
                 CountyId = Guid.Parse("610fb8b0-386e-4b0d-9a51-59403fd686b6"),
+            };
+            var unitGroup22 = new UnitGroup
+            {
+                Id = Guid.Parse("b32e83be-34f0-4bed-b225-966887eb13e4"),
+                AttackId = null,
+                CountyId = Guid.Parse("01ef4de3-61c4-4671-bcd3-4b5009dea2d2"),
             };
 
             var county11 = new County
@@ -772,7 +858,8 @@ namespace StrategyGame.DAL
                 Marble = 5000,
                 Wine = 2000,
                 Sulfur = 1000,
-                taxPerPop = 5,
+                BasePopulation = 200,
+                //UnitGroupId = Guid.Parse("05926428-3186-4730-85c6-31b740cd9e5d"),
             };
             var county12 = new County
             {
@@ -785,7 +872,7 @@ namespace StrategyGame.DAL
                 Marble = 5000,
                 Wine = 2000,
                 Sulfur = 1000,
-                taxPerPop = 5,
+                BasePopulation = 200,
             };
             var county21 = new County
             {
@@ -798,7 +885,8 @@ namespace StrategyGame.DAL
                 Marble = 5000,
                 Wine = 2000,
                 Sulfur = 1000,
-                taxPerPop = 5,
+                BasePopulation = 200,
+                //UnitGroupId = Guid.Parse("1a4b7681-b373-420d-aaa0-c5ec80e00b16"),
             };
             var county22 = new County
             {
@@ -811,7 +899,7 @@ namespace StrategyGame.DAL
                 Marble = 5000,
                 Wine = 2000,
                 Sulfur = 1000,
-                taxPerPop = 5,
+                BasePopulation = 200,
             };
 
             var counties1 = new List<County>{
@@ -826,14 +914,14 @@ namespace StrategyGame.DAL
             var kingdom1 = new Kingdom
             {
                 Id = Guid.Parse("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
-                UserId = Guid.Parse("ff5e4b7f-c83d-4070-a91a-a33de1b19405"),
-                Gold = 3000
+                Gold = 3000,
+                ResearchPoint = 2000,
             };
             var kingdom2 = new Kingdom
             {
                 Id = Guid.Parse("a37de913-486d-4df3-9025-1e5d4f881220"),
-                UserId = Guid.Parse("b63d4aee-70d2-4d84-93a6-56c9db32aa11"),
-                Gold = 3000
+                Gold = 3000,
+                ResearchPoint = 2000,
             };
 
             var user1 = new User
@@ -841,6 +929,7 @@ namespace StrategyGame.DAL
                 Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                 UserName = "Rajmundo1",
                 GameId = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
+                KingdomId = Guid.Parse("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                 ScoreboardPlace = 1
             };
             user1.PasswordHash = passwordHasher.HashPassword(user1, "Password1");
@@ -849,6 +938,7 @@ namespace StrategyGame.DAL
                 Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                 UserName = "TestUser",
                 GameId = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
+                KingdomId = Guid.Parse("a37de913-486d-4df3-9025-1e5d4f881220"),
                 ScoreboardPlace = 2,
 
             };
@@ -887,7 +977,10 @@ namespace StrategyGame.DAL
                     sulfurMineLevels[2],
                     academyLevels[0],
                     academyLevels[1],
-                    academyLevels[2]
+                    academyLevels[2],
+                    garrisonLevels[0],
+                    garrisonLevels[1],
+                    garrisonLevels[2]
                 });
 
             builder.Entity<BuildingSpecifics>()
@@ -897,7 +990,8 @@ namespace StrategyGame.DAL
                     quarrySpecifics,
                     winerySpecifics,
                     sulfurMineSpecifics,
-                    academySpecifics
+                    academySpecifics,
+                    garrisonSpecifics
                 });
 
             builder.Entity<TechnologySpecifics>()
@@ -920,8 +1014,10 @@ namespace StrategyGame.DAL
             builder.Entity<UnitGroup>()
                 .HasData(new UnitGroup[]
                 {
-                    units11,
-                    units21
+                    unitGroup11,
+                    unitGroup12,
+                    unitGroup21,
+                    unitGroup22                    
                 });
 
             builder.Entity<UnitLevel>()
@@ -986,21 +1082,25 @@ namespace StrategyGame.DAL
                     buildings11[2],
                     buildings11[3],
                     buildings11[4],
+                    buildings11[5],
                     buildings12[0],
                     buildings12[1],
                     buildings12[2],
                     buildings12[3],
                     buildings12[4],
+                    buildings12[5],
                     buildings21[0],
                     buildings21[1],
                     buildings21[2],
                     buildings21[3],
                     buildings21[4],
+                    buildings21[5],
                     buildings22[0],
                     buildings22[1],
                     buildings22[2],
                     buildings22[3],
-                    buildings22[4]
+                    buildings22[4],
+                    buildings22[5]
                 });
 #endregion
         }

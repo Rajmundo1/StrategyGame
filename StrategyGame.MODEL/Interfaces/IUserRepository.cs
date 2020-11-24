@@ -10,7 +10,9 @@ namespace StrategyGame.MODEL.Interfaces
 {
     public interface IUserRepository
     {
-        Task<PagedList<User>> GetUsersAsync(PagingParameters pagingParameters);
-        Task<PagedList<User>> GetFilteredUseresAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters);
+        Task<User> GetUserAsync(Guid id);
+        Task<PagedList<User>> GetPagedUsersAsync(PagingParameters pagingParameters);
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<PagedList<User>> GetFilteredPagedUsersAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters);
     }
 }

@@ -35,14 +35,14 @@ namespace StrategyGame.API.Controllers
             return await userAppService.GetFilteredUsersAsync(userParametersDto);
         }
 
-        [HttpGet("{id}")]
-        public async Task<UserDto> GetUserAsync([FromRoute] string id)
+        [HttpGet("user/{id}")]
+        public async Task<UserDto> GetUserAsync([FromRoute] Guid id)
         {
             return await userAppService.GetUserAsync(id);
         }
 
-        [HttpPost("{id}")]
-        public async Task DeleteUserAsync([FromRoute] string id)
+        [HttpPost("delete/{id}")]
+        public async Task DeleteUserAsync([FromRoute] Guid id)
         {
             await userAppService.DeleteUserAsync(id);
         }
