@@ -12,7 +12,7 @@ namespace StrategyGame.MODEL.Interfaces
         Task<County> GetCountyAsync(Guid countyId);
         Task SpendResourcesAsync(Guid countyId, ResourcesDto resources);
         Task TransferResourcesAsync(Guid sourceCountyId, Guid targetCountyId, ResourcesDto resources);
-        Task<bool> IsOwner(Guid countyId, Guid userId);
+        Task<bool> IsOwner(Guid countyId, string userId);
         Task SetWineConsumption(Guid countyId, int amount);
     }
 }

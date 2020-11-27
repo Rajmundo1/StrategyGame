@@ -5,6 +5,7 @@ using StrategyGame.BLL.Hubs;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.Exceptions;
 using StrategyGame.MODEL.FilterParameters;
 using StrategyGame.MODEL.Interfaces;
 using System;
@@ -28,6 +29,7 @@ namespace StrategyGame.BLL.Services
         private readonly IGameRepository gameRepository;
         private readonly IUserRepository userRepository;
         private readonly IHubContext<MyHub> hubContext;
+        private readonly IIdentityService identityService;
 
         public GameAppService(IMapper mapper,
                                 IKingdomRepository kingdomRepository,
@@ -37,7 +39,8 @@ namespace StrategyGame.BLL.Services
                                 IUnitOfWork unitOfWork,
                                 IGameRepository gameRepository,
                                 IUserRepository userRepository,
-                                IHubContext<MyHub> hubContext)
+                                IHubContext<MyHub> hubContext,
+                                IIdentityService identityService)
         {
             this.mapper = mapper;
             this.kingdomRepository = kingdomRepository;
@@ -48,10 +51,17 @@ namespace StrategyGame.BLL.Services
             this.gameRepository = gameRepository;
             this.userRepository = userRepository;
             this.hubContext = hubContext;
+            this.identityService = identityService;
         }
 
         public async Task<MainPageDto> GetCountyPage(Guid countyId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var county = await countyRepository.GetCountyAsync(countyId);
             var kingdom = await kingdomRepository.GetKingdomAsync(county.KingdomId);
 
@@ -77,6 +87,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task<MainPageDto> GetMainPage(Guid kingdomId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
             var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
             var countiesOfKingdom = kingdom.Counties.ToList();
             var county = await countyRepository.GetCountyAsync(countiesOfKingdom[0].Id);
@@ -247,6 +263,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task SetWineConsumption(Guid countyId, int amount)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             await countyRepository.SetWineConsumption(countyId, amount);
         }
     }

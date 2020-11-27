@@ -36,7 +36,7 @@ namespace StrategyGame.DAL.Repositories
                 .SingleAsync(x => x.Id.Equals(countyId));
         }
 
-        public async Task<bool> IsOwner(Guid countyId, Guid userId)
+        public async Task<bool> IsOwner(Guid countyId, string userId)
         {
             var county = await dbContext.Counties.SingleAsync(county => county.Id.Equals(countyId));
 

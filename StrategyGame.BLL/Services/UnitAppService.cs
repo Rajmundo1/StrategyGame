@@ -21,20 +21,29 @@ namespace StrategyGame.BLL.Services
         private readonly IUnitRepository unitRepository;
         private readonly ICountyRepository countyRepository;
         private readonly IKingdomRepository kingdomRepository;
+        private readonly IIdentityService identityService;
 
         public UnitAppService(IUnitRepository unitRepository,
                                 ICountyRepository countyRepository,
                                 IKingdomRepository kingdomRepository,
-                                IMapper mapper)
+                                IMapper mapper,
+                                IIdentityService identityService)
         {
             this.mapper = mapper;
             this.countyRepository = countyRepository;
             this.unitRepository = unitRepository;
             this.kingdomRepository = kingdomRepository;
+            this.identityService = identityService;
         }
 
         public async Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if(!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(unitSpecificsId);
             var unitLevel = unitSpecifics.UnitLevels.SingleOrDefault(x => x.Level == (currentLvl + 1));
 
@@ -95,6 +104,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task<IEnumerable<UnitDto>> GetUnitsAsync(Guid countyId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var units = await unitRepository.GetUnitsAsync(countyId);
             var unitDic = new List<UnitSpecificAndLevel>();
 
@@ -138,8 +153,14 @@ namespace StrategyGame.BLL.Services
 
         public async Task HireUnitsAsync(int count, Guid countyId, Guid unitSpecificsId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             //check if it has enough  resources + forcelimit
-            if(await CheckAndSpendResources(count, countyId, unitSpecificsId, 1))
+            if (await CheckAndSpendResources(count, countyId, unitSpecificsId, 1))
             {
                 //+units
                 await unitRepository.HireUnitsAsync(count, countyId, unitSpecificsId);
@@ -148,6 +169,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var units = (await unitRepository.GetUnitsAsync(countyId)).Where(x => x.UnitSpecificsId.Equals(unitSpecificsId) && x.Level == lvl).ToList();
 
             if(units.Count - count < 0)

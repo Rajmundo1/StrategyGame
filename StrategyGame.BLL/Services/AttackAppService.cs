@@ -21,20 +21,29 @@ namespace StrategyGame.BLL.Services
         private readonly ICountyRepository countyRepository;
         private readonly IUnitRepository unitRepository;
         private readonly IMapper mapper;
+        private readonly IIdentityService identityService;
 
         public AttackAppService(IAttackRepository attackRepository,
                                 ICountyRepository countyRepository,
                                 IUnitRepository unitRepository,
-                                IMapper mapper)
+                                IMapper mapper,
+                                IIdentityService identityService)
         {
             this.attackRepository = attackRepository;
             this.countyRepository = countyRepository;
             this.unitRepository = unitRepository;
             this.mapper = mapper;
+            this.identityService = identityService;
         }
 
         public async Task Attack(Guid attackerCountyId, Guid defenderCountyId, IEnumerable<AttackUnitDto> units)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(attackerCountyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             //check if county has enough units
 
             var availableUnits = new List<Unit> (await unitRepository.GetUnitsAsync(attackerCountyId));
@@ -98,6 +107,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task<IEnumerable<AttackDto>> GetAttacks(Guid countyId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var attacks = await attackRepository.GetAttacks(countyId);
             var result = new List<AttackDto>();
             var unitDic = new List<UnitSpecificAndLevel>();
