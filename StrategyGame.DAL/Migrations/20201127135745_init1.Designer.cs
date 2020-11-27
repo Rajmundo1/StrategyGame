@@ -10,7 +10,7 @@ using StrategyGame.DAL;
 namespace StrategyGame.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201124154027_init1")]
+    [Migration("20201127135745_init1")]
     partial class init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,16 +158,13 @@ namespace StrategyGame.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AttackerCountyId")
+                    b.Property<Guid>("AttackerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AttackerId")
+                    b.Property<Guid>("DefenderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DefenderCountyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DefenderId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("TimeStamp")
@@ -1289,7 +1286,7 @@ namespace StrategyGame.DAL.Migrations
                     b.Property<Guid?>("AttackId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CountyId")
+                    b.Property<Guid?>("CountyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -1299,7 +1296,8 @@ namespace StrategyGame.DAL.Migrations
                         .HasFilter("[AttackId] IS NOT NULL");
 
                     b.HasIndex("CountyId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CountyId] IS NOT NULL");
 
                     b.ToTable("UnitGroups");
 
@@ -1688,15 +1686,15 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6cce09b6-19a0-4227-9daa-dbb099a35f81",
+                            ConcurrencyStamp = "0c435853-ed91-45f9-b1b5-05843bd257f6",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAED+3/0nf7+6jSaLGmLVQaDBWe7ZBryjNnwBCRWHUxzVv4nk0ql7YcuBmdJpqbaDC0g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJnSl+KnCis00zUTYzHMHm8H2xS0u/gNvs2iSMzIXTcHcnkLDoBPJXciG2FjUR9mBw==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 1,
-                            SecurityStamp = "68328f3d-9600-4b85-9b57-902fe37ce33a",
+                            SecurityStamp = "f6065086-f74f-4c02-bf4c-0a72b055ad23",
                             TwoFactorEnabled = false,
                             UserName = "Rajmundo1"
                         },
@@ -1704,15 +1702,15 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b566eb3e-9b1d-438e-91dd-231767591ee9",
+                            ConcurrencyStamp = "64211e6c-60d6-429f-9c02-0773a5b9c47b",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEALwYwLoUqTpmZ3X3kWg4zBhQigiJ2TXimw3h0oLTzBvKzPETXmeez6+2ewe+4KPvA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDq1VncbeaiIYLMgV9Q6OAPWPlpHN+0F+3DZPlzKRd3L6mdR3IxG+Eg3rm9PPIlzRw==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 2,
-                            SecurityStamp = "6b9194d2-1d72-43ae-bfe8-cee836927298",
+                            SecurityStamp = "771e0bfb-98d1-4020-9f2d-902f792759ef",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         });
@@ -1774,12 +1772,14 @@ namespace StrategyGame.DAL.Migrations
                     b.HasOne("StrategyGame.MODEL.Entities.County", "Attacker")
                         .WithMany()
                         .HasForeignKey("AttackerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("StrategyGame.MODEL.Entities.County", "Defender")
                         .WithMany()
                         .HasForeignKey("DefenderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StrategyGame.MODEL.Entities.Buildings.Building", b =>
@@ -1855,8 +1855,7 @@ namespace StrategyGame.DAL.Migrations
                     b.HasOne("StrategyGame.MODEL.Entities.County", null)
                         .WithOne("Units")
                         .HasForeignKey("StrategyGame.MODEL.Entities.Units.UnitGroup", "CountyId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("StrategyGame.MODEL.Entities.Units.UnitLevel", b =>

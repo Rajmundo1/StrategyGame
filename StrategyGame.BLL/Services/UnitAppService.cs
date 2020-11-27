@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StrategyGame.BLL.Dtos;
+using StrategyGame.BLL.HelperClasses;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities.Units;
@@ -191,13 +192,6 @@ namespace StrategyGame.BLL.Services
             });
 
             return true;
-        }
-
-        private class UnitSpecificAndLevel
-        {
-            public Guid UnitSpecificsId { get; set; }
-            public int Level { get; set; }
-            public int Count { get; set; }
         }
     }
 }

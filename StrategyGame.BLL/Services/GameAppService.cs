@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using StrategyGame.BLL.Dtos;
+using StrategyGame.BLL.Hubs;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
@@ -25,6 +27,7 @@ namespace StrategyGame.BLL.Services
         private readonly IUnitOfWork unitOfWork;
         private readonly IGameRepository gameRepository;
         private readonly IUserRepository userRepository;
+        private readonly IHubContext<MyHub> hubContext;
 
         public GameAppService(IMapper mapper,
                                 IKingdomRepository kingdomRepository,
@@ -33,7 +36,8 @@ namespace StrategyGame.BLL.Services
                                 IAttackRepository attackRepository,
                                 IUnitOfWork unitOfWork,
                                 IGameRepository gameRepository,
-                                IUserRepository userRepository)
+                                IUserRepository userRepository,
+                                IHubContext<MyHub> hubContext)
         {
             this.mapper = mapper;
             this.kingdomRepository = kingdomRepository;
@@ -43,6 +47,7 @@ namespace StrategyGame.BLL.Services
             this.unitOfWork = unitOfWork;
             this.gameRepository = gameRepository;
             this.userRepository = userRepository;
+            this.hubContext = hubContext;
         }
 
         public async Task<MainPageDto> GetCountyPage(Guid countyId)
@@ -115,10 +120,10 @@ namespace StrategyGame.BLL.Services
                 var defendingKingdom = await kingdomRepository.GetKingdomAsync(attack.Defender.KingdomId);
                 var defendingArmyBonus = defendingKingdom.Technologies.Sum(tech => tech.Specifics.DefensePowerBonus);
 
-                while(attackingArmy.Count != 0 || defendingArmy.Count != 0)
+                while(attackingArmy.Count != 0 && defendingArmy.Count != 0)
                 {
-                    var currentAttacker = attackingArmy[rnd.Next(attackingArmy.Count)];
-                    var currentDefender = defendingArmy[rnd.Next(defendingArmy.Count)];
+                    var currentAttacker = attackingArmy[rnd.Next(attackingArmy.Count-1)];
+                    var currentDefender = defendingArmy[rnd.Next(defendingArmy.Count-1)];
                     if (currentAttacker.CurrentLevel.AttackPower >= currentDefender.CurrentLevel.DefensePower)
                     {
                         defendingArmy.Remove(currentDefender);
@@ -130,21 +135,10 @@ namespace StrategyGame.BLL.Services
                         await unitRepository.RemoveUnitByIdAsync(currentAttacker.Id);
                     }
                 }
-                if(attackingArmy.Count == 0)
-                {
-                    await kingdomRepository.TranferGold(attack.Attacker.KingdomId, attack.Defender.KingdomId, Convert.ToInt32(attackingKingdom.Gold * 0.1));
-                    await countyRepository.TransferResourcesAsync(attack.AttackerCountyId, attack.DefenderCountyId, new ResourcesDto
-                    {
-                        Wood = Convert.ToInt32(attack.Attacker.Wood * 0.1),
-                        Marble = Convert.ToInt32(attack.Attacker.Marble * 0.1),
-                        Wine = Convert.ToInt32(attack.Attacker.Wine * 0.1),
-                        Sulfur = Convert.ToInt32(attack.Attacker.Sulfur * 0.1)
-                    });
-                }
-                else if (defendingArmy.Count == 0)
+                if (defendingArmy.Count == 0)
                 {
                     await kingdomRepository.TranferGold(attack.Defender.KingdomId, attack.Attacker.KingdomId, Convert.ToInt32(attackingKingdom.Gold * 0.1));
-                    await countyRepository.TransferResourcesAsync(attack.DefenderCountyId, attack.AttackerCountyId, new ResourcesDto
+                    await countyRepository.TransferResourcesAsync(attack.DefenderId, attack.AttackerId, new ResourcesDto
                     {
                         Wood = Convert.ToInt32(attack.Defender.Wood * 0.1),
                         Marble = Convert.ToInt32(attack.Defender.Marble * 0.1),
@@ -158,10 +152,16 @@ namespace StrategyGame.BLL.Services
             attacks = await attackRepository.GetAllAttacks();
             foreach(var attack in attacks)
             {
-                foreach(var unit in attack.AttackerUnits.Units)
+
+                for(int i = attack.AttackerUnits.Units.Count() - 1; i >= 0; i--)
+                //foreach(var unit in attack.AttackerUnits.Units)
                 {
-                    await unitRepository.MoveToUnitGroup(unit.Id, attack.Attacker.Units.Id);
+                    await unitRepository.MoveToUnitGroup(attack.AttackerUnits.Units.ElementAt(i).Id, attack.Attacker.Units.Id);
                 }
+
+                await unitRepository.RemoveUnitGroup(attack.AttackerUnits.Id);
+                await attackRepository.RemoveAttack(attack.Id);
+
             }
 
 
@@ -197,8 +197,9 @@ namespace StrategyGame.BLL.Services
                         county.Wine -= county.WineConsumption;
                     }
 
-                    foreach(var unit in county.Units.Units)
+                    for(int i = county.Units.Units.Count() - 1; i >= 0; i--)
                     {
+                        var unit = county.Units.Units.ElementAt(i);
                         if (kingdom.Gold - unit.CurrentLevel.GoldUpkeep < 0 ||
                             county.Wood - unit.CurrentLevel.WoodUpkeep < 0 ||
                             county.Marble - unit.CurrentLevel.MarbleUpkeep < 0 ||
@@ -240,6 +241,13 @@ namespace StrategyGame.BLL.Services
             }
 
             await unitOfWork.SaveAsync();
+
+            await hubContext.Clients.All.SendAsync("NewRound");
+        }
+
+        public async Task SetWineConsumption(Guid countyId, int amount)
+        {
+            await countyRepository.SetWineConsumption(countyId, amount);
         }
     }
 }

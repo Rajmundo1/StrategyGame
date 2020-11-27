@@ -50,6 +50,18 @@ namespace StrategyGame.DAL.Repositories
                 .ToListAsync();
         }
 
+        public async Task<bool> IsOwner(Guid kingdomId, Guid userId)
+        {
+            var user = await dbContext.Users.SingleOrDefaultAsync(user => user.KingdomId.Equals(kingdomId) && user.Id.Equals(userId));
+
+            if(user == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task SpendGoldAsync(Guid kingdomId, int amount)
         {
             await dbContext.Kingdoms.ForEachAsync(kingdom =>

@@ -13,5 +13,6 @@ namespace StrategyGame.MODEL.Interfaces
         Task SpendGoldAsync(Guid kingdomId, int amount);
         Task SpendResearchPointAsync(Guid kingdomId, int amount);
         Task TranferGold(Guid sourceKingdomId, Guid targetKingdomId, int amount);
+        Task<bool> IsOwner(Guid kingdomId, Guid userId);
     }
 }

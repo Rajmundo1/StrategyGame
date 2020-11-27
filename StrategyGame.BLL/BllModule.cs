@@ -15,6 +15,10 @@ namespace StrategyGame.BLL
                 .Where(type => type.Name.EndsWith("AppService"))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(type => type.Name.EndsWith("Job"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
             base.Load(builder);
         }

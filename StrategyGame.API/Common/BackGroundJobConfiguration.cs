@@ -7,7 +7,6 @@ namespace StrategyGame.API.Common
 {
     public class BackGroundJobConfiguration
     { 
-        //TODO make specific
-        public string TestJobInterval { get; set; }
+        public string NewRoundJobInterval { get; set; }
     }
 }

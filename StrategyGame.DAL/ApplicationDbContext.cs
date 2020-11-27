@@ -928,6 +928,7 @@ namespace StrategyGame.DAL
             {
                 Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                 UserName = "Rajmundo1",
+                NormalizedUserName = "RAJMUNDO1",
                 GameId = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                 KingdomId = Guid.Parse("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                 ScoreboardPlace = 1
@@ -937,6 +938,7 @@ namespace StrategyGame.DAL
             {
                 Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                 UserName = "TestUser",
+                NormalizedUserName = "TESTUSER",
                 GameId = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                 KingdomId = Guid.Parse("a37de913-486d-4df3-9025-1e5d4f881220"),
                 ScoreboardPlace = 2,

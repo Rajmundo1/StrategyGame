@@ -10,11 +10,13 @@ namespace StrategyGame.MODEL.Entities
     {
         public Guid Id { get; set; }
         [ForeignKey("County")]
-        public Guid AttackerCountyId { get; set; }
-        public County Attacker { get; set; }
+        public Guid AttackerId { get; set; }
         [ForeignKey("County")]
-        public Guid DefenderCountyId { get; set; }
+        public Guid DefenderId { get; set; }
+        public County Attacker { get; set; }
         public County Defender { get; set; }
+        [ForeignKey("Game")]
+        public Guid GameId { get; set; }
         public UnitGroup AttackerUnits { get; set; }
         public DateTime TimeStamp { get; set; }
     }

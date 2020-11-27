@@ -16,6 +16,145 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 @Injectable({
     providedIn: 'root'
 })
+export class ApiAttackAttacksClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getAttacks(countyId: string): Observable<AttackDto[] | null> {
+        let url_ = this.baseUrl + "/api/Attack/attacks/{countyId}";
+        if (countyId === undefined || countyId === null)
+            throw new Error("The parameter 'countyId' must be defined.");
+        url_ = url_.replace("{countyId}", encodeURIComponent("" + countyId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAttacks(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAttacks(<any>response_);
+                } catch (e) {
+                    return <Observable<AttackDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AttackDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAttacks(response: HttpResponseBase): Observable<AttackDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(AttackDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AttackDto[] | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiAttackAttackClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    attack(attackerCountyId: string, defenderCountyId: string, units: AttackUnitDto[] | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/Attack/attack?";
+        if (attackerCountyId === undefined || attackerCountyId === null)
+            throw new Error("The parameter 'attackerCountyId' must be defined and cannot be null.");
+        else
+            url_ += "attackerCountyId=" + encodeURIComponent("" + attackerCountyId) + "&"; 
+        if (defenderCountyId === undefined || defenderCountyId === null)
+            throw new Error("The parameter 'defenderCountyId' must be defined and cannot be null.");
+        else
+            url_ += "defenderCountyId=" + encodeURIComponent("" + defenderCountyId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(units);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAttack(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAttack(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAttack(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class LoginClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -652,6 +791,71 @@ export class ApiGameCountyPageClient {
             }));
         }
         return _observableOf<MainPageDto | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiGameSetWineConsumptionClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    setWineConsumption(countyId: string, amount: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Game/setWineConsumption/{countyId}?";
+        if (countyId === undefined || countyId === null)
+            throw new Error("The parameter 'countyId' must be defined.");
+        url_ = url_.replace("{countyId}", encodeURIComponent("" + countyId)); 
+        if (amount === undefined || amount === null)
+            throw new Error("The parameter 'amount' must be defined and cannot be null.");
+        else
+            url_ += "amount=" + encodeURIComponent("" + amount) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetWineConsumption(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetWineConsumption(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetWineConsumption(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -1597,6 +1801,170 @@ export class ApiUserNewUserClient {
     }
 }
 
+export class AttackDto implements IAttackDto {
+    id!: string;
+    attackerCountyId!: string;
+    defenderCountyId!: string;
+    defenderCountyName?: string | undefined;
+    units?: UnitDto[] | undefined;
+    timeStamp!: Date;
+
+    constructor(data?: IAttackDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.attackerCountyId = data["attackerCountyId"];
+            this.defenderCountyId = data["defenderCountyId"];
+            this.defenderCountyName = data["defenderCountyName"];
+            if (data["units"] && data["units"].constructor === Array) {
+                this.units = [];
+                for (let item of data["units"])
+                    this.units.push(UnitDto.fromJS(item));
+            }
+            this.timeStamp = data["timeStamp"] ? new Date(data["timeStamp"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AttackDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AttackDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["attackerCountyId"] = this.attackerCountyId;
+        data["defenderCountyId"] = this.defenderCountyId;
+        data["defenderCountyName"] = this.defenderCountyName;
+        if (this.units && this.units.constructor === Array) {
+            data["units"] = [];
+            for (let item of this.units)
+                data["units"].push(item.toJSON());
+        }
+        data["timeStamp"] = this.timeStamp ? this.timeStamp.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IAttackDto {
+    id: string;
+    attackerCountyId: string;
+    defenderCountyId: string;
+    defenderCountyName?: string | undefined;
+    units?: UnitDto[] | undefined;
+    timeStamp: Date;
+}
+
+export class UnitDto implements IUnitDto {
+    unitSpecificsId!: string;
+    name?: string | undefined;
+    count!: number;
+    level!: number;
+    maxLevel!: number;
+    imageUrl?: string | undefined;
+
+    constructor(data?: IUnitDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.unitSpecificsId = data["unitSpecificsId"];
+            this.name = data["name"];
+            this.count = data["count"];
+            this.level = data["level"];
+            this.maxLevel = data["maxLevel"];
+            this.imageUrl = data["imageUrl"];
+        }
+    }
+
+    static fromJS(data: any): UnitDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UnitDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["unitSpecificsId"] = this.unitSpecificsId;
+        data["name"] = this.name;
+        data["count"] = this.count;
+        data["level"] = this.level;
+        data["maxLevel"] = this.maxLevel;
+        data["imageUrl"] = this.imageUrl;
+        return data; 
+    }
+}
+
+export interface IUnitDto {
+    unitSpecificsId: string;
+    name?: string | undefined;
+    count: number;
+    level: number;
+    maxLevel: number;
+    imageUrl?: string | undefined;
+}
+
+export class AttackUnitDto implements IAttackUnitDto {
+    unitSpecificsId!: string;
+    count!: number;
+    level!: number;
+
+    constructor(data?: IAttackUnitDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.unitSpecificsId = data["unitSpecificsId"];
+            this.count = data["count"];
+            this.level = data["level"];
+        }
+    }
+
+    static fromJS(data: any): AttackUnitDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AttackUnitDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["unitSpecificsId"] = this.unitSpecificsId;
+        data["count"] = this.count;
+        data["level"] = this.level;
+        return data; 
+    }
+}
+
+export interface IAttackUnitDto {
+    unitSpecificsId: string;
+    count: number;
+    level: number;
+}
+
 export class TokenDto implements ITokenDto {
     accessToken?: string | undefined;
 
@@ -1971,6 +2339,7 @@ export interface IBuildingNextLevelDto {
 }
 
 export class MainPageDto implements IMainPageDto {
+    currentCountyName?: string | undefined;
     round!: number;
     gold!: number;
     goldIncome!: number;
@@ -2005,6 +2374,7 @@ export class MainPageDto implements IMainPageDto {
 
     init(data?: any) {
         if (data) {
+            this.currentCountyName = data["currentCountyName"];
             this.round = data["round"];
             this.gold = data["gold"];
             this.goldIncome = data["goldIncome"];
@@ -2043,6 +2413,7 @@ export class MainPageDto implements IMainPageDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["currentCountyName"] = this.currentCountyName;
         data["round"] = this.round;
         data["gold"] = this.gold;
         data["goldIncome"] = this.goldIncome;
@@ -2074,6 +2445,7 @@ export class MainPageDto implements IMainPageDto {
 }
 
 export interface IMainPageDto {
+    currentCountyName?: string | undefined;
     round: number;
     gold: number;
     goldIncome: number;
@@ -2285,62 +2657,6 @@ export interface ITechnologyDetailDto {
     attackPowerBonus: number;
     defensePowerBonus: number;
     status: ResearchStatus;
-}
-
-export class UnitDto implements IUnitDto {
-    unitSpecificsId!: string;
-    name?: string | undefined;
-    count!: number;
-    level!: number;
-    maxLevel!: number;
-    imageUrl?: string | undefined;
-
-    constructor(data?: IUnitDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.unitSpecificsId = data["unitSpecificsId"];
-            this.name = data["name"];
-            this.count = data["count"];
-            this.level = data["level"];
-            this.maxLevel = data["maxLevel"];
-            this.imageUrl = data["imageUrl"];
-        }
-    }
-
-    static fromJS(data: any): UnitDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UnitDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["unitSpecificsId"] = this.unitSpecificsId;
-        data["name"] = this.name;
-        data["count"] = this.count;
-        data["level"] = this.level;
-        data["maxLevel"] = this.maxLevel;
-        data["imageUrl"] = this.imageUrl;
-        return data; 
-    }
-}
-
-export interface IUnitDto {
-    unitSpecificsId: string;
-    name?: string | undefined;
-    count: number;
-    level: number;
-    maxLevel: number;
-    imageUrl?: string | undefined;
 }
 
 export class UnitDetailsDto implements IUnitDetailsDto {

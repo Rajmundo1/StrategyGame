@@ -20,7 +20,7 @@ namespace StrategyGame.BLL.Services
             this.configuration = configuration;
         }
 
-        public async Task<string> CreateAccessToken(User user)
+        public async Task<string> CreateNormalAccessToken(User user)
         {
             var claims = new[]
 {
@@ -28,11 +28,11 @@ namespace StrategyGame.BLL.Services
                 new Claim(ClaimTypes.NameIdentifier, Convert.ToString(user.Id)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Authentication")["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-               configuration["JwtIssuer"],
-               configuration["JwtIssuer"],
+               configuration.GetSection("Authentication")["JwtNormalIssuer"],
+               configuration.GetSection("Authentication")["JwtNormalIssuer"],
                claims,
                expires: DateTime.Now.AddHours(1),
                signingCredentials: creds

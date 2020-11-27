@@ -11,7 +11,7 @@ namespace StrategyGame.MODEL.Entities.Units
         [ForeignKey("Attack")]
         public Guid? AttackId { get; set; }
         [ForeignKey("County")]
-        public Guid CountyId { get; set; }
+        public Guid? CountyId { get; set; }
         public IEnumerable<Unit> Units { get; set; }
     }
 }

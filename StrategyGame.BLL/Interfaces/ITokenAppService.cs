@@ -8,6 +8,6 @@ namespace StrategyGame.BLL.Interfaces
 {
     public interface ITokenAppService
     {
-        Task<string> CreateAccessToken(User user);
+        Task<string> CreateNormalAccessToken(User user);
     }
 }

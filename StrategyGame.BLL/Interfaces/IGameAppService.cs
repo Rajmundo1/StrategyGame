@@ -10,6 +10,7 @@ namespace StrategyGame.BLL.Interfaces
     {
         Task<MainPageDto> GetMainPage(Guid kingdomId);
         Task<MainPageDto> GetCountyPage(Guid countyId);
+        Task SetWineConsumption(Guid countyId, int amount);
         Task NewRound();
     }
 }

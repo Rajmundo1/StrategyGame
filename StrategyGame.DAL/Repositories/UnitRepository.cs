@@ -174,5 +174,14 @@ namespace StrategyGame.DAL.Repositories
                     .ToList();
             });
         }
+
+        public async Task RemoveUnitGroup(Guid unitGroupId)
+        {
+            var unitgroup = await dbContext.UnitGroups.SingleAsync(x => x.Id.Equals(unitGroupId));
+
+            dbContext.Remove(unitgroup);
+
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

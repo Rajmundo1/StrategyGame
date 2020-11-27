@@ -80,8 +80,14 @@ namespace StrategyGame.BLL
 
             CreateMap<County, MainPageDto>()
                 .ForMember(dest => dest.CurrentCountyName, opt => opt.MapFrom(src => src.Name));
+
             CreateMap<Building, BuildingViewDto>()
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.BuildingSpecifics.ImageUrl));
+
+            CreateMap<Attack, AttackDto>()
+                .ForMember(dest => dest.AttackerCountyId, opt => opt.MapFrom(src => src.AttackerId))
+                .ForMember(dest => dest.DefenderCountyId, opt => opt.MapFrom(src => src.DefenderId))
+                .ForMember(dest => dest.DefenderCountyName, opt => opt.MapFrom(src => src.Defender.Name));
         }
     }
 }

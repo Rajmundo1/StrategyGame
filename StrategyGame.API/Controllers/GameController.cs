@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
@@ -39,6 +40,12 @@ namespace StrategyGame.API.Controllers
         public async Task<MainPageDto> GetCountyPage([FromRoute]Guid countyId)
         {
             return await gameAppService.GetCountyPage(countyId);
+        }
+
+        [HttpPut("setWineConsumption/{countyId}")]
+        public async Task SetWineConsumption([FromRoute]Guid countyId, [FromQuery] int amount)
+        {
+            await gameAppService.SetWineConsumption(countyId, amount);
         }
     }
 }

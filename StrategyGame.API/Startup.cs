@@ -22,6 +22,8 @@ using StrategyGame.API.Common;
 using StrategyGame.API.Infrastructure.Middlewares;
 using StrategyGame.API.Infrastructure.Services;
 using StrategyGame.BLL;
+using StrategyGame.BLL.BackgroundJobs.Interfaces;
+using StrategyGame.BLL.Hubs;
 using StrategyGame.BLL.ValidationDtos;
 using StrategyGame.DAL;
 using StrategyGame.MODEL.Entities;
@@ -59,6 +61,8 @@ namespace StrategyGame.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
+
             // Add Hangfire services
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -250,24 +254,17 @@ namespace StrategyGame.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //// Pass background tasks to Hangfire
-            //recurringJobManager.AddOrUpdate(
-            //    "Message Metadata Processor",
-            //    () => serviceProvider.GetService<IMsgMetadataProcessingJob>().ProcessAsync(),
-            //    backgroundJobConfiguration.Value.MetadataProcessingJobInterval);
-            //recurringJobManager.AddOrUpdate(
-            //    "Message Clients Processor",
-            //    () => serviceProvider.GetService<IMsgClientsProcessingJob>().ProcessAsync(),
-            //    backgroundJobConfiguration.Value.ClientsProcessingJobInterval);
-            //recurringJobManager.AddOrUpdate(
-            //    "Message Sender",
-            //    () => serviceProvider.GetService<IMsgSendingJob>().SendAsync(),
-            //    backgroundJobConfiguration.Value.MessageSendingJobInterval);
+            // Pass background tasks to Hangfire
+            recurringJobManager.AddOrUpdate(
+                "New Round",
+                () => serviceProvider.GetService<INewRoundJob>().NewRound(),
+                backgroundJobConfiguration.Value.NewRoundJobInterval);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHangfireDashboard();
+                endpoints.MapHub<MyHub>("/api/newround");
             });
 
             app.UseSpa(spa => { });

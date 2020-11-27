@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,111 +15,102 @@ namespace StrategyGame.DAL.Repositories
     public class AttackRepository : IAttackRepository
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IUnitRepository unitRepository;
+        private readonly IGameRepository gameRepository;
+        private readonly ICountyRepository countyRepository;
 
-        public AttackRepository(ApplicationDbContext dbContext)
+        public AttackRepository(ApplicationDbContext dbContext,
+                                IUnitRepository unitRepository,
+                                IGameRepository gameRepository,
+                                ICountyRepository countyRepository)
         {
-            this.dbContext = dbContext;       
+            this.dbContext = dbContext;
+            this.unitRepository = unitRepository;
+            this.gameRepository = gameRepository;
+            this.countyRepository = countyRepository;
         }
 
-        public async Task Attack(Guid attackerCountyId, Guid defenderCountyId, UnitGroup units)
+        public async Task Attack(Guid attackerCountyId, Guid defenderCountyId, IEnumerable<Unit> units)
         {
+            var attackerCounty = await countyRepository.GetCountyAsync(attackerCountyId);
+            var game = await gameRepository.GetGameByKingdomIdAsync(attackerCounty.KingdomId);
+
             var attackId = Guid.NewGuid();
+            var newUnitGroupId = Guid.NewGuid();
+
+            await dbContext.Attacks.AddAsync(new Attack
+            {
+                AttackerId = attackerCountyId,
+                DefenderId = defenderCountyId,
+                GameId = game.Id,
+                TimeStamp = DateTime.Now,
+                Id = attackId
+            });
+
+            await dbContext.SaveChangesAsync();
 
             var unitGroup = new UnitGroup
             {
                 AttackId = attackId,
-                CountyId = attackerCountyId,
-                Id = Guid.NewGuid(),
-                Units = units.Units
+                Id = newUnitGroupId,
             };
 
             await dbContext.UnitGroups.AddAsync(unitGroup);
 
             await dbContext.SaveChangesAsync();
 
-            await dbContext.Attacks.AddAsync(new Attack
+            foreach (var unit in units)
             {
-                AttackerCountyId = attackerCountyId,
-                DefenderCountyId = defenderCountyId,
-                AttackerUnits = units,
-                TimeStamp = DateTime.Now,
-                Id = attackId
-            });
+                await unitRepository.MoveToUnitGroup(unit.Id, newUnitGroupId);
+            }
+
 
             await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Attack>> GetAllAttacks()
         {
-            return await dbContext.Attacks
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Units)
-                .ThenInclude(u => u.Units)
-                .ThenInclude(u => u.UnitSpecifics)
-                .ThenInclude(usp => usp.UnitLevels)
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Kingdom)
-                .ThenInclude(k => k.Technologies)
-                .ThenInclude(t => t.Specifics)
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Buildings)
-                .ThenInclude(b => b.BuildingSpecifics)
-                .ThenInclude(bsp => bsp.BuildingLevels)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Kingdom)
-                .ThenInclude(k => k.Technologies)
-                .ThenInclude(t => t.Specifics)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Units)
-                .ThenInclude(u => u.Units)
-                .ThenInclude(u => u.UnitSpecifics)
-                .ThenInclude(usp => usp.UnitLevels)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Buildings)
-                .ThenInclude(b => b.BuildingSpecifics)
-                .ThenInclude(bsp => bsp.BuildingLevels)
+            var attacks = await dbContext.Attacks
                 .Include(a => a.AttackerUnits)
                 .ThenInclude(au => au.Units)
                 .ThenInclude(u => u.UnitSpecifics)
                 .ThenInclude(usp => usp.UnitLevels)
                 .ToListAsync();
+
+            foreach (var attack in attacks)
+            {
+                attack.Defender = await countyRepository.GetCountyAsync(attack.DefenderId);
+                attack.Attacker = await countyRepository.GetCountyAsync(attack.AttackerId);
+            }
+
+            return attacks;
         }
 
         public async Task<IEnumerable<Attack>> GetAttacks(Guid countyId)
         {
-            return await dbContext.Attacks
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Units)
-                .ThenInclude(u => u.Units)
-                .ThenInclude(u => u.UnitSpecifics)
-                .ThenInclude(usp => usp.UnitLevels)
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Kingdom)
-                .ThenInclude(k => k.Technologies)
-                .ThenInclude(t => t.Specifics)
-                .Include(a => a.Attacker)
-                .ThenInclude(c => c.Buildings)
-                .ThenInclude(b => b.BuildingSpecifics)
-                .ThenInclude(bsp => bsp.BuildingLevels)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Kingdom)
-                .ThenInclude(k => k.Technologies)
-                .ThenInclude(t => t.Specifics)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Units)
-                .ThenInclude(u => u.Units)
-                .ThenInclude(u => u.UnitSpecifics)
-                .ThenInclude(usp => usp.UnitLevels)
-                .Include(a => a.Defender)
-                .ThenInclude(c => c.Buildings)
-                .ThenInclude(b => b.BuildingSpecifics)
-                .ThenInclude(bsp => bsp.BuildingLevels)
+            var attacks = await dbContext.Attacks
                 .Include(a => a.AttackerUnits)
                 .ThenInclude(au => au.Units)
                 .ThenInclude(u => u.UnitSpecifics)
                 .ThenInclude(usp => usp.UnitLevels)
-                .Where(attack => attack.Attacker.Id.Equals(countyId))
+                .Where(attack => attack.AttackerId.Equals(countyId))
                 .ToListAsync();
+
+            foreach(var attack in attacks)
+            {
+                attack.Defender = await countyRepository.GetCountyAsync(attack.DefenderId);
+                attack.Attacker = await countyRepository.GetCountyAsync(attack.AttackerId);
+            }
+
+            return attacks;
+        }
+
+        public async Task RemoveAttack(Guid attackId)
+        {
+            var attack = await dbContext.Attacks.SingleAsync(a => a.Id.Equals(attackId));
+            dbContext.Attacks.Remove(attack);
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

@@ -124,6 +124,7 @@ namespace StrategyGame.API.Infrastructure.Middlewares
                     (int)HttpStatusCode.InternalServerError,
                     new ErrorDto
                     {
+                        Message = e.Message,
                         StackTrace = e.StackTrace
                     });
             }

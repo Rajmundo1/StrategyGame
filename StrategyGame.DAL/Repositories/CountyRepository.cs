@@ -4,6 +4,8 @@ using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +34,33 @@ namespace StrategyGame.DAL.Repositories
                 .ThenInclude(u => u.UnitSpecifics)
                 .ThenInclude(usp => usp.UnitLevels)
                 .SingleAsync(x => x.Id.Equals(countyId));
+        }
+
+        public async Task<bool> IsOwner(Guid countyId, Guid userId)
+        {
+            var county = await dbContext.Counties.SingleAsync(county => county.Id.Equals(countyId));
+
+            var user = await dbContext.Users.SingleOrDefaultAsync(user => user.KingdomId.Equals(county.KingdomId) && user.Id.Equals(userId));
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task SetWineConsumption(Guid countyId, int amount)
+        {
+            await dbContext.Counties.ForEachAsync(county =>
+            {
+                if (county.Id.Equals(countyId))
+                {
+                    county.WineConsumption = amount;
+                }
+            });
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task SpendResourcesAsync(Guid countyId, ResourcesDto resources)

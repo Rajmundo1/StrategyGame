@@ -352,10 +352,9 @@ namespace StrategyGame.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    AttackerCountyId = table.Column<Guid>(nullable: false),
-                    AttackerId = table.Column<Guid>(nullable: true),
-                    DefenderCountyId = table.Column<Guid>(nullable: false),
-                    DefenderId = table.Column<Guid>(nullable: true),
+                    AttackerId = table.Column<Guid>(nullable: false),
+                    DefenderId = table.Column<Guid>(nullable: false),
+                    GameId = table.Column<Guid>(nullable: false),
                     TimeStamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -404,7 +403,7 @@ namespace StrategyGame.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     AttackId = table.Column<Guid>(nullable: true),
-                    CountyId = table.Column<Guid>(nullable: false)
+                    CountyId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -498,8 +497,8 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GameId", "KingdomId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ScoreboardPlace", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "6cce09b6-19a0-4227-9daa-dbb099a35f81", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), false, null, null, null, "AQAAAAEAACcQAAAAED+3/0nf7+6jSaLGmLVQaDBWe7ZBryjNnwBCRWHUxzVv4nk0ql7YcuBmdJpqbaDC0g==", null, false, 1, "68328f3d-9600-4b85-9b57-902fe37ce33a", false, "Rajmundo1" },
-                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "b566eb3e-9b1d-438e-91dd-231767591ee9", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), false, null, null, null, "AQAAAAEAACcQAAAAEALwYwLoUqTpmZ3X3kWg4zBhQigiJ2TXimw3h0oLTzBvKzPETXmeez6+2ewe+4KPvA==", null, false, 2, "6b9194d2-1d72-43ae-bfe8-cee836927298", false, "TestUser" }
+                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "0c435853-ed91-45f9-b1b5-05843bd257f6", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), false, null, null, null, "AQAAAAEAACcQAAAAEJnSl+KnCis00zUTYzHMHm8H2xS0u/gNvs2iSMzIXTcHcnkLDoBPJXciG2FjUR9mBw==", null, false, 1, "f6065086-f74f-4c02-bf4c-0a72b055ad23", false, "Rajmundo1" },
+                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "64211e6c-60d6-429f-9c02-0773a5b9c47b", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), false, null, null, null, "AQAAAAEAACcQAAAAEDq1VncbeaiIYLMgV9Q6OAPWPlpHN+0F+3DZPlzKRd3L6mdR3IxG+Eg3rm9PPIlzRw==", null, false, 2, "771e0bfb-98d1-4020-9f2d-902f792759ef", false, "TestUser" }
                 });
 
             migrationBuilder.InsertData(
@@ -726,7 +725,8 @@ namespace StrategyGame.DAL.Migrations
                 name: "IX_UnitGroups_CountyId",
                 table: "UnitGroups",
                 column: "CountyId",
-                unique: true);
+                unique: true,
+                filter: "[CountyId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnitLevels_UnitSpecificsId",
