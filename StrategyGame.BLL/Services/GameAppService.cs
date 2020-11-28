@@ -5,6 +5,7 @@ using StrategyGame.BLL.Hubs;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.Exceptions;
 using StrategyGame.MODEL.FilterParameters;
 using StrategyGame.MODEL.Interfaces;
 using System;
@@ -50,6 +51,20 @@ namespace StrategyGame.BLL.Services
             this.hubContext = hubContext;
         }
 
+        public async Task<IEnumerable<CountyDto>> GetCounties(Guid kingdomId)
+        {
+            var counties = await countyRepository.GetCountiesByKingdomId(kingdomId);
+
+            var result = new List<CountyDto>();
+
+            foreach(var county in counties)
+            {
+                result.Add(mapper.Map<CountyDto>(county));
+            }
+
+            return result;
+        }
+
         public async Task<MainPageDto> GetCountyPage(Guid countyId)
         {
             var county = await countyRepository.GetCountyAsync(countyId);
@@ -71,6 +86,13 @@ namespace StrategyGame.BLL.Services
             }
 
             result.Buildings = buildingViewDtos;
+
+            result.GoldPictureUrl = game.GoldPictureUrl;
+            result.MarblePictureUrl = game.MarblePictureUrl;
+            result.SulfurPictureUrl = game.SulfurPictureUrl;
+            result.TechnologyPictureUrl = game.TechnologyPictureUrl;
+            result.WinePictureUrl = game.WinePictureUrl;
+            result.WoodPictureUrl = game.WoodPictureUrl;
 
             return result;
         }
@@ -98,7 +120,27 @@ namespace StrategyGame.BLL.Services
 
             result.Buildings = buildingViewDtos;
 
+            result.GoldPictureUrl = game.GoldPictureUrl;
+            result.MarblePictureUrl = game.MarblePictureUrl;
+            result.SulfurPictureUrl = game.SulfurPictureUrl;
+            result.TechnologyPictureUrl = game.TechnologyPictureUrl;
+            result.WinePictureUrl = game.WinePictureUrl;
+            result.WoodPictureUrl = game.WoodPictureUrl; 
+
             return result;
+        }
+
+        public async Task NewCounty(Guid kingdomId, string countyName)
+        {
+            var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
+
+            //check resources
+            if(kingdom.Gold <= 10000)
+            {
+                throw new AppException("You don't have enough gold for a new county");
+            }
+            
+            await countyRepository.NewCounty(kingdomId, countyName);
         }
 
         public async Task NewRound()

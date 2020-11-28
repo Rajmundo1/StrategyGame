@@ -91,6 +91,8 @@ namespace StrategyGame.BLL
                 .ForMember(dest => dest.DefenderCountyName, opt => opt.MapFrom(src => src.Defender.Name));
 
             CreateMap<RegisterDto, RegisterData>();
+
+            CreateMap<County, CountyDto>();
         }
     }
 }

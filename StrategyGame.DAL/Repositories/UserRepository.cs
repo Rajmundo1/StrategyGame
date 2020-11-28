@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using StrategyGame.DAL.Extensions;
 using StrategyGame.MODEL;
 using StrategyGame.MODEL.DataTransferModels;
@@ -83,6 +84,7 @@ namespace StrategyGame.DAL.Repositories
 
         public async Task Register(RegisterData registerData)
         {
+            var passwordHasher = new PasswordHasher<IdentityUser>();
             var userId = Guid.NewGuid();
             var kingdomId = Guid.NewGuid();
             var countyId = Guid.NewGuid();
@@ -208,6 +210,7 @@ namespace StrategyGame.DAL.Repositories
                 GameId = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                 KingdomId = kingdomId,
             };
+            newUser.PasswordHash = passwordHasher.HashPassword(newUser, registerData.Password);
 
             await dbContext.Kingdoms.AddAsync(newKingdom);
             await dbContext.SaveChangesAsync();

@@ -41,7 +41,13 @@ namespace StrategyGame.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Round = table.Column<int>(nullable: false)
+                    Round = table.Column<int>(nullable: false),
+                    WoodPictureUrl = table.Column<string>(nullable: true),
+                    MarblePictureUrl = table.Column<string>(nullable: true),
+                    WinePictureUrl = table.Column<string>(nullable: true),
+                    SulfurPictureUrl = table.Column<string>(nullable: true),
+                    GoldPictureUrl = table.Column<string>(nullable: true),
+                    TechnologyPictureUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -449,18 +455,18 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "Description", "ImageUrl", "MaxLevel", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), "A sawmill that produces wood", "/images/sawmill", 3, "Sawmill" },
-                    { new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), "A marble quarry that produces marble", "/images/quarry", 3, "Quarry" },
-                    { new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), "A winery that produces wine", "/images/winery", 3, "Winery" },
-                    { new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), "A sulfur mine that produces sulfur", "/images/sulfurMine", 3, "Sulfur Mine" },
-                    { new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), "An academy that produces research points", "/images/academy", 3, "Academy" },
-                    { new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), "A garrison that accomodate units", "/images/garrison", 3, "Garrison" }
+                    { new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), "A sawmill that produces wood", "/images/sawmill.svg", 3, "Sawmill" },
+                    { new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), "A marble quarry that produces marble", "/images/quarry.svg", 3, "Quarry" },
+                    { new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"), "A winery that produces wine", "/images/winery.svg", 3, "Winery" },
+                    { new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), "A sulfur mine that produces sulfur", "/images/sulfurMine.svg", 3, "Sulfur Mine" },
+                    { new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"), "An academy that produces research points", "/images/academy.svg", 3, "Academy" },
+                    { new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"), "A garrison that accomodate units", "/images/garrison.svg", 3, "Garrison" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Game",
-                columns: new[] { "Id", "Round" },
-                values: new object[] { new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), 0 });
+                columns: new[] { "Id", "GoldPictureUrl", "MarblePictureUrl", "Round", "SulfurPictureUrl", "TechnologyPictureUrl", "WinePictureUrl", "WoodPictureUrl" },
+                values: new object[] { new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), "/images/gold.svg", "/images/marble.svg", 0, "/images/sulfur.svg", "/images/technology.svg", "/images/wine.svg", "/images/wood.svg" });
 
             migrationBuilder.InsertData(
                 table: "Kingdoms",
@@ -476,10 +482,10 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "AttackPowerBonus", "DefensePowerBonus", "Description", "GoldBonus", "Name", "PictureUrl", "ResearchBonus", "ResearchPointCost", "StoneBonus", "SulfurBonus", "WineBonus", "WoodBonus" },
                 values: new object[,]
                 {
-                    { new Guid("a6336474-fa17-43ba-a5c6-7fee92ab15b7"), 0.0, 0.0, "Boosts all production", 0.0, "Production Booster", "/images/productionBooster", 0.0, 1000, 1.1000000000000001, 1.1000000000000001, 1.1000000000000001, 1.1000000000000001 },
-                    { new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c"), 0.0, 0.0, "Boosts research output", 0.0, "Science Booster", "/images/scienceBooster", 1.2, 1000, 0.0, 0.0, 0.0, 0.0 },
-                    { new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da"), 0.0, 0.0, "Boosts gold production", 1.3, "Gold Production Booster", "/images/goldProductionBooster", 0.0, 1000, 0.0, 0.0, 0.0, 0.0 },
-                    { new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae"), 1.1499999999999999, 1.1000000000000001, "Unit booster research", 0.0, "Unit Booster", "/images/unitBooster", 0.0, 1000, 0.0, 0.0, 0.0, 0.0 }
+                    { new Guid("a6336474-fa17-43ba-a5c6-7fee92ab15b7"), 0.0, 0.0, "Boosts all production", 0.0, "Production Booster", "/images/productionBooster.svg", 0.0, 1000, 1.1000000000000001, 1.1000000000000001, 1.1000000000000001, 1.1000000000000001 },
+                    { new Guid("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c"), 0.0, 0.0, "Boosts research output", 0.0, "Science Booster", "/images/scienceBooster.svg", 1.2, 1000, 0.0, 0.0, 0.0, 0.0 },
+                    { new Guid("93ad7e45-7071-48d5-a5df-c5eb21bb35da"), 0.0, 0.0, "Boosts gold production", 1.3, "Gold Production Booster", "/images/goldProductionBooster.svg", 0.0, 1000, 0.0, 0.0, 0.0, 0.0 },
+                    { new Guid("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae"), 1.1499999999999999, 1.1000000000000001, "Unit booster research", 0.0, "Unit Booster", "/images/unitBooster.svg", 0.0, 1000, 0.0, 0.0, 0.0, 0.0 }
                 });
 
             migrationBuilder.InsertData(
@@ -487,9 +493,9 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "Description", "ImageUrl", "MaxLevel", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"), "A melee unit that is strong in close combat", "/images/hoplite", 3, "Hoplite" },
-                    { new Guid("489e9070-f6f6-4130-8979-89e54b140835"), "A ranged unit that is strong in ranged combat", "/images/slingshot", 3, "Slingshot" },
-                    { new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"), "A ranged unit that is the strongest in ranged combat", "/images/catapult", 3, "Catapult" }
+                    { new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"), "A melee unit that is strong in close combat", "/images/hoplite.svg", 3, "Hoplite" },
+                    { new Guid("489e9070-f6f6-4130-8979-89e54b140835"), "A ranged unit that is strong in ranged combat", "/images/slingshot.svg", 3, "Slingshot" },
+                    { new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"), "A ranged unit that is the strongest in ranged combat", "/images/catapult.svg", 3, "Catapult" }
                 });
 
             migrationBuilder.InsertData(
@@ -497,8 +503,8 @@ namespace StrategyGame.DAL.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GameId", "KingdomId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ScoreboardPlace", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "0c435853-ed91-45f9-b1b5-05843bd257f6", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), false, null, null, null, "AQAAAAEAACcQAAAAEJnSl+KnCis00zUTYzHMHm8H2xS0u/gNvs2iSMzIXTcHcnkLDoBPJXciG2FjUR9mBw==", null, false, 1, "f6065086-f74f-4c02-bf4c-0a72b055ad23", false, "Rajmundo1" },
-                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "64211e6c-60d6-429f-9c02-0773a5b9c47b", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), false, null, null, null, "AQAAAAEAACcQAAAAEDq1VncbeaiIYLMgV9Q6OAPWPlpHN+0F+3DZPlzKRd3L6mdR3IxG+Eg3rm9PPIlzRw==", null, false, 2, "771e0bfb-98d1-4020-9f2d-902f792759ef", false, "TestUser" }
+                    { "ff5e4b7f-c83d-4070-a91a-a33de1b19405", 0, "c0f21566-b20a-4fcc-a8d0-0a564875a66f", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"), false, null, null, "RAJMUNDO1", "AQAAAAEAACcQAAAAEEw9tY/meMKCKG5imadYrm0bO3XCzjXcz43lscGb3365va03dodn8Hijaj4puUkbDg==", null, false, 1, "e80dcc88-597d-413b-b250-1be75fe59c9b", false, "Rajmundo1" },
+                    { "b63d4aee-70d2-4d84-93a6-56c9db32aa11", 0, "cd461708-bb69-4218-bc4c-34a8cd52c28a", null, false, new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"), new Guid("a37de913-486d-4df3-9025-1e5d4f881220"), false, null, null, "TESTUSER", "AQAAAAEAACcQAAAAELK9hB3d8KpBoktlfb4aD6FO3C99N+GZ7Gidxit0YAKxp4Bj31ssbYP8MQgYdDxwxg==", null, false, 2, "0651be9f-a518-4f27-a29d-210961ab402a", false, "TestUser" }
                 });
 
             migrationBuilder.InsertData(
@@ -521,9 +527,9 @@ namespace StrategyGame.DAL.Migrations
                     { new Guid("b7bc3554-98d4-419c-a656-74b81cd33dfa"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 3, 1500, 1000, 0, 0, 0, 0, 0, 0, 10000, 0 },
                     { new Guid("e8268211-0c57-49c3-b88d-821876b372a5"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 2, 200, 500, 0, 0, 0, 0, 0, 0, 1500, 0 },
                     { new Guid("16da0e13-b4dd-4221-a755-5746605f9331"), new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"), 0, 0, 1, 0, 100, 0, 0, 0, 0, 0, 0, 250, 0 },
-                    { new Guid("770206ed-5f86-4ea9-a6cc-8b0a1083aa9b"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 3, 15, 0, 0, 0, 0, 0, 0, 0, 10, 1000 },
+                    { new Guid("770206ed-5f86-4ea9-a6cc-8b0a1083aa9b"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 3, 1500, 0, 0, 0, 0, 0, 0, 0, 10000, 1000 },
                     { new Guid("7906db1c-8193-4e27-aa30-8a30e5426eea"), new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"), 0, 0, 1, 0, 0, 0, 0, 0, 100, 0, 0, 250, 0 },
-                    { new Guid("73b692f5-591e-42a5-9f6f-d5b382cc5ccd"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 15, 500 }
+                    { new Guid("73b692f5-591e-42a5-9f6f-d5b382cc5ccd"), new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"), 0, 0, 2, 200, 0, 0, 0, 0, 0, 0, 0, 1500, 500 }
                 });
 
             migrationBuilder.InsertData(

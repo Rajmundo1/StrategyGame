@@ -12,5 +12,7 @@ namespace StrategyGame.BLL.Interfaces
         Task<MainPageDto> GetCountyPage(Guid countyId);
         Task SetWineConsumption(Guid countyId, int amount);
         Task NewRound();
+        Task NewCounty(Guid kingdomId, string countyName);
+        Task<IEnumerable<CountyDto>> GetCounties(Guid kingdomId);
     }
 }

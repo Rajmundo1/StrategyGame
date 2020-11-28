@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.Entities.Buildings;
+using StrategyGame.MODEL.Entities.Technologies;
+using StrategyGame.MODEL.Entities.Units;
+using StrategyGame.MODEL.Enums;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,10 +18,30 @@ namespace StrategyGame.DAL.Repositories
     public class CountyRepository : ICountyRepository
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IUserRepository userRepository;
 
-        public CountyRepository(ApplicationDbContext dbContext)
+        public CountyRepository(ApplicationDbContext dbContext,
+                                IUserRepository userRepository)
         {
             this.dbContext = dbContext;
+            this.userRepository = userRepository;
+        }
+
+        public async Task<IEnumerable<County>> GetCountiesByKingdomId(Guid kingdomId)
+        {
+            return await dbContext.Counties
+                .Include(county => county.Kingdom)
+                .ThenInclude(kingdom => kingdom.Technologies)
+                .ThenInclude(tech => tech.Specifics)
+                .Include(county => county.Buildings)
+                .ThenInclude(b => b.BuildingSpecifics)
+                .ThenInclude(sp => sp.BuildingLevels)
+                .Include(county => county.Units)
+                .ThenInclude(u => u.Units)
+                .ThenInclude(u => u.UnitSpecifics)
+                .ThenInclude(usp => usp.UnitLevels)
+                .Where(x => x.KingdomId.Equals(kingdomId))
+                .ToListAsync();
         }
 
         public async Task<County> GetCountyAsync(Guid countyId)
@@ -48,6 +72,145 @@ namespace StrategyGame.DAL.Repositories
             }
 
             return true;
+        }
+
+        public async Task NewCounty(Guid kingdomId, string countyName)
+        {
+            var countyId = Guid.NewGuid();
+            var unitGroupId = Guid.NewGuid();
+
+            var newTechnologies = new List<Technology>
+            {
+                new Technology
+                {
+                    Id = Guid.NewGuid(),
+                    KingdomId = kingdomId,
+                    TechnologySpecificsId = Guid.Parse("a6336474-fa17-43ba-a5c6-7fee92ab15b7"),
+                    Status = ResearchStatus.UnResearched
+                },
+                new Technology
+                {
+                    Id = Guid.NewGuid(),
+                    KingdomId = kingdomId,
+                    TechnologySpecificsId = Guid.Parse("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c"),
+                    Status = ResearchStatus.UnResearched
+                },
+                new Technology
+                {
+                    Id = Guid.NewGuid(),
+                    KingdomId = kingdomId,
+                    TechnologySpecificsId = Guid.Parse("93ad7e45-7071-48d5-a5df-c5eb21bb35da"),
+                    Status = ResearchStatus.UnResearched
+                },
+                new Technology
+                {
+                    Id = Guid.NewGuid(),
+                    KingdomId = kingdomId,
+                    TechnologySpecificsId = Guid.Parse("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae"),
+                    Status = ResearchStatus.UnResearched
+                },
+            };
+
+            var newBuildings = new List<Building>
+            {
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("1d203260-0928-47b6-9d10-5e4cf0c70265"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("d02e3c9c-f26c-4136-a904-27ad074fa456"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+                new Building
+                {
+                    Id = Guid.NewGuid(),
+                    BuildingSpecificsId = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
+                    CountyId = countyId,
+                    Level = 1,
+                    Status = BuildingStatus.NotBuilt
+                },
+            };
+
+            var newUnitGroup = new UnitGroup
+            {
+                Id = unitGroupId,
+                AttackId = null,
+                CountyId = countyId,
+            };
+
+            var newCounty = new County
+            {
+                Id = countyId,
+                KingdomId = kingdomId,
+                Name = countyName,
+                TaxRate = 1.0,
+                WineConsumption = 0,
+                Wood = 5000,
+                Marble = 5000,
+                Wine = 2000,
+                Sulfur = 1000,
+                BasePopulation = 200,
+            };
+
+
+            await dbContext.Counties.AddAsync(newCounty);
+            await dbContext.SaveChangesAsync();
+
+            await dbContext.UnitGroups.AddAsync(newUnitGroup);
+            await dbContext.SaveChangesAsync();
+
+            await dbContext.Buildings.AddRangeAsync(newBuildings);
+            await dbContext.SaveChangesAsync();
+
+            await dbContext.Technologies.AddRangeAsync(newTechnologies);
+            await dbContext.SaveChangesAsync();
+
+
+            //calculate rankings
+            var users = (await userRepository
+                .GetAllUsersAsync())
+                .OrderByDescending(user => user.Score);
+
+            var place = 1;
+
+            foreach (var user in users)
+            {
+                user.ScoreboardPlace = place++;
+            }
+
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task SetWineConsumption(Guid countyId, int amount)

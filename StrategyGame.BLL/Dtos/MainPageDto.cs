@@ -36,6 +36,13 @@ namespace StrategyGame.BLL.Dtos
         public int UsedForceLimit { get; set; }
         public int MaxForceLimit { get; set; }
 
+        public string WoodPictureUrl { get; set; }
+        public string MarblePictureUrl { get; set; }
+        public string WinePictureUrl { get; set; }
+        public string SulfurPictureUrl { get; set; }
+        public string GoldPictureUrl { get; set; }
+        public string TechnologyPictureUrl { get; set; }
+
         public IEnumerable<BuildingViewDto> Buildings { get; set; }
     }
 }

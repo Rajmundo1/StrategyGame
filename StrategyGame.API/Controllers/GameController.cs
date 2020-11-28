@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
+using StrategyGame.MODEL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,18 @@ namespace StrategyGame.API.Controllers
         public async Task SetWineConsumption([FromRoute]Guid countyId, [FromQuery] int amount)
         {
             await gameAppService.SetWineConsumption(countyId, amount);
+        }
+
+        [HttpPut("newCounty/{kingdomId}")]
+        public async Task NewCounty([FromRoute] Guid kingdomId, [FromQuery] string countyName)
+        {
+            await gameAppService.NewCounty(kingdomId, countyName);
+        }
+
+        [HttpGet("counties/{kingdomId}")]
+        public async Task<IEnumerable<CountyDto>> GetCounties(Guid kingdomId)
+        {
+            return await gameAppService.GetCounties(kingdomId);
         }
     }
 }

@@ -862,6 +862,140 @@ export class ApiGameSetWineConsumptionClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiGameNewCountyClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    newCounty(kingdomId: string, countyName: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/Game/newCounty/{kingdomId}?";
+        if (kingdomId === undefined || kingdomId === null)
+            throw new Error("The parameter 'kingdomId' must be defined.");
+        url_ = url_.replace("{kingdomId}", encodeURIComponent("" + kingdomId)); 
+        if (countyName === undefined)
+            throw new Error("The parameter 'countyName' must be defined.");
+        else
+            url_ += "countyName=" + encodeURIComponent("" + countyName) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processNewCounty(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processNewCounty(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processNewCounty(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiGameCountiesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getCounties(kingdomId: string): Observable<CountyDto[] | null> {
+        let url_ = this.baseUrl + "/api/Game/counties/{kingdomId}";
+        if (kingdomId === undefined || kingdomId === null)
+            throw new Error("The parameter 'kingdomId' must be defined.");
+        url_ = url_.replace("{kingdomId}", encodeURIComponent("" + kingdomId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCounties(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCounties(<any>response_);
+                } catch (e) {
+                    return <Observable<CountyDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CountyDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCounties(response: HttpResponseBase): Observable<CountyDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(CountyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CountyDto[] | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiTechnologyTechnologiesClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -2044,6 +2178,7 @@ export interface ILoginDto {
 export class RegisterDto implements IRegisterDto {
     userName?: string | undefined;
     password?: string | undefined;
+    countyName?: string | undefined;
 
     constructor(data?: IRegisterDto) {
         if (data) {
@@ -2058,6 +2193,7 @@ export class RegisterDto implements IRegisterDto {
         if (data) {
             this.userName = data["userName"];
             this.password = data["password"];
+            this.countyName = data["countyName"];
         }
     }
 
@@ -2072,6 +2208,7 @@ export class RegisterDto implements IRegisterDto {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName;
         data["password"] = this.password;
+        data["countyName"] = this.countyName;
         return data; 
     }
 }
@@ -2079,6 +2216,7 @@ export class RegisterDto implements IRegisterDto {
 export interface IRegisterDto {
     userName?: string | undefined;
     password?: string | undefined;
+    countyName?: string | undefined;
 }
 
 export class BuildingDto implements IBuildingDto {
@@ -2361,6 +2499,12 @@ export class MainPageDto implements IMainPageDto {
     sulfurProductionBonus!: number;
     usedForceLimit!: number;
     maxForceLimit!: number;
+    woodPictureUrl?: string | undefined;
+    marblePictureUrl?: string | undefined;
+    winePictureUrl?: string | undefined;
+    sulfurPictureUrl?: string | undefined;
+    goldPictureUrl?: string | undefined;
+    technologyPictureUrl?: string | undefined;
     buildings?: BuildingViewDto[] | undefined;
 
     constructor(data?: IMainPageDto) {
@@ -2396,6 +2540,12 @@ export class MainPageDto implements IMainPageDto {
             this.sulfurProductionBonus = data["sulfurProductionBonus"];
             this.usedForceLimit = data["usedForceLimit"];
             this.maxForceLimit = data["maxForceLimit"];
+            this.woodPictureUrl = data["woodPictureUrl"];
+            this.marblePictureUrl = data["marblePictureUrl"];
+            this.winePictureUrl = data["winePictureUrl"];
+            this.sulfurPictureUrl = data["sulfurPictureUrl"];
+            this.goldPictureUrl = data["goldPictureUrl"];
+            this.technologyPictureUrl = data["technologyPictureUrl"];
             if (data["buildings"] && data["buildings"].constructor === Array) {
                 this.buildings = [];
                 for (let item of data["buildings"])
@@ -2435,6 +2585,12 @@ export class MainPageDto implements IMainPageDto {
         data["sulfurProductionBonus"] = this.sulfurProductionBonus;
         data["usedForceLimit"] = this.usedForceLimit;
         data["maxForceLimit"] = this.maxForceLimit;
+        data["woodPictureUrl"] = this.woodPictureUrl;
+        data["marblePictureUrl"] = this.marblePictureUrl;
+        data["winePictureUrl"] = this.winePictureUrl;
+        data["sulfurPictureUrl"] = this.sulfurPictureUrl;
+        data["goldPictureUrl"] = this.goldPictureUrl;
+        data["technologyPictureUrl"] = this.technologyPictureUrl;
         if (this.buildings && this.buildings.constructor === Array) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -2467,6 +2623,12 @@ export interface IMainPageDto {
     sulfurProductionBonus: number;
     usedForceLimit: number;
     maxForceLimit: number;
+    woodPictureUrl?: string | undefined;
+    marblePictureUrl?: string | undefined;
+    winePictureUrl?: string | undefined;
+    sulfurPictureUrl?: string | undefined;
+    goldPictureUrl?: string | undefined;
+    technologyPictureUrl?: string | undefined;
     buildings?: BuildingViewDto[] | undefined;
 }
 
@@ -2512,6 +2674,46 @@ export interface IBuildingViewDto {
     id: string;
     imageUrl?: string | undefined;
     status: BuildingStatus;
+}
+
+export class CountyDto implements ICountyDto {
+    name?: string | undefined;
+    score?: string | undefined;
+
+    constructor(data?: ICountyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.name = data["name"];
+            this.score = data["score"];
+        }
+    }
+
+    static fromJS(data: any): CountyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["score"] = this.score;
+        return data; 
+    }
+}
+
+export interface ICountyDto {
+    name?: string | undefined;
+    score?: string | undefined;
 }
 
 export class TechnologyDto implements ITechnologyDto {
