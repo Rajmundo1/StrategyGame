@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StrategyGame.BLL.Dtos;
+using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Entities.Buildings;
 using StrategyGame.MODEL.Entities.Technologies;
@@ -88,6 +89,8 @@ namespace StrategyGame.BLL
                 .ForMember(dest => dest.AttackerCountyId, opt => opt.MapFrom(src => src.AttackerId))
                 .ForMember(dest => dest.DefenderCountyId, opt => opt.MapFrom(src => src.DefenderId))
                 .ForMember(dest => dest.DefenderCountyName, opt => opt.MapFrom(src => src.Defender.Name));
+
+            CreateMap<RegisterDto, RegisterData>();
         }
     }
 }

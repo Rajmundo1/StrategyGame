@@ -1,4 +1,5 @@
-﻿using StrategyGame.MODEL.Entities;
+﻿using StrategyGame.MODEL.DataTransferModels;
+using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.FilterParameters;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace StrategyGame.MODEL.Interfaces
 {
     public interface IUserRepository
     {
+        Task Register(RegisterData registerData);
         Task<User> GetUserAsync(Guid id);
         Task<PagedList<User>> GetPagedUsersAsync(PagingParameters pagingParameters);
         Task<IEnumerable<User>> GetAllUsersAsync();

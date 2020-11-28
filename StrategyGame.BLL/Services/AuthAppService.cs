@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
+using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Exceptions;
 using StrategyGame.MODEL.Interfaces;
@@ -19,16 +21,22 @@ namespace StrategyGame.BLL.Services
         private readonly SignInManager<User> signInManager;
         private readonly ITokenAppService tokenService;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
         public AuthAppService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
                                 ITokenAppService tokenService,
-                                IUnitOfWork unitOfWork)
+                                IUnitOfWork unitOfWork,
+                                IUserRepository userRepository,
+                                IMapper mapper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.tokenService = tokenService;
             this.unitOfWork = unitOfWork;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         public async Task<TokenDto> Login(LoginDto loginDto)
@@ -52,15 +60,8 @@ namespace StrategyGame.BLL.Services
 
         public async Task<TokenDto> Register(RegisterDto registerDto)
         {
-
-            var user = new User { UserName = registerDto.UserName};
-
-            var result = await userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded)
-            {
-                throw new ValidationAppException("User creation failed.", result.Errors.Select(e => e.Description));
-            }
-            await unitOfWork.SaveAsync();
+            var registerData = mapper.Map<RegisterData>(registerDto);
+            await userRepository.Register(registerData);
 
             var storedUser = await userManager.FindByNameAsync(registerDto.UserName);
 
