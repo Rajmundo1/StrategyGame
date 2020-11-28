@@ -13,7 +13,7 @@ namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
-    //[Authorize]
+    [Authorize]
     public class UserController : StrategyGameControllerBase
     {
         private readonly IUserAppService userAppService;
@@ -40,19 +40,5 @@ namespace StrategyGame.API.Controllers
         {
             return await userAppService.GetUserAsync(id);
         }
-
-        [HttpPost("delete/{id}")]
-        public async Task DeleteUserAsync([FromRoute] Guid id)
-        {
-            await userAppService.DeleteUserAsync(id);
-        }
-
-        [HttpPost("newUser")]
-        public async Task<UserDto> CreateUserAsync([FromBody] UserCreateDto userCreateDto)
-        {
-            return await userAppService.CreateUserAsync(userCreateDto);
-        }
-
-
     }
 }

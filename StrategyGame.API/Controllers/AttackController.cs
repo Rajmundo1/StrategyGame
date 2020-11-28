@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StrategyGame.API.Common;
 using StrategyGame.BLL.Dtos;
 using StrategyGame.BLL.Interfaces;
@@ -11,6 +12,7 @@ namespace StrategyGame.API.Controllers
 {
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class AttackController: StrategyGameControllerBase
     {
         private readonly IAttackAppService attackAppService;
@@ -19,9 +21,6 @@ namespace StrategyGame.API.Controllers
         {
             this.attackAppService = attackAppService;
         }
-
-        //Task<IEnumerable<Attack>> GetAttacks(Guid countyId);
-        //Task Attack(Guid attackerCountyId, Guid defenderCountyId, UnitGroup units);
 
         [HttpGet("attacks/{countyId}")]
         public async Task<IEnumerable<AttackDto>> GetAttacks([FromRoute]Guid countyId)

@@ -20,27 +20,42 @@ namespace StrategyGame.BLL.Services
         private readonly ICountyRepository countyRepository;
         private readonly IKingdomRepository kingdomRepository;
         private readonly IMapper mapper;
+        private readonly IIdentityService identityService;
 
         public BuildingAppService(  IBuildingRepository buildingRepository,
                                     ICountyRepository countyRepository,
                                     IKingdomRepository kingdomRepository,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    IIdentityService identityService)
         {
             this.buildingRepository = buildingRepository;
             this.countyRepository = countyRepository;
             this.kingdomRepository = kingdomRepository;
             this.mapper = mapper;
+            this.identityService = identityService;
         }
 
         public async Task<BuildingDetailDto> GetBuildingDetailAsync(Guid buildingId)
         {
             var building = await buildingRepository.GetBuildingAsync(buildingId);
 
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(building.CountyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             return mapper.Map<BuildingDetailDto>(building);
         }
 
         public async Task<IEnumerable<BuildingDto>> GetBuildingsAsync(Guid countyId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(countyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
             var buildings = await buildingRepository.GetBuildingsAsync(countyId);
 
             var result = new List<BuildingDto>();
@@ -57,7 +72,13 @@ namespace StrategyGame.BLL.Services
         {
             var building = await buildingRepository.GetBuildingAsync(buildingId);
 
-            if(building.BuildingSpecifics.MaxLevel <= building.Level)
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(building.CountyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
+            if (building.BuildingSpecifics.MaxLevel <= building.Level)
             {
                 throw new AppException("The building is already on max LVL");
             }
@@ -69,7 +90,13 @@ namespace StrategyGame.BLL.Services
         {
             var building = await buildingRepository.GetBuildingAsync(buildingId);
 
-            if(building.Level >= building.BuildingSpecifics.MaxLevel)
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await countyRepository.IsOwner(building.CountyId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that county");
+            }
+
+            if (building.Level >= building.BuildingSpecifics.MaxLevel)
             {
                 throw new AppException("The building is already on max LVL");
             }

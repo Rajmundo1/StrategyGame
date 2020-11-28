@@ -22,43 +22,13 @@ namespace StrategyGame.BLL.Services
     public class UserAppService : IUserAppService
     {
         private readonly IUserRepository userRepository;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
 
         public UserAppService(IUserRepository userRepository,
-                                IUnitOfWork unitOfWork,
-                                UserManager<User> userManager,
                                 IMapper mapper)
         {
             this.userRepository = userRepository;
-            this.unitOfWork = unitOfWork;
-            this.userManager = userManager;
             this.mapper = mapper;
-        }
-
-        public async Task<UserDto> CreateUserAsync(UserCreateDto userDto)
-        {
-            var user = new User { UserName = userDto.Username };
-
-            var result = await userManager.CreateAsync(user, userDto.Password);
-            if (!result.Succeeded)
-            {
-                throw new ValidationAppException("User creation failed.", result.Errors.Select(e => e.Description));
-            }
-            await unitOfWork.SaveAsync();
-
-            var storedUser = await userManager.FindByNameAsync(userDto.Username);
-
-            return mapper.Map<UserDto>(storedUser);
-        }
-
-        public async Task DeleteUserAsync(Guid id)
-        {
-            var userToDelete = await userManager.FindByIdAsync(id.ToString());
-            await userManager.DeleteAsync(userToDelete);
-
-            await unitOfWork.SaveAsync();
         }
 
         public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync(UserParametersDto parameters)

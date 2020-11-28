@@ -15,23 +15,32 @@ namespace StrategyGame.BLL.Services
         private readonly ITechnologyRepository technologyRepository;
         private readonly IKingdomRepository kingdomRepository;
         private readonly IMapper mapper;
+        private readonly IIdentityService identityService;
 
         public TechnologyAppService(ITechnologyRepository technologyRepository,
                                     IKingdomRepository kingdomRepository,
-                                    IMapper mapper)
+                                    IMapper mapper,
+                                    IIdentityService identityService)
         {
             this.technologyRepository = technologyRepository;
             this.kingdomRepository = kingdomRepository;
             this.mapper = mapper;
+            this.identityService = identityService;
         }
 
         public async Task DevelopTechnology(Guid technologyId)
         {
             var technology = await technologyRepository.GetTechnologyAsync(technologyId);
             var kingdom = await kingdomRepository.GetKingdomAsync(technology.KingdomId);
-            
 
-            if(technology.Specifics.ResearchPointCost <= kingdom.ResearchPoint)
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdom.Id, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
+
+            if (technology.Specifics.ResearchPointCost <= kingdom.ResearchPoint)
             {
                 await kingdomRepository.SpendResearchPointAsync(kingdom.Id, technology.Specifics.ResearchPointCost);
                 await technologyRepository.DevelopTechnologyAsync(technologyId);
@@ -44,11 +53,25 @@ namespace StrategyGame.BLL.Services
 
         public async Task<TechnologyDetailDto> GetTechnologyDetail(Guid technologyId)
         {
-            return mapper.Map<TechnologyDetailDto>(await technologyRepository.GetTechnologyAsync(technologyId));
+            var technology = await technologyRepository.GetTechnologyAsync(technologyId);
+
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(technology.KingdomId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
+            return mapper.Map<TechnologyDetailDto>(technology);
         }
 
         public async Task<IEnumerable<TechnologyDto>> GetTechnologies(Guid kingdomId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
             var technologies = (await kingdomRepository.GetKingdomAsync(kingdomId)).Technologies;
 
             var result = new List<TechnologyDto>();

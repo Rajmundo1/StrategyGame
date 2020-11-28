@@ -50,7 +50,7 @@ namespace StrategyGame.DAL.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> IsOwner(Guid kingdomId, Guid userId)
+        public async Task<bool> IsOwner(Guid kingdomId, string userId)
         {
             var user = await dbContext.Users.SingleOrDefaultAsync(user => user.KingdomId.Equals(kingdomId) && user.Id.Equals(userId));
 
