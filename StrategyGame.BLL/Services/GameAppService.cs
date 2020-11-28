@@ -56,6 +56,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task<IEnumerable<CountyDto>> GetCounties(Guid kingdomId)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
             var counties = await countyRepository.GetCountiesByKingdomId(kingdomId);
 
             var result = new List<CountyDto>();
@@ -147,6 +153,12 @@ namespace StrategyGame.BLL.Services
 
         public async Task NewCounty(Guid kingdomId, string countyName)
         {
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
             var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
 
             //check resources
