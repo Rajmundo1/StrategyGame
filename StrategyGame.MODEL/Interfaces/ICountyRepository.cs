@@ -16,5 +16,6 @@ namespace StrategyGame.MODEL.Interfaces
         Task<bool> IsOwner(Guid countyId, string userId);
         Task SetWineConsumption(Guid countyId, int amount);
         Task NewCounty(Guid kingdomId, string countyName);
+        Task<IEnumerable<County>> GetAllCounties();
     }
 }

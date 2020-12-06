@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StrategyGame.BLL.Dtos;
+using StrategyGame.BLL.HelperClasses;
 using StrategyGame.MODEL.DataTransferModels;
 using StrategyGame.MODEL.Entities;
 using StrategyGame.MODEL.Entities.Buildings;
@@ -8,6 +9,7 @@ using StrategyGame.MODEL.Entities.Units;
 using StrategyGame.MODEL.FilterParameters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace StrategyGame.BLL
@@ -68,7 +70,8 @@ namespace StrategyGame.BLL
                 .ForMember(dest => dest.StoneBonus, opt => opt.MapFrom(src => src.Specifics.StoneBonus))
                 .ForMember(dest => dest.SulfurBonus, opt => opt.MapFrom(src => src.Specifics.SulfurBonus))
                 .ForMember(dest => dest.WineBonus, opt => opt.MapFrom(src => src.Specifics.WineBonus))
-                .ForMember(dest => dest.WoodBonus, opt => opt.MapFrom(src => src.Specifics.WoodBonus));
+                .ForMember(dest => dest.WoodBonus, opt => opt.MapFrom(src => src.Specifics.WoodBonus))
+                .ForMember(dest => dest.ResearchPointCost, opt => opt.MapFrom(src => src.Specifics.ResearchPointCost));
 
             CreateMap<Technology, TechnologyDto>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Specifics.Description))
@@ -80,7 +83,9 @@ namespace StrategyGame.BLL
             CreateMap<UnitLevel, UnitDetailsDto>();
 
             CreateMap<County, MainPageDto>()
-                .ForMember(dest => dest.CurrentCountyName, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.CurrentCountyName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.CurrentCountyId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CurrentKingdomId, opt => opt.MapFrom(src => src.KingdomId));
 
             CreateMap<Building, BuildingViewDto>()
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.BuildingSpecifics.ImageUrl));
@@ -92,7 +97,27 @@ namespace StrategyGame.BLL
 
             CreateMap<RegisterDto, RegisterData>();
 
-            CreateMap<County, CountyDto>();
+            CreateMap<County, CountyDto>()
+                .ForMember(dest => dest.CountyName, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<UnitSpecificsAndLevel, UnitSpecificsDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UnitSpecifics.Id))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UnitSpecifics.Name))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.UnitSpecifics.ImageUrl))
+                .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.Level))
+                .ForMember(dest => dest.AttackPower, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).AttackPower))
+                .ForMember(dest => dest.DefensePower, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).DefensePower))
+                .ForMember(dest => dest.ForceLimit, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).ForceLimit))
+                .ForMember(dest => dest.WoodCost, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).WoodCost))
+                .ForMember(dest => dest.MarbleCost, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).MarbleCost))
+                .ForMember(dest => dest.WineCost, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).WineCost))
+                .ForMember(dest => dest.SulfurCost, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).SulfurCost))
+                .ForMember(dest => dest.GoldCost, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).GoldCost))
+                .ForMember(dest => dest.WoodUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).WoodUpkeep))
+                .ForMember(dest => dest.MarbleUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).MarbleUpkeep))
+                .ForMember(dest => dest.WineUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).WineUpkeep))
+                .ForMember(dest => dest.SulfurUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).SulfurUpkeep))
+                .ForMember(dest => dest.GoldUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).GoldUpkeep));
         }
     }
 }

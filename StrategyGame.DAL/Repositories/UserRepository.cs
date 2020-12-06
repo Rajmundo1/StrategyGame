@@ -28,20 +28,7 @@ namespace StrategyGame.DAL.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task<PagedList<User>> GetPagedUsersAsync(PagingParameters pagingParameters)
-        {
-            return await dbContext.Users
-                .Include(u => u.Kingdom)
-                .ThenInclude(k => k.Technologies)
-                .Include(u => u.Kingdom)
-                .ThenInclude(k => k.Counties)
-                .ThenInclude(c => c.Buildings)
-                .ThenInclude(b => b.BuildingSpecifics)
-                .ThenInclude(bsp => bsp.BuildingLevels)
-                .ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
-        }
-
-        public async Task<PagedList<User>> GetFilteredPagedUsersAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters)
+        public async Task<IEnumerable<User>> GetFilteredUsersAsync(string userName)
         {
 
             return await dbContext.Users
@@ -52,8 +39,9 @@ namespace StrategyGame.DAL.Repositories
                 .ThenInclude(c => c.Buildings)
                 .ThenInclude(b => b.BuildingSpecifics)
                 .ThenInclude(bsp => bsp.BuildingLevels)
-                .Where(filter)
-                .ToPagedListAsync(pagingParameters.PageNumber, pagingParameters.PageSize);
+                .Where(u => u.UserName.ToUpper().Contains(userName.ToUpper()))
+                .OrderBy(u => u.ScoreboardPlace)
+                .ToListAsync();
         }
 
         public async Task<User> GetUserAsync(Guid id)
@@ -79,6 +67,7 @@ namespace StrategyGame.DAL.Repositories
             .ThenInclude(c => c.Buildings)
             .ThenInclude(b => b.BuildingSpecifics)
             .ThenInclude(bsp => bsp.BuildingLevels)
+            .OrderBy(u => u.ScoreboardPlace)
             .ToListAsync();
         }
 
@@ -243,6 +232,32 @@ namespace StrategyGame.DAL.Repositories
             }
 
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<User> GetUserByRefreshToken(string refreshToken)
+        {
+            return await dbContext.Users
+                .SingleAsync(user => user.RefreshToken.Equals(refreshToken));
+        }
+
+        public async Task RemoveRefreshToken(string userId)
+        {
+            await dbContext.Users
+                .ForEachAsync(user =>
+                {
+                    if (user.Id.Equals(userId))
+                    {
+                        user.RefreshToken = null;
+                    }
+                });
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<User> GetUserByKingdomId(Guid kingdomId)
+        {
+            return await dbContext.Users
+                .SingleAsync(user => user.KingdomId.Equals(kingdomId));
         }
     }
 }

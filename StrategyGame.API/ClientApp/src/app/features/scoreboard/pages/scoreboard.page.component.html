@@ -1,0 +1,27 @@
+<div class="flex-box">
+    <mat-card class="mat-card-main">
+        <mat-card-content>
+            <h1 class="main-card-title">Scoreboard</h1>
+            <div class="slider">
+                <mat-list>
+                    <mat-list-item class="list-item">
+                        <form class="search-form" onsubmit="return false;">
+                            <mat-form-field class="search-full-width" floatLabel="never">
+                                <mat-label>Username</mat-label>
+                                <input matInput type="search" #searchbox (input)="search(searchbox.value)" autocomplete="off">
+                            </mat-form-field>
+                        </form>
+                    </mat-list-item>
+
+                    <div *ngFor="let user of users">
+                        <mat-list-item class="list-item">
+                            <app-scoreboard [user]="user"></app-scoreboard>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                    </div>
+                    
+                </mat-list>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

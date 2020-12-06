@@ -15,6 +15,7 @@ namespace StrategyGame.MODEL.Interfaces
         Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl);
         Task RemoveUnitByIdAsync(Guid unitId);
         Task<UnitSpecifics> GetUnitSpecificsAsync(Guid unitSpecificsId);
+        Task<IEnumerable<UnitSpecifics>> GetAllUnitSpecificsAsync();
         Task MoveToUnitGroup(Guid unitId, Guid attackId);
         Task RemoveUnitGroup(Guid unitGroupId);
     }

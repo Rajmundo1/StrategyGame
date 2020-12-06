@@ -1,0 +1,59 @@
+$baloo-font: 'baloo', regular;
+$basic-brown:rgb(255, 228, 181);
+$dark-brown: #764b1c;
+
+h1{
+    color: $dark-brown;
+    font-family: $baloo-font !important;
+    text-align: center;
+}
+
+h2{
+    color: $dark-brown;
+}
+
+h3{
+    color: $dark-brown;
+}
+
+h4{
+    color: $dark-brown;
+}
+
+.main-card-title{
+    color: white;
+    font-family: $baloo-font;
+    text-align: left;
+    font-size: 32px;
+}
+
+.main-name{
+    font-family: 'open-sans', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0px !important;
+}
+
+.main-text{
+    font-family: 'open-sans', sans-serif;
+    font-weight: regular;
+    margin-bottom: 0px;
+    font-size: 16px;
+}
+
+.my-divider{
+    margin: 1vw !important;
+    width: 60%;
+}
+
+.numbers{
+    text-align: right;
+}
+
+.mat-h4, .mat-subheading-1, .mat-typography h4.attack-unit-name{
+    margin: 0;
+}
+
+.mat-input-element {
+    padding-left: 10px !important;
+}

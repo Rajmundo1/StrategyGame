@@ -1,0 +1,134 @@
+$light-brown:  rgba(225, 198, 153, 0.8);
+$dark-brown: #764b1c;
+$dark-dark-brown: #001234;
+
+.flex-box{
+    height: 80vh;
+    flex-direction: row;
+    .flex-box{
+        height: fit-content;
+        flex-direction: row;
+        align-items: flex-start;
+        
+    }
+}
+
+.flex-box .unit-card{
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 16px;
+}
+
+.plus-minus{
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.data-holder{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 20vw;
+    margin-bottom: 5vh;
+}
+
+div.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8vh;
+}
+
+
+.divider{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.mat-divider.my-divider{
+    width: 65vw;
+}
+
+.search-full-width {
+    width: 80%;
+    min-width: 1.5vw;
+    border-radius: 20px;
+    background-color: rgba(white, 0.39);
+}
+
+::ng-deep .mat-form-field-infix{
+    border: 40px;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding: 2px;
+}
+
+::ng-deep.mat-form-field-label{
+    color: $dark-brown !important;
+    font-family: 'open-sans', sans-serif;
+    font-size: 16px;
+    padding-left: 10px;
+}
+::ng-deep.mat-form-field-underline {
+    display: none;
+} 
+
+
+
+.search-item{
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.search-form{
+    width: 100%;
+}
+
+.list-item{
+    margin-top: 10px;
+    width: 20vw;
+}
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $dark-brown;
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: $dark-dark-brown;
+  }
+
+  h4{
+      margin: 0px;
+  }
+
+  element.style {
+    color: $dark-brown;
+    font-family: 'open-sans', sans-serif;
+    height: 25px;
+}
+
+::ng-deep .mat-list-base .mat-list-item{
+    color: $dark-brown;
+}
+
+.mat-accent .mat-slider-thumb,
+.mat-accent .mat-slider-thumb-label,
+.mat-accent .mat-slider-track-fill{background-color:#764b1c}

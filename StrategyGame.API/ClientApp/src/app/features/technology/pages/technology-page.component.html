@@ -1,0 +1,65 @@
+<div class="flex-box">
+    <mat-card class="mat-card-main">
+        <mat-card-content>
+            <h1 class="main-card-title">Technologies</h1>
+
+            <div class="flex-box">
+                <mat-list>
+                    <div *ngFor="let technology of technologies">
+                        <mat-divider></mat-divider>
+                        <mat-list-item class="list-item" (click)="selectTechnology(technology.id)" style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+                            <div class="flex-box">
+                                {{technology.name}} - {{technology.description}} | {{technology.status}}
+                            </div>
+                            <div>
+                                <mat-icon *ngIf="technology.id == selectedTechnologyId">check_circle</mat-icon>
+                            </div>
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </div>
+
+            <div class="divider">
+                <mat-divider class="my-divider"></mat-divider>
+            </div>
+
+            <div class="flex-box" *ngIf="selectedTechnology && selectedTechnology.status.toString() == 'Researched'">
+                <h4> The technology has been already researched</h4>
+                <div class="divider">
+                    <mat-divider class="my-divider"></mat-divider>
+                </div>
+            </div>
+
+
+
+            
+            <div  class="flex-box" *ngIf="selectedTechnology">
+                <h2 class="main-card-title"> Bonuses:</h2>
+                <h4 *ngIf = "selectedTechnology.woodBonus > 0">Wood Bonus: {{ selectedTechnology.woodBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.stoneBonus > 0"> Marble Bonus: {{ selectedTechnology.stoneBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.wineBonus > 0"> Wine Bonus: {{ selectedTechnology.wineBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.sulfurBonus > 0"> Sulfur Bonus: {{ selectedTechnology.sulfurBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.goldBonus > 0"> Gold Bonus: {{ selectedTechnology.goldBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.researchBonus > 0"> Research Bonus: {{ selectedTechnology.researchBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.attackPowerBonus > 0"> Attack Power Bonus: {{ selectedTechnology.attackPowerBonus }}</h4> 
+                <h4 *ngIf = "selectedTechnology.defensePowerBonus > 0"> Defense Power Bonus: {{ selectedTechnology.defensePowerBonus }}</h4>
+                
+                <div *ngIf = "selectedTechnology.status.toString() == 'UnResearched'">
+                    <div class="divider">
+                        <mat-divider class="my-divider"></mat-divider>
+                    </div>
+    
+                    <h2 class="main-card-title"> Development Cost: </h2>
+                    <div  class="flex-box">
+                        <h4> Research Point Cost: {{ selectedTechnology.researchPointCost }}</h4> 
+                    </div>
+    
+                    <div class="button">
+                        <button mat-flat-button class="color-button"
+                            (click)="developTechnology()"> Develop </button>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

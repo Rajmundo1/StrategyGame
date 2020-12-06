@@ -24,15 +24,15 @@ namespace StrategyGame.API.Controllers
         }
 
         [HttpGet("users")]
-        public async Task<PagedListDto<UserDto>> GetUsersAsync([FromQuery] PagingParametersDto pagingParametersDto)
+        public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            return await userAppService.GetUsersAsync(pagingParametersDto);
+            return await userAppService.GetUsersAsync();
         }
 
         [HttpGet("filteredUsers")]
-        public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync([FromQuery] UserParametersDto userParametersDto)
+        public async Task<IEnumerable<UserDto>> GetFilteredUsersAsync([FromQuery] string userName)
         {
-            return await userAppService.GetFilteredUsersAsync(userParametersDto);
+            return await userAppService.GetFilteredUsersAsync(userName);
         }
 
         [HttpGet("user/{id}")]

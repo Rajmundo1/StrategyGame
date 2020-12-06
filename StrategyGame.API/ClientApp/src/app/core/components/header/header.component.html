@@ -1,0 +1,75 @@
+<div class="flex-box" style="margin-top: 20px;">
+    <mat-card class="flex-card">
+        <div class="flex-box">
+            <mat-card-content>
+                <div class="header-text">{{ mainPageData?.username }}</div>
+                <div class="header-text">{{ mainPageData?.currentCountyName }}</div>
+                <div style="margin-left: 0.75vw; margin-top: 1vw;">
+                    <button class="color-button" (click)="logout()" style="cursor: pointer"> Logout </button>
+                </div>
+            </mat-card-content>
+        </div>
+
+        <div class="flex-box">
+            <mat-card-content>
+                <div style="margin-bottom: 1vw; margin-left: 0vw;">
+                    <button class="color-button" (click)="scoreboard()" style="cursor: pointer"> Scoreboard </button>
+                </div>
+                <div class="header-text" (click)="newRound()" style="cursor: pointer">{{ mainPageData?.round }}. Round</div>
+            </mat-card-content>
+        </div>
+
+        <div class="flex-box">
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.goldPictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.gold | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.goldIncome | number}} + {{mainPageData?.goldIncomeBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.technologyPictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.researchPoint | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.researchOutput | number}} + {{mainPageData?.researchOutputBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.woodPictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.wood | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.woodProduction | number}} + {{mainPageData?.woodProductionBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.marblePictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.marble | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.marbleProduction | number}} + {{mainPageData?.marbleProductionBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.winePictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.wine | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.wineProduction | number}} + {{mainPageData?.wineProductionBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.sulfurPictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.sulfur | number}}</div>
+                    <div class="header-small-text">{{mainPageData?.sulfurProduction | number}} + {{mainPageData?.sulfurProductionBonus | number}}/Round</div>
+            </mat-card-content>
+
+            <mat-card-content>
+                    <img [src]="baseUrl + mainPageData?.forceLimitPictureUrl" alt="">
+                    <div class="header-number">{{mainPageData?.usedForceLimit | number}} / {{mainPageData?.maxForceLimit | number}}</div>
+            </mat-card-content>
+        </div>
+
+        <div class="flex-box"> 
+            
+            <button class="color-button" style="margin-right: 1vw;" (click)="counties()" style="cursor: pointer"> Counties </button>
+            <button class="color-button" style="margin-right: 1vw;" (click)="attacks()" style="cursor: pointer"> Attacks </button>
+            <button class="color-button" style="margin-right: 1vw;" (click)="technologies()" style="cursor: pointer"> Technologies </button>
+            <button class="color-button" style="margin-right: 1vw;" (click)="units()" style="cursor: pointer"> Units </button>
+
+        </div>
+
+    </mat-card>
+</div>

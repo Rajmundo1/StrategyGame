@@ -1,0 +1,80 @@
+<div class="flex-box">
+    <mat-card class="mat-card-main">
+        <mat-card-content>
+            <h1 class="main-card-title">Attack</h1>
+
+            <div class="flex-box">
+                <div class="attack-parts">
+                    <h3>Choose your victim</h3>
+                    <div class="slider">
+                        <mat-list>
+                            <mat-list-item class="list-item">
+                                <form class="search-form" onsubmit="return false;">
+                                    <mat-form-field class="search-full-width" floatLabel="never">
+                                        <mat-label>County name</mat-label>
+                                        <input matInput type="search" #searchbox (input)="search(searchbox.value)" autocomplete="off">
+                                    </mat-form-field>
+                                </form>
+                            </mat-list-item>
+                            <div *ngFor="let county of countiesToAttack" >
+                                <mat-divider></mat-divider>
+                                <mat-list-item  class="list-item" (click)="choose(county.id)" style=" cursor: pointer; display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+                                    
+                                    <div style="width: 10vw;">{{ county.username }} - {{county.countyName}}</div>
+                                    <div>
+                                        <mat-icon *ngIf="county.id.match(attackData.defenderCountyId) && clicked">check_circle</mat-icon>
+                                    </div>
+                                    
+                                </mat-list-item>
+                            </div>
+                        </mat-list>
+                    </div>
+                </div>
+
+                <div class="attack-parts">
+                    <h3>Units to send to battle</h3>
+                    <div *ngIf="availableUnits.length == 0" > You don't have any units</div>
+                    <div *ngIf="availableUnits.length != 0">
+                        <div *ngFor="let availableunit of availableUnits">
+                            <app-attack [unit]="availableunit"></app-attack>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="divider">
+                <mat-divider class="my-divider"></mat-divider>
+            </div>
+
+            <div class="button">
+                <button mat-flat-button class="color-button" [disabled]="!attackData.defenderCountyId && clicked" (click)="sendAttack()">Attack</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <div class="flex-box">
+        <mat-card class="mat-card-main">
+            <mat-card-content>
+                <h1 class="main-card-title">Outgoing Attacks</h1>
+                <div *ngIf="this.outgoingAttacks.length === 0"><h4>
+                    Currently there isn't any outgoing attack</h4></div>
+                    <div class="slider">
+                        <mat-list>
+                            <div class="flex-box" style="flex-direction: column;"></div>
+                            <div *ngFor="let attack of outgoingAttacks">
+                                <div>
+                                    <h3>Target : {{ attack.defenderCountyName }}</h3>
+                                </div>
+                                <div *ngFor="let unit of attack.units" class="flex-box" style="flex-direction: column;">
+                                    <h4>{{ unit.name }}: {{ unit.count }}, Level {{ unit.level}}</h4>
+                                </div>
+                                <div class="divider">
+                                    <mat-divider class="my-divider"></mat-divider>
+                                </div>
+                            </div> 
+                        </mat-list>
+                    </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

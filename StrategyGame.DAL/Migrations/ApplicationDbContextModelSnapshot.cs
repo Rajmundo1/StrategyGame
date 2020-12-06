@@ -806,7 +806,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                             Description = "A sawmill that produces wood",
-                            ImageUrl = "/images/sawmill.svg",
+                            ImageUrl = "/images/sawmill.png",
                             MaxLevel = 3,
                             Name = "Sawmill"
                         },
@@ -814,7 +814,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("1d203260-0928-47b6-9d10-5e4cf0c70265"),
                             Description = "A marble quarry that produces marble",
-                            ImageUrl = "/images/quarry.svg",
+                            ImageUrl = "/images/quarry.png",
                             MaxLevel = 3,
                             Name = "Quarry"
                         },
@@ -822,7 +822,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"),
                             Description = "A winery that produces wine",
-                            ImageUrl = "/images/winery.svg",
+                            ImageUrl = "/images/winery.png",
                             MaxLevel = 3,
                             Name = "Winery"
                         },
@@ -830,7 +830,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                             Description = "A sulfur mine that produces sulfur",
-                            ImageUrl = "/images/sulfurMine.svg",
+                            ImageUrl = "/images/sulfurMine.png",
                             MaxLevel = 3,
                             Name = "Sulfur Mine"
                         },
@@ -838,7 +838,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("598fd678-5915-4c88-80d8-ff389c8278f9"),
                             Description = "An academy that produces research points",
-                            ImageUrl = "/images/academy.svg",
+                            ImageUrl = "/images/academy.png",
                             MaxLevel = 3,
                             Name = "Academy"
                         },
@@ -846,7 +846,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
                             Description = "A garrison that accomodate units",
-                            ImageUrl = "/images/garrison.svg",
+                            ImageUrl = "/images/garrison.png",
                             MaxLevel = 3,
                             Name = "Garrison"
                         });
@@ -952,6 +952,9 @@ namespace StrategyGame.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ForceLimitPictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GoldPictureUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -981,13 +984,14 @@ namespace StrategyGame.DAL.Migrations
                         new
                         {
                             Id = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
-                            GoldPictureUrl = "/images/gold.svg",
-                            MarblePictureUrl = "/images/marble.svg",
+                            ForceLimitPictureUrl = "/images/forcelimit.png",
+                            GoldPictureUrl = "/images/gold.png",
+                            MarblePictureUrl = "/images/marble.png",
                             Round = 0,
-                            SulfurPictureUrl = "/images/sulfur.svg",
-                            TechnologyPictureUrl = "/images/technology.svg",
-                            WinePictureUrl = "/images/wine.svg",
-                            WoodPictureUrl = "/images/wood.svg"
+                            SulfurPictureUrl = "/images/sulfur.png",
+                            TechnologyPictureUrl = "/images/technology.png",
+                            WinePictureUrl = "/images/wine.png",
+                            WoodPictureUrl = "/images/wood.png"
                         });
                 });
 
@@ -1159,7 +1163,7 @@ namespace StrategyGame.DAL.Migrations
                             Description = "Boosts all production",
                             GoldBonus = 0.0,
                             Name = "Production Booster",
-                            PictureUrl = "/images/productionBooster.svg",
+                            PictureUrl = "/images/productionBooster.png",
                             ResearchBonus = 0.0,
                             ResearchPointCost = 1000,
                             StoneBonus = 1.1000000000000001,
@@ -1175,7 +1179,7 @@ namespace StrategyGame.DAL.Migrations
                             Description = "Boosts research output",
                             GoldBonus = 0.0,
                             Name = "Science Booster",
-                            PictureUrl = "/images/scienceBooster.svg",
+                            PictureUrl = "/images/scienceBooster.png",
                             ResearchBonus = 1.2,
                             ResearchPointCost = 1000,
                             StoneBonus = 0.0,
@@ -1191,7 +1195,7 @@ namespace StrategyGame.DAL.Migrations
                             Description = "Boosts gold production",
                             GoldBonus = 1.3,
                             Name = "Gold Production Booster",
-                            PictureUrl = "/images/goldProductionBooster.svg",
+                            PictureUrl = "/images/goldProductionBooster.png",
                             ResearchBonus = 0.0,
                             ResearchPointCost = 1000,
                             StoneBonus = 0.0,
@@ -1207,7 +1211,7 @@ namespace StrategyGame.DAL.Migrations
                             Description = "Unit booster research",
                             GoldBonus = 0.0,
                             Name = "Unit Booster",
-                            PictureUrl = "/images/unitBooster.svg",
+                            PictureUrl = "/images/unitBooster.png",
                             ResearchBonus = 0.0,
                             ResearchPointCost = 1000,
                             StoneBonus = 0.0,
@@ -1604,7 +1608,7 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("97f6314a-766d-4aa2-9c49-7dbcf86140b5"),
                             Description = "A melee unit that is strong in close combat",
-                            ImageUrl = "/images/hoplite.svg",
+                            ImageUrl = "/images/hoplite.png",
                             MaxLevel = 3,
                             Name = "Hoplite"
                         },
@@ -1612,15 +1616,15 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = new Guid("489e9070-f6f6-4130-8979-89e54b140835"),
                             Description = "A ranged unit that is strong in ranged combat",
-                            ImageUrl = "/images/slingshot.svg",
+                            ImageUrl = "/images/archer.png",
                             MaxLevel = 3,
-                            Name = "Slingshot"
+                            Name = "Archer"
                         },
                         new
                         {
                             Id = new Guid("06d69f35-d7f8-444f-bd25-da45bc6accb6"),
                             Description = "A ranged unit that is the strongest in ranged combat",
-                            ImageUrl = "/images/catapult.svg",
+                            ImageUrl = "/images/catapult.png",
                             MaxLevel = 3,
                             Name = "Catapult"
                         });
@@ -1674,6 +1678,9 @@ namespace StrategyGame.DAL.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ScoreboardPlace")
                         .HasColumnType("int");
 
@@ -1708,16 +1715,16 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "ff5e4b7f-c83d-4070-a91a-a33de1b19405",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c0f21566-b20a-4fcc-a8d0-0a564875a66f",
+                            ConcurrencyStamp = "14c670cf-1d3a-488b-8916-8e0de92ef2b4",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             KingdomId = new Guid("5fd3e0a3-0e0e-445a-93e6-8f94b6690794"),
                             LockoutEnabled = false,
                             NormalizedUserName = "RAJMUNDO1",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEw9tY/meMKCKG5imadYrm0bO3XCzjXcz43lscGb3365va03dodn8Hijaj4puUkbDg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBO4RZ7cGpA2CADIF268TxgD8HQIv/M7uUbY6ZJo03r4K5U1/7D7kk2cipWPJEPShg==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 1,
-                            SecurityStamp = "e80dcc88-597d-413b-b250-1be75fe59c9b",
+                            SecurityStamp = "e1c76fb4-445b-4b30-a75d-a37a5e7bcc17",
                             TwoFactorEnabled = false,
                             UserName = "Rajmundo1"
                         },
@@ -1725,16 +1732,16 @@ namespace StrategyGame.DAL.Migrations
                         {
                             Id = "b63d4aee-70d2-4d84-93a6-56c9db32aa11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cd461708-bb69-4218-bc4c-34a8cd52c28a",
+                            ConcurrencyStamp = "f9389b39-253a-4a70-829a-e8e9dee9af6f",
                             EmailConfirmed = false,
                             GameId = new Guid("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                             KingdomId = new Guid("a37de913-486d-4df3-9025-1e5d4f881220"),
                             LockoutEnabled = false,
                             NormalizedUserName = "TESTUSER",
-                            PasswordHash = "AQAAAAEAACcQAAAAELK9hB3d8KpBoktlfb4aD6FO3C99N+GZ7Gidxit0YAKxp4Bj31ssbYP8MQgYdDxwxg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAz/O3QZGw6lkJfYvJUIU3iCHVg5ei19Q8eP8RwVOJK1BK52Wzq15kNH2bMpdRny8g==",
                             PhoneNumberConfirmed = false,
                             ScoreboardPlace = 2,
-                            SecurityStamp = "0651be9f-a518-4f27-a29d-210961ab402a",
+                            SecurityStamp = "117e6964-3fa1-4f03-8abd-d585d5bb2fc6",
                             TwoFactorEnabled = false,
                             UserName = "TestUser"
                         });

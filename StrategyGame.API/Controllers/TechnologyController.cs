@@ -35,9 +35,9 @@ namespace StrategyGame.API.Controllers
         }
 
         [HttpPut("develop/{technologyId}")]
-        public async Task DevelopTechnology([FromRoute] Guid technologyId)
+        public async Task<TechnologyDto> DevelopTechnology([FromRoute] Guid technologyId)
         {
-            await technologyAppService.DevelopTechnology(technologyId);
+            return await technologyAppService.DevelopTechnology(technologyId);
         }
     }
 }

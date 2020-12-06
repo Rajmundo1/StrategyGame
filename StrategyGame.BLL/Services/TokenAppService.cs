@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using StrategyGame.BLL.Interfaces;
 using StrategyGame.MODEL.Entities;
+using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,10 +15,16 @@ namespace StrategyGame.BLL.Services
     public class TokenAppService : ITokenAppService
     {
         private readonly IConfiguration configuration;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IUserRepository userRepository;
 
-        public TokenAppService(IConfiguration configuration)
+        public TokenAppService(IConfiguration configuration,
+                                IUnitOfWork unitOfWork,
+                                IUserRepository userRepository)
         {
             this.configuration = configuration;
+            this.unitOfWork = unitOfWork;
+            this.userRepository = userRepository;
         }
 
         public async Task<string> CreateNormalAccessToken(User user)
@@ -38,6 +45,32 @@ namespace StrategyGame.BLL.Services
                signingCredentials: creds
             );
             return await Task.Run(() => new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        public async Task<string> CreateNormalRefreshTokenAsync(User user)
+        {
+            var random = new Random();
+            string charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 30; ++i)
+            {
+                int index = (int)(random.NextDouble() * charPool.Length);
+                if (index == charPool.Length)
+                {
+                    --index;
+                }
+                sb.Append(charPool[index]);
+            }
+            string refreshToken = sb.ToString();
+            user.RefreshToken = refreshToken;
+            await unitOfWork.SaveAsync();
+
+            return refreshToken;
+        }
+
+        public async Task RemoveRefreshToken(string userId)
+        {
+            await userRepository.RemoveRefreshToken(userId);
         }
     }
 }

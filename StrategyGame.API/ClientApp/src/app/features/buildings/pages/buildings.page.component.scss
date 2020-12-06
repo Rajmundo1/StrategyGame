@@ -1,0 +1,91 @@
+
+.flex-box{
+        height: fit-content;
+        flex-direction: column;
+        align-items: left;
+        
+    }
+.flex-box .unit-card{
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 16px;
+}
+
+.plus-minus{
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.data-holder{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 20vw;
+    margin-bottom: 5vh;
+}
+
+div.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+}
+
+.divider{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-divider.my-divider{
+    width: 35vw;
+    padding-left: 3vw;
+}
+
+h3{
+    margin: 0 0 0 0;
+    justify-content: center;
+    text-align: center;
+}
+
+h2{
+    justify-content: center;
+    text-align: center;
+}
+
+.h3-container{
+    min-height: 8vh;
+}
+
+.mat-card > h3{
+    text-align: center;
+}
+
+h4{
+    font-weight: lighter;
+    margin: 0;
+    justify-content: center;
+}
+
+.mat-card > h4{
+    text-align: center;
+}
+
+.color1, .color2, .color3{
+    background-color: rgba(white, 0.3);
+}
+
+
+img{
+    height: 10vh;
+    width: auto;
+    justify-content: center;
+}
+.img-container{
+    text-align: center;
+    justify-content: center;
+}

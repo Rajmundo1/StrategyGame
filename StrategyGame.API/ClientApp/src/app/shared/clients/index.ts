@@ -345,6 +345,72 @@ export class ApiAuthLogoutClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiAuthRenewClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    renewToken(refreshToken: string | null): Observable<TokenDto | null> {
+        let url_ = this.baseUrl + "/api/Auth/renew?";
+        if (refreshToken === undefined)
+            throw new Error("The parameter 'refreshToken' must be defined.");
+        else
+            url_ += "refreshToken=" + encodeURIComponent("" + refreshToken) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRenewToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRenewToken(<any>response_);
+                } catch (e) {
+                    return <Observable<TokenDto | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TokenDto | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRenewToken(response: HttpResponseBase): Observable<TokenDto | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? TokenDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TokenDto | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiBuildingBuildingsClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -677,11 +743,8 @@ export class ApiGameMainPageClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getMainPage(kingdomId: string): Observable<MainPageDto | null> {
-        let url_ = this.baseUrl + "/api/Game/mainPage/{kingdomId}";
-        if (kingdomId === undefined || kingdomId === null)
-            throw new Error("The parameter 'kingdomId' must be defined.");
-        url_ = url_.replace("{kingdomId}", encodeURIComponent("" + kingdomId)); 
+    getMainPage(): Observable<MainPageDto | null> {
+        let url_ = this.baseUrl + "/api/Game/mainPage";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -797,7 +860,7 @@ export class ApiGameCountyPageClient {
 @Injectable({
     providedIn: 'root'
 })
-export class ApiGameSetWineConsumptionClient {
+export class ApiGameWineConsClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -807,8 +870,8 @@ export class ApiGameSetWineConsumptionClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    setWineConsumption(countyId: string, amount: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Game/setWineConsumption/{countyId}?";
+    wineCons(countyId: string, amount: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Game/wineCons/{countyId}?";
         if (countyId === undefined || countyId === null)
             throw new Error("The parameter 'countyId' must be defined.");
         url_ = url_.replace("{countyId}", encodeURIComponent("" + countyId)); 
@@ -826,11 +889,11 @@ export class ApiGameSetWineConsumptionClient {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSetWineConsumption(response_);
+            return this.processWineCons(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSetWineConsumption(<any>response_);
+                    return this.processWineCons(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -839,7 +902,7 @@ export class ApiGameSetWineConsumptionClient {
         }));
     }
 
-    protected processSetWineConsumption(response: HttpResponseBase): Observable<void> {
+    protected processWineCons(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -890,7 +953,7 @@ export class ApiGameNewCountyClient {
             })
         };
 
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processNewCounty(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
@@ -967,6 +1030,142 @@ export class ApiGameCountiesClient {
     }
 
     protected processGetCounties(response: HttpResponseBase): Observable<CountyDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(CountyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CountyDto[] | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiGameAllCountiesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getAllCountiesAll(): Observable<CountyDto[] | null> {
+        let url_ = this.baseUrl + "/api/Game/allCounties";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllCountiesAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllCountiesAll(<any>response_);
+                } catch (e) {
+                    return <Observable<CountyDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CountyDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllCountiesAll(response: HttpResponseBase): Observable<CountyDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(CountyDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CountyDto[] | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiGameAllCountiesFilteredClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getAllCounties(userName: string | null): Observable<CountyDto[] | null> {
+        let url_ = this.baseUrl + "/api/Game/allCountiesFiltered?";
+        if (userName === undefined)
+            throw new Error("The parameter 'userName' must be defined.");
+        else
+            url_ += "userName=" + encodeURIComponent("" + userName) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllCounties(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllCounties(<any>response_);
+                } catch (e) {
+                    return <Observable<CountyDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CountyDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllCounties(response: HttpResponseBase): Observable<CountyDto[] | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1140,7 +1339,7 @@ export class ApiTechnologyDevelopClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    developTechnology(technologyId: string): Observable<void> {
+    developTechnology(technologyId: string): Observable<TechnologyDto | null> {
         let url_ = this.baseUrl + "/api/Technology/develop/{technologyId}";
         if (technologyId === undefined || technologyId === null)
             throw new Error("The parameter 'technologyId' must be defined.");
@@ -1151,6 +1350,7 @@ export class ApiTechnologyDevelopClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -1161,14 +1361,14 @@ export class ApiTechnologyDevelopClient {
                 try {
                     return this.processDevelopTechnology(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<TechnologyDto | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<TechnologyDto | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processDevelopTechnology(response: HttpResponseBase): Observable<void> {
+    protected processDevelopTechnology(response: HttpResponseBase): Observable<TechnologyDto | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1177,14 +1377,17 @@ export class ApiTechnologyDevelopClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? TechnologyDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<TechnologyDto | null>(<any>null);
     }
 }
 
@@ -1610,6 +1813,72 @@ export class ApiUnitHireClient {
 @Injectable({
     providedIn: 'root'
 })
+export class ApiUnitUnispecificsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getUnitSpecifics(): Observable<UnitSpecificsDto[] | null> {
+        let url_ = this.baseUrl + "/api/Unit/unispecifics";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUnitSpecifics(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUnitSpecifics(<any>response_);
+                } catch (e) {
+                    return <Observable<UnitSpecificsDto[] | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UnitSpecificsDto[] | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUnitSpecifics(response: HttpResponseBase): Observable<UnitSpecificsDto[] | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(UnitSpecificsDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UnitSpecificsDto[] | null>(<any>null);
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiUserUsersClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -1620,12 +1889,8 @@ export class ApiUserUsersClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getUsers(pageNumber: number | null | undefined, pageSize: number | null | undefined): Observable<PagedListDtoOfUserDto | null> {
-        let url_ = this.baseUrl + "/api/User/users?";
-        if (pageNumber !== undefined)
-            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&"; 
-        if (pageSize !== undefined)
-            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&"; 
+    getUsers(): Observable<UserDto[] | null> {
+        let url_ = this.baseUrl + "/api/User/users";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1643,14 +1908,14 @@ export class ApiUserUsersClient {
                 try {
                     return this.processGetUsers(<any>response_);
                 } catch (e) {
-                    return <Observable<PagedListDtoOfUserDto | null>><any>_observableThrow(e);
+                    return <Observable<UserDto[] | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PagedListDtoOfUserDto | null>><any>_observableThrow(response_);
+                return <Observable<UserDto[] | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetUsers(response: HttpResponseBase): Observable<PagedListDtoOfUserDto | null> {
+    protected processGetUsers(response: HttpResponseBase): Observable<UserDto[] | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1661,7 +1926,11 @@ export class ApiUserUsersClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? PagedListDtoOfUserDto.fromJS(resultData200) : <any>null;
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(UserDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1669,7 +1938,7 @@ export class ApiUserUsersClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PagedListDtoOfUserDto | null>(<any>null);
+        return _observableOf<UserDto[] | null>(<any>null);
     }
 }
 
@@ -1686,16 +1955,12 @@ export class ApiUserFilteredUsersClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getFilteredUsers(name: string | null | undefined, scoreboardPlace: number | null | undefined, pageNumber: number | null | undefined, pageSize: number | null | undefined): Observable<PagedListDtoOfUserDto | null> {
+    getFilteredUsers(userName: string | null): Observable<UserDto[] | null> {
         let url_ = this.baseUrl + "/api/User/filteredUsers?";
-        if (name !== undefined)
-            url_ += "name=" + encodeURIComponent("" + name) + "&"; 
-        if (scoreboardPlace !== undefined)
-            url_ += "scoreboardPlace=" + encodeURIComponent("" + scoreboardPlace) + "&"; 
-        if (pageNumber !== undefined)
-            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&"; 
-        if (pageSize !== undefined)
-            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&"; 
+        if (userName === undefined)
+            throw new Error("The parameter 'userName' must be defined.");
+        else
+            url_ += "userName=" + encodeURIComponent("" + userName) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1713,14 +1978,14 @@ export class ApiUserFilteredUsersClient {
                 try {
                     return this.processGetFilteredUsers(<any>response_);
                 } catch (e) {
-                    return <Observable<PagedListDtoOfUserDto | null>><any>_observableThrow(e);
+                    return <Observable<UserDto[] | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PagedListDtoOfUserDto | null>><any>_observableThrow(response_);
+                return <Observable<UserDto[] | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetFilteredUsers(response: HttpResponseBase): Observable<PagedListDtoOfUserDto | null> {
+    protected processGetFilteredUsers(response: HttpResponseBase): Observable<UserDto[] | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1731,7 +1996,11 @@ export class ApiUserFilteredUsersClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? PagedListDtoOfUserDto.fromJS(resultData200) : <any>null;
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(UserDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1739,7 +2008,7 @@ export class ApiUserFilteredUsersClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PagedListDtoOfUserDto | null>(<any>null);
+        return _observableOf<UserDto[] | null>(<any>null);
     }
 }
 
@@ -1786,133 +2055,6 @@ export class ApiUserUserClient {
     }
 
     protected processGetUser(response: HttpResponseBase): Observable<UserDto | null> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? UserDto.fromJS(resultData200) : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<UserDto | null>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class ApiUserDeleteClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    deleteUser(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/User/delete/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteUser(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteUser(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDeleteUser(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class ApiUserNewUserClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    createUser(userCreateDto: UserCreateDto | null): Observable<UserDto | null> {
-        let url_ = this.baseUrl + "/api/User/newUser";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(userCreateDto);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json", 
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateUser(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreateUser(<any>response_);
-                } catch (e) {
-                    return <Observable<UserDto | null>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<UserDto | null>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreateUser(response: HttpResponseBase): Observable<UserDto | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -2101,6 +2243,7 @@ export interface IAttackUnitDto {
 
 export class TokenDto implements ITokenDto {
     accessToken?: string | undefined;
+    refreshToken?: string | undefined;
 
     constructor(data?: ITokenDto) {
         if (data) {
@@ -2114,6 +2257,7 @@ export class TokenDto implements ITokenDto {
     init(data?: any) {
         if (data) {
             this.accessToken = data["accessToken"];
+            this.refreshToken = data["refreshToken"];
         }
     }
 
@@ -2127,12 +2271,14 @@ export class TokenDto implements ITokenDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["accessToken"] = this.accessToken;
+        data["refreshToken"] = this.refreshToken;
         return data; 
     }
 }
 
 export interface ITokenDto {
     accessToken?: string | undefined;
+    refreshToken?: string | undefined;
 }
 
 export class LoginDto implements ILoginDto {
@@ -2477,6 +2623,9 @@ export interface IBuildingNextLevelDto {
 }
 
 export class MainPageDto implements IMainPageDto {
+    username?: string | undefined;
+    currentCountyId?: string | undefined;
+    currentKingdomId?: string | undefined;
     currentCountyName?: string | undefined;
     round!: number;
     gold!: number;
@@ -2505,6 +2654,7 @@ export class MainPageDto implements IMainPageDto {
     sulfurPictureUrl?: string | undefined;
     goldPictureUrl?: string | undefined;
     technologyPictureUrl?: string | undefined;
+    forceLimitPictureUrl?: string | undefined;
     buildings?: BuildingViewDto[] | undefined;
 
     constructor(data?: IMainPageDto) {
@@ -2518,6 +2668,9 @@ export class MainPageDto implements IMainPageDto {
 
     init(data?: any) {
         if (data) {
+            this.username = data["username"];
+            this.currentCountyId = data["currentCountyId"];
+            this.currentKingdomId = data["currentKingdomId"];
             this.currentCountyName = data["currentCountyName"];
             this.round = data["round"];
             this.gold = data["gold"];
@@ -2546,6 +2699,7 @@ export class MainPageDto implements IMainPageDto {
             this.sulfurPictureUrl = data["sulfurPictureUrl"];
             this.goldPictureUrl = data["goldPictureUrl"];
             this.technologyPictureUrl = data["technologyPictureUrl"];
+            this.forceLimitPictureUrl = data["forceLimitPictureUrl"];
             if (data["buildings"] && data["buildings"].constructor === Array) {
                 this.buildings = [];
                 for (let item of data["buildings"])
@@ -2563,6 +2717,9 @@ export class MainPageDto implements IMainPageDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["currentCountyId"] = this.currentCountyId;
+        data["currentKingdomId"] = this.currentKingdomId;
         data["currentCountyName"] = this.currentCountyName;
         data["round"] = this.round;
         data["gold"] = this.gold;
@@ -2591,6 +2748,7 @@ export class MainPageDto implements IMainPageDto {
         data["sulfurPictureUrl"] = this.sulfurPictureUrl;
         data["goldPictureUrl"] = this.goldPictureUrl;
         data["technologyPictureUrl"] = this.technologyPictureUrl;
+        data["forceLimitPictureUrl"] = this.forceLimitPictureUrl;
         if (this.buildings && this.buildings.constructor === Array) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -2601,6 +2759,9 @@ export class MainPageDto implements IMainPageDto {
 }
 
 export interface IMainPageDto {
+    username?: string | undefined;
+    currentCountyId?: string | undefined;
+    currentKingdomId?: string | undefined;
     currentCountyName?: string | undefined;
     round: number;
     gold: number;
@@ -2629,6 +2790,7 @@ export interface IMainPageDto {
     sulfurPictureUrl?: string | undefined;
     goldPictureUrl?: string | undefined;
     technologyPictureUrl?: string | undefined;
+    forceLimitPictureUrl?: string | undefined;
     buildings?: BuildingViewDto[] | undefined;
 }
 
@@ -2677,7 +2839,9 @@ export interface IBuildingViewDto {
 }
 
 export class CountyDto implements ICountyDto {
-    name?: string | undefined;
+    id!: string;
+    username?: string | undefined;
+    countyName?: string | undefined;
     score?: string | undefined;
 
     constructor(data?: ICountyDto) {
@@ -2691,7 +2855,9 @@ export class CountyDto implements ICountyDto {
 
     init(data?: any) {
         if (data) {
-            this.name = data["name"];
+            this.id = data["id"];
+            this.username = data["username"];
+            this.countyName = data["countyName"];
             this.score = data["score"];
         }
     }
@@ -2705,14 +2871,18 @@ export class CountyDto implements ICountyDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
+        data["id"] = this.id;
+        data["username"] = this.username;
+        data["countyName"] = this.countyName;
         data["score"] = this.score;
         return data; 
     }
 }
 
 export interface ICountyDto {
-    name?: string | undefined;
+    id: string;
+    username?: string | undefined;
+    countyName?: string | undefined;
     score?: string | undefined;
 }
 
@@ -2790,6 +2960,7 @@ export class TechnologyDetailDto implements ITechnologyDetailDto {
     researchBonus!: number;
     attackPowerBonus!: number;
     defensePowerBonus!: number;
+    researchPointCost!: number;
     status!: ResearchStatus;
 
     constructor(data?: ITechnologyDetailDto) {
@@ -2815,6 +2986,7 @@ export class TechnologyDetailDto implements ITechnologyDetailDto {
             this.researchBonus = data["researchBonus"];
             this.attackPowerBonus = data["attackPowerBonus"];
             this.defensePowerBonus = data["defensePowerBonus"];
+            this.researchPointCost = data["researchPointCost"];
             this.status = data["status"];
         }
     }
@@ -2840,6 +3012,7 @@ export class TechnologyDetailDto implements ITechnologyDetailDto {
         data["researchBonus"] = this.researchBonus;
         data["attackPowerBonus"] = this.attackPowerBonus;
         data["defensePowerBonus"] = this.defensePowerBonus;
+        data["researchPointCost"] = this.researchPointCost;
         data["status"] = this.status;
         return data; 
     }
@@ -2858,6 +3031,7 @@ export interface ITechnologyDetailDto {
     researchBonus: number;
     attackPowerBonus: number;
     defensePowerBonus: number;
+    researchPointCost: number;
     status: ResearchStatus;
 }
 
@@ -3085,11 +3259,26 @@ export interface IUnitNextLevelDto {
     goldUpkeep: number;
 }
 
-export class PagedListDtoOfUserDto implements IPagedListDtoOfUserDto {
-    items?: UserDto[] | undefined;
-    paginationHeader?: PaginationHeader | undefined;
+export class UnitSpecificsDto implements IUnitSpecificsDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    imageUrl?: string | undefined;
+    level!: number;
+    attackPower!: number;
+    defensePower!: number;
+    forceLimit!: number;
+    woodCost!: number;
+    marbleCost!: number;
+    wineCost!: number;
+    sulfurCost!: number;
+    goldCost!: number;
+    woodUpkeep!: number;
+    marbleUpkeep!: number;
+    wineUpkeep!: number;
+    sulfurUpkeep!: number;
+    goldUpkeep!: number;
 
-    constructor(data?: IPagedListDtoOfUserDto) {
+    constructor(data?: IUnitSpecificsDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -3100,37 +3289,74 @@ export class PagedListDtoOfUserDto implements IPagedListDtoOfUserDto {
 
     init(data?: any) {
         if (data) {
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [];
-                for (let item of data["items"])
-                    this.items.push(UserDto.fromJS(item));
-            }
-            this.paginationHeader = data["paginationHeader"] ? PaginationHeader.fromJS(data["paginationHeader"]) : <any>undefined;
+            this.id = data["id"];
+            this.name = data["name"];
+            this.imageUrl = data["imageUrl"];
+            this.level = data["level"];
+            this.attackPower = data["attackPower"];
+            this.defensePower = data["defensePower"];
+            this.forceLimit = data["forceLimit"];
+            this.woodCost = data["woodCost"];
+            this.marbleCost = data["marbleCost"];
+            this.wineCost = data["wineCost"];
+            this.sulfurCost = data["sulfurCost"];
+            this.goldCost = data["goldCost"];
+            this.woodUpkeep = data["woodUpkeep"];
+            this.marbleUpkeep = data["marbleUpkeep"];
+            this.wineUpkeep = data["wineUpkeep"];
+            this.sulfurUpkeep = data["sulfurUpkeep"];
+            this.goldUpkeep = data["goldUpkeep"];
         }
     }
 
-    static fromJS(data: any): PagedListDtoOfUserDto {
+    static fromJS(data: any): UnitSpecificsDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PagedListDtoOfUserDto();
+        let result = new UnitSpecificsDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (this.items && this.items.constructor === Array) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["paginationHeader"] = this.paginationHeader ? this.paginationHeader.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["imageUrl"] = this.imageUrl;
+        data["level"] = this.level;
+        data["attackPower"] = this.attackPower;
+        data["defensePower"] = this.defensePower;
+        data["forceLimit"] = this.forceLimit;
+        data["woodCost"] = this.woodCost;
+        data["marbleCost"] = this.marbleCost;
+        data["wineCost"] = this.wineCost;
+        data["sulfurCost"] = this.sulfurCost;
+        data["goldCost"] = this.goldCost;
+        data["woodUpkeep"] = this.woodUpkeep;
+        data["marbleUpkeep"] = this.marbleUpkeep;
+        data["wineUpkeep"] = this.wineUpkeep;
+        data["sulfurUpkeep"] = this.sulfurUpkeep;
+        data["goldUpkeep"] = this.goldUpkeep;
         return data; 
     }
 }
 
-export interface IPagedListDtoOfUserDto {
-    items?: UserDto[] | undefined;
-    paginationHeader?: PaginationHeader | undefined;
+export interface IUnitSpecificsDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    imageUrl?: string | undefined;
+    level: number;
+    attackPower: number;
+    defensePower: number;
+    forceLimit: number;
+    woodCost: number;
+    marbleCost: number;
+    wineCost: number;
+    sulfurCost: number;
+    goldCost: number;
+    woodUpkeep: number;
+    marbleUpkeep: number;
+    wineUpkeep: number;
+    sulfurUpkeep: number;
+    goldUpkeep: number;
 }
 
 export class UserDto implements IUserDto {
@@ -3179,102 +3405,6 @@ export interface IUserDto {
     userName?: string | undefined;
     score: number;
     scoreboardPlace: number;
-}
-
-export class PaginationHeader implements IPaginationHeader {
-    totalCount!: number;
-    pageSize!: number;
-    currentPage!: number;
-    totalPages!: number;
-    hasNext!: boolean;
-    hasPrevious!: boolean;
-
-    constructor(data?: IPaginationHeader) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.totalCount = data["totalCount"];
-            this.pageSize = data["pageSize"];
-            this.currentPage = data["currentPage"];
-            this.totalPages = data["totalPages"];
-            this.hasNext = data["hasNext"];
-            this.hasPrevious = data["hasPrevious"];
-        }
-    }
-
-    static fromJS(data: any): PaginationHeader {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginationHeader();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["totalCount"] = this.totalCount;
-        data["pageSize"] = this.pageSize;
-        data["currentPage"] = this.currentPage;
-        data["totalPages"] = this.totalPages;
-        data["hasNext"] = this.hasNext;
-        data["hasPrevious"] = this.hasPrevious;
-        return data; 
-    }
-}
-
-export interface IPaginationHeader {
-    totalCount: number;
-    pageSize: number;
-    currentPage: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrevious: boolean;
-}
-
-export class UserCreateDto implements IUserCreateDto {
-    username?: string | undefined;
-    password?: string | undefined;
-
-    constructor(data?: IUserCreateDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.username = data["username"];
-            this.password = data["password"];
-        }
-    }
-
-    static fromJS(data: any): UserCreateDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UserCreateDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["username"] = this.username;
-        data["password"] = this.password;
-        return data; 
-    }
-}
-
-export interface IUserCreateDto {
-    username?: string | undefined;
-    password?: string | undefined;
 }
 
 export class SwaggerException extends Error {

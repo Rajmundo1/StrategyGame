@@ -6,6 +6,9 @@ namespace StrategyGame.BLL.Dtos
 {
     public class MainPageDto
     {
+        public string Username { get; set; }
+        public string CurrentCountyId { get; set; }
+        public string CurrentKingdomId { get; set; }
         public string CurrentCountyName { get; set; }
         public int Round { get; set; }
 
@@ -42,6 +45,7 @@ namespace StrategyGame.BLL.Dtos
         public string SulfurPictureUrl { get; set; }
         public string GoldPictureUrl { get; set; }
         public string TechnologyPictureUrl { get; set; }
+        public string ForceLimitPictureUrl { get; set; }
 
         public IEnumerable<BuildingViewDto> Buildings { get; set; }
     }

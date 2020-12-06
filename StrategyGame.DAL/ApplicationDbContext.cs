@@ -245,7 +245,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("e2bfc4a7-d73f-4a2e-b91f-209c08a3f14f"),
                 Description = "A sawmill that produces wood",
                 Name = "Sawmill",
-                ImageUrl = "/images/sawmill.svg",
+                ImageUrl = "/images/sawmill.png",
                 MaxLevel = 3
 
             };
@@ -254,7 +254,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("1d203260-0928-47b6-9d10-5e4cf0c70265"),
                 Description = "A marble quarry that produces marble",
                 Name = "Quarry",
-                ImageUrl = "/images/quarry.svg",
+                ImageUrl = "/images/quarry.png",
                 MaxLevel = 3
 
             };
@@ -263,7 +263,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("4db1c8d2-b2b0-49a9-b8a5-8f9d5bbecddb"),
                 Description = "A winery that produces wine",
                 Name = "Winery",
-                ImageUrl = "/images/winery.svg",
+                ImageUrl = "/images/winery.png",
                 MaxLevel = 3
 
             };
@@ -272,7 +272,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("d02e3c9c-f26c-4136-a904-27ad074fa456"),
                 Description = "A sulfur mine that produces sulfur",
                 Name = "Sulfur Mine",
-                ImageUrl = "/images/sulfurMine.svg",
+                ImageUrl = "/images/sulfurMine.png",
                 MaxLevel = 3
             };
             var academySpecifics = new BuildingSpecifics
@@ -280,7 +280,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("598fd678-5915-4c88-80d8-ff389c8278f9"),
                 Description = "An academy that produces research points",
                 Name = "Academy",
-                ImageUrl = "/images/academy.svg",
+                ImageUrl = "/images/academy.png",
                 MaxLevel = 3
             };
             var garrisonSpecifics = new BuildingSpecifics
@@ -288,7 +288,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("3a8ffb5d-6edb-4908-a72e-3d268128efee"),
                 Description = "A garrison that accomodate units",
                 Name = "Garrison",
-                ImageUrl = "/images/garrison.svg",
+                ImageUrl = "/images/garrison.png",
                 MaxLevel = 3
             };
 
@@ -434,7 +434,7 @@ namespace StrategyGame.DAL
             {
                 Id = Guid.Parse("97f6314a-766d-4aa2-9c49-7dbcf86140b5"),
                 Description = "A melee unit that is strong in close combat",
-                ImageUrl = "/images/hoplite.svg",
+                ImageUrl = "/images/hoplite.png",
                 MaxLevel = 3,
                 Name = "Hoplite",            
             };
@@ -442,15 +442,15 @@ namespace StrategyGame.DAL
             {
                 Id = Guid.Parse("489e9070-f6f6-4130-8979-89e54b140835"),
                 Description = "A ranged unit that is strong in ranged combat",
-                ImageUrl = "/images/slingshot.svg",
+                ImageUrl = "/images/archer.png",
                 MaxLevel = 3,
-                Name = "Slingshot",
+                Name = "Archer",
             };
             var catapultSpecifics = new UnitSpecifics
             {
                 Id = Guid.Parse("06d69f35-d7f8-444f-bd25-da45bc6accb6"),
                 Description = "A ranged unit that is the strongest in ranged combat",
-                ImageUrl = "/images/catapult.svg",
+                ImageUrl = "/images/catapult.png",
                 MaxLevel = 3,
                 Name = "Catapult",
             };
@@ -460,7 +460,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("a6336474-fa17-43ba-a5c6-7fee92ab15b7"),
                 Description = "Boosts all production",
                 Name = "Production Booster",
-                PictureUrl = "/images/productionBooster.svg",
+                PictureUrl = "/images/productionBooster.png",
                 StoneBonus = 1.1,
                 SulfurBonus = 1.1,
                 WineBonus = 1.1,
@@ -472,7 +472,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c"),
                 Description = "Boosts research output",
                 Name = "Science Booster",
-                PictureUrl = "/images/scienceBooster.svg",
+                PictureUrl = "/images/scienceBooster.png",
                 ResearchBonus = 1.2,
                 ResearchPointCost = 1000
             };
@@ -481,7 +481,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("93ad7e45-7071-48d5-a5df-c5eb21bb35da"),
                 Description = "Boosts gold production",
                 Name = "Gold Production Booster",
-                PictureUrl = "/images/goldProductionBooster.svg",
+                PictureUrl = "/images/goldProductionBooster.png",
                 GoldBonus = 1.3,
                 ResearchPointCost = 1000
             };
@@ -490,7 +490,7 @@ namespace StrategyGame.DAL
                 Id = Guid.Parse("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae"),
                 Description = "Unit booster research",
                 Name = "Unit Booster",
-                PictureUrl = "/images/unitBooster.svg",
+                PictureUrl = "/images/unitBooster.png",
                 AttackPowerBonus = 1.15,
                 DefensePowerBonus = 1.1,
                 ResearchPointCost = 1000
@@ -947,12 +947,13 @@ namespace StrategyGame.DAL
             {
                 Id = Guid.Parse("1bb1f3c1-8c10-439c-8dcb-7f8cc1f8044e"),
                 Round = 0,
-                GoldPictureUrl = "/images/gold.svg",
-                MarblePictureUrl = "/images/marble.svg",
-                WinePictureUrl = "/images/wine.svg",
-                SulfurPictureUrl = "/images/sulfur.svg",
-                WoodPictureUrl = "/images/wood.svg",
-                TechnologyPictureUrl = "/images/technology.svg",
+                GoldPictureUrl = "/images/gold.png",
+                MarblePictureUrl = "/images/marble.png",
+                WinePictureUrl = "/images/wine.png",
+                SulfurPictureUrl = "/images/sulfur.png",
+                WoodPictureUrl = "/images/wood.png",
+                TechnologyPictureUrl = "/images/technology.png",
+                ForceLimitPictureUrl = "/images/forcelimit.png",
             };
             #endregion
 

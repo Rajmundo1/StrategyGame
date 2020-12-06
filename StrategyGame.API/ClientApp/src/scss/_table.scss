@@ -1,0 +1,44 @@
+tr{
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+
+    td:first-of-type {
+        width: 20vw;
+    }
+
+    td:last-of-type{
+        padding-right: 0;
+    }
+
+    td{
+        padding-right: 3vw;
+    }
+}
+
+tr.scoreboard{
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+
+    td:first-of-type {
+        width: 3vw;
+        padding: 0;
+    }
+    td.username{
+        width: 35vw;
+    }
+
+    td:last-of-type{
+        padding-right: 0;
+    }
+
+    td{
+        padding-right: 3vw;
+    }
+}
+
+
+.tab{
+    padding-right: 35px;
+}

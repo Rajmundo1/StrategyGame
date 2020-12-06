@@ -12,5 +12,6 @@ namespace StrategyGame.BLL.Interfaces
         Task<TokenDto> Login(LoginDto loginDto);
         Task Logout();
         Task<TokenDto> Register(RegisterDto registerDto);
+        Task<TokenDto> RenewToken(string refreshToken);
     }
 }

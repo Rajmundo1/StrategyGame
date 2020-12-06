@@ -15,6 +15,7 @@ namespace StrategyGame.MODEL.Entities
         public string SulfurPictureUrl { get; set; }
         public string GoldPictureUrl { get; set; }
         public string TechnologyPictureUrl { get; set; }
+        public string ForceLimitPictureUrl { get; set; }
 
     }
 }

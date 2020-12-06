@@ -1,0 +1,30 @@
+@import 'table';
+@import 'button';
+@import 'flex-box';
+@import 'icons';
+@import '_text';
+@import '_snackbar';
+
+@font-face{
+    font-family: baloo;
+    src: url(../assets/font/Baloo-Regular.ttf);
+}
+
+body{
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    background-image: url("../assets/images/background.jpg");
+    margin: 0;
+}
+
+.login-body {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    background-image: url("../assets/images/background.jpg");
+}

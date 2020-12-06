@@ -28,7 +28,7 @@ namespace StrategyGame.BLL.Services
             this.identityService = identityService;
         }
 
-        public async Task DevelopTechnology(Guid technologyId)
+        public async Task<TechnologyDto> DevelopTechnology(Guid technologyId)
         {
             var technology = await technologyRepository.GetTechnologyAsync(technologyId);
             var kingdom = await kingdomRepository.GetKingdomAsync(technology.KingdomId);
@@ -43,12 +43,33 @@ namespace StrategyGame.BLL.Services
             if (technology.Specifics.ResearchPointCost <= kingdom.ResearchPoint)
             {
                 await kingdomRepository.SpendResearchPointAsync(kingdom.Id, technology.Specifics.ResearchPointCost);
-                await technologyRepository.DevelopTechnologyAsync(technologyId);
+                return mapper.Map<TechnologyDto>(await technologyRepository.DevelopTechnologyAsync(technologyId));
             }
             else
             {
                 throw new AppException("Insufficient research points");
             }
+        }
+
+        public async Task<IEnumerable<TechnologyDto>> GetTechnologies(Guid kingdomId)
+        {
+            var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
+
+            var currentUser = await identityService.GetCurrentUser();
+            if (!(await kingdomRepository.IsOwner(kingdom.Id, currentUser.Id)))
+            {
+                throw new AppException("You aren't the owner of that kingdom");
+            }
+
+            var technologies = await technologyRepository.GetTechnologiesAsync(kingdomId);
+            var result = new List<TechnologyDto>();
+
+            foreach(var tech in technologies)
+            {
+                result.Add(mapper.Map<TechnologyDto>(tech));
+            }
+
+            return result;
         }
 
         public async Task<TechnologyDetailDto> GetTechnologyDetail(Guid technologyId)
@@ -62,26 +83,6 @@ namespace StrategyGame.BLL.Services
             }
 
             return mapper.Map<TechnologyDetailDto>(technology);
-        }
-
-        public async Task<IEnumerable<TechnologyDto>> GetTechnologies(Guid kingdomId)
-        {
-            var currentUser = await identityService.GetCurrentUser();
-            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
-            {
-                throw new AppException("You aren't the owner of that kingdom");
-            }
-
-            var technologies = (await kingdomRepository.GetKingdomAsync(kingdomId)).Technologies;
-
-            var result = new List<TechnologyDto>();
-
-            foreach(var technology in technologies)
-            {
-                result.Add(mapper.Map<TechnologyDto>(technology));
-            }
-
-            return result;
         }
 
     }

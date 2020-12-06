@@ -14,5 +14,6 @@ namespace StrategyGame.BLL.Interfaces
         Task DevelopUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int currentLvl);
         Task HireUnitsAsync(int count, Guid countyId, Guid unitSpecificsId);
         Task RemoveUnitsAsync(int count, Guid countyId, Guid unitSpecificsId, int lvl);
+        Task<IEnumerable<UnitSpecificsDto>> GetUnitSpecifics();
     }
 }

@@ -1,0 +1,118 @@
+<body class="login-body">
+
+    <div class="flex-box login">
+
+        <h1 style="color: rgb(255, 228, 181);;">Strategy Game</h1>
+
+        <mat-card *ngIf=!reg class="flex-box">
+            <mat-card-title>Login</mat-card-title>
+            <mat-card-content class="input-line">
+                <form class="login-form" [formGroup]="loginForm" style="display: flex; flex-direction: column; align-items: center;">
+                    <mat-form-field class="login-full-width" floatLabel="never">
+                        <mat-label>Username</mat-label>
+                        <input matInput name="username" formControlName="username">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="loginForm.controls['username'].errors?.required && loginForm.controls['username'].touched">
+                        The username cannot be empty.
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="loginForm.controls['username'].errors?.whitespace && loginForm.controls['username'].touched">
+                        The username cannot be only spaces.
+                    </div>
+
+
+                    <mat-form-field class="login-full-width" floatLabel="never" style="margin-top: 20px;">
+                        <mat-label>Password</mat-label>
+                        <input matInput type="password" name="password" formControlName="password">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="loginForm.controls['password'].errors?.required && loginForm.controls['password'].touched">
+                        The password cannot be empty.
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="loginForm.controls['password'].errors?.whitespace && loginForm.controls['password'].touched">
+                        The password cannot be only spaces.
+                    </div>
+                    
+                    <button mat-flat-button type="submit" class="color-button" style="margin-top: 25px; width: auto;" (click)="login()">Login</button>
+                    
+                    <button mat-flat-button class="color-button" style="margin-top: 20px; width: auto;" (click)="_true()">Registration</button>
+                    
+                </form>
+            </mat-card-content>
+        </mat-card>
+
+
+        <mat-card *ngIf=reg class="flex-box">
+            <mat-card-title>Registration</mat-card-title>
+            <mat-card-content class="input-line">
+                <form class="login-form" [formGroup]="regForm" style="display: flex; flex-direction: column; align-items: center;">
+                    <mat-form-field class="login-full-width" floatLabel="never">
+                        <mat-label>Username</mat-label>
+                        <input matInput name="regUsername" formControlName="regUsername">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['regUsername'].errors?.required && regForm.controls['regUsername'].touched">
+                        The username cannot be empty
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['regUsername'].errors?.whitespace && regForm.controls['regUsername'].touched">
+                        The username cannot be only spaces.
+                    </div>
+
+                    <mat-form-field class="login-full-width" floatLabel="never" style="margin-top: 20px;">
+                        <mat-label>Password</mat-label>
+                        <input matInput type="password" name="regPassword" formControlName="regPassword">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['regPassword'].errors?.required && regForm.controls['regPassword'].touched">
+                        The password cannot be empty
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['regPassword'].errors?.whitespace && regForm.controls['regPassword'].touched">
+                        The password cannot be only spaces.
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['regPassword'].errors?.minlength && regForm.controls['regPassword'].touched">
+                        The password cannot be shorter than four chracters.
+                    </div>
+
+                    <mat-form-field class="login-full-width" floatLabel="never" style="margin-top: 20px;">
+                        <mat-label>Confirm Password</mat-label>
+                        <input matInput type="password" name="passConfirm" formControlName="passConfirm">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['passConfirm'].errors?.required && regForm.controls['passConfirm'].touched">
+                        You must confirm the password.
+                    </div>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['passConfirm'].value != regForm.controls['regPassword'].value && regForm.controls['passConfirm'].touched">
+                        The password does not match.
+                    </div>
+
+                    <mat-form-field class="login-full-width" floatLabel="never" style="margin-top: 20px;">
+                        <mat-label>The name of your county</mat-label>
+                        <input matInput name="county" formControlName="county">
+                    </mat-form-field>
+                    <div style="margin-left: 10px; color: red"
+                        *ngIf="regForm.controls['county'].errors?.required && regForm.controls['county'].touched">
+                        The county name is necessary.
+                    </div>
+                    <button type="submit" class="color-button" style="margin-top: 25px; width: auto;" (click)="signup()" mat-flat-button>Register</button>
+                    <button class="color-button" style="margin-top: 20px; width: auto;" (click)="_false()" mat-flat-button>Login</button>
+                </form>
+
+            </mat-card-content>
+            <mat-card-actions class="input-line">
+                
+            </mat-card-actions>
+            <mat-card-actions>
+                
+            </mat-card-actions>
+
+        </mat-card>
+    </div>
+
+
+</body>

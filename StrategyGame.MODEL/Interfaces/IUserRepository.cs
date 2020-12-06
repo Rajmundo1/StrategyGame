@@ -13,8 +13,10 @@ namespace StrategyGame.MODEL.Interfaces
     {
         Task Register(RegisterData registerData);
         Task<User> GetUserAsync(Guid id);
-        Task<PagedList<User>> GetPagedUsersAsync(PagingParameters pagingParameters);
         Task<IEnumerable<User>> GetAllUsersAsync();
-        Task<PagedList<User>> GetFilteredPagedUsersAsync(Expression<Func<User, bool>> filter, PagingParameters pagingParameters);
+        Task<IEnumerable<User>> GetFilteredUsersAsync(string userName);
+        Task<User> GetUserByRefreshToken(string refreshToken);
+        Task RemoveRefreshToken(string userId);
+        Task<User> GetUserByKingdomId(Guid kingdomId);
     }
 }

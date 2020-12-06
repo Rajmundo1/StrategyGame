@@ -9,8 +9,8 @@ namespace StrategyGame.BLL.Interfaces
 {
     public interface ITechnologyAppService
     {
-        Task<IEnumerable<TechnologyDto>> GetTechnologies(Guid kingdomId);
         Task<TechnologyDetailDto> GetTechnologyDetail(Guid technologyId);
-        Task DevelopTechnology(Guid technologyId);
+        Task<TechnologyDto> DevelopTechnology(Guid technologyId);
+        Task<IEnumerable<TechnologyDto>> GetTechnologies(Guid kingdomId);
     }
 }

@@ -1,0 +1,82 @@
+$white: #ffffff;
+$light-blue: #9FFFF0;
+$second-blue: #6BEEE9;
+$third-blue: #0FCFDE;
+$dark-brown: #472d11;
+$dark-dark-brown: #341300;
+$baloo-font: 'baloo', regular;
+
+.flex-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    flex-wrap: wrap;
+}
+
+.flex-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+::ng-deep .mat-card-content{
+    margin-bottom: 0px !important;
+}
+
+.mat-card{
+    background-color: rgba($white, 0.3);
+    border-radius: 16px;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 95vw;
+    //min-height: 2vh;
+    box-shadow: none;
+    padding: 8px;
+}
+
+.header-text{
+    font-family: $baloo-font;
+    font-size: 25px;
+    color: $dark-brown;
+    margin-left: 1vw;
+}
+
+.header-number{
+    font-family: $baloo-font;
+    font-size: 25px;
+    color: $dark-brown;
+    margin-left: 1vw;
+}
+
+.header-small-text{
+    font-family: $baloo-font;
+    font-size: 15px;
+    color: $dark-brown;
+    margin-left: 1vw;
+}
+
+
+.rectangle{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 3vw;
+    height: 4vh;
+    width: 4vh;
+    border: 2px;
+    border-style: solid;
+    border-color: #428DFF;
+    border-radius: 14px;
+    background-color: #9FFFF0;
+    padding: 10px;
+}
+
+img{
+    width: 4vw;
+    height: 4vw;
+}

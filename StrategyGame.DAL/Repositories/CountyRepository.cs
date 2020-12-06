@@ -27,6 +27,22 @@ namespace StrategyGame.DAL.Repositories
             this.userRepository = userRepository;
         }
 
+        public async Task<IEnumerable<County>> GetAllCounties()
+        {
+            return await dbContext.Counties
+                .Include(county => county.Kingdom)
+                .ThenInclude(kingdom => kingdom.Technologies)
+                .ThenInclude(tech => tech.Specifics)
+                .Include(county => county.Buildings)
+                .ThenInclude(b => b.BuildingSpecifics)
+                .ThenInclude(sp => sp.BuildingLevels)
+                .Include(county => county.Units)
+                .ThenInclude(u => u.Units)
+                .ThenInclude(u => u.UnitSpecifics)
+                .ThenInclude(usp => usp.UnitLevels)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<County>> GetCountiesByKingdomId(Guid kingdomId)
         {
             return await dbContext.Counties
@@ -78,38 +94,6 @@ namespace StrategyGame.DAL.Repositories
         {
             var countyId = Guid.NewGuid();
             var unitGroupId = Guid.NewGuid();
-
-            var newTechnologies = new List<Technology>
-            {
-                new Technology
-                {
-                    Id = Guid.NewGuid(),
-                    KingdomId = kingdomId,
-                    TechnologySpecificsId = Guid.Parse("a6336474-fa17-43ba-a5c6-7fee92ab15b7"),
-                    Status = ResearchStatus.UnResearched
-                },
-                new Technology
-                {
-                    Id = Guid.NewGuid(),
-                    KingdomId = kingdomId,
-                    TechnologySpecificsId = Guid.Parse("f7f7f6a9-1ce5-4051-82b0-a55fb19d901c"),
-                    Status = ResearchStatus.UnResearched
-                },
-                new Technology
-                {
-                    Id = Guid.NewGuid(),
-                    KingdomId = kingdomId,
-                    TechnologySpecificsId = Guid.Parse("93ad7e45-7071-48d5-a5df-c5eb21bb35da"),
-                    Status = ResearchStatus.UnResearched
-                },
-                new Technology
-                {
-                    Id = Guid.NewGuid(),
-                    KingdomId = kingdomId,
-                    TechnologySpecificsId = Guid.Parse("4e9f32b6-2621-4f7c-a939-f4d1a1a2daae"),
-                    Status = ResearchStatus.UnResearched
-                },
-            };
 
             var newBuildings = new List<Building>
             {
@@ -193,10 +177,6 @@ namespace StrategyGame.DAL.Repositories
 
             await dbContext.Buildings.AddRangeAsync(newBuildings);
             await dbContext.SaveChangesAsync();
-
-            await dbContext.Technologies.AddRangeAsync(newTechnologies);
-            await dbContext.SaveChangesAsync();
-
 
             //calculate rankings
             var users = (await userRepository

@@ -7,7 +7,9 @@ namespace StrategyGame.BLL.Dtos
 {
     public class CountyDto
     {
-        public string Name { get; set; }
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string CountyName { get; set; }
         public string Score { get; set; }
     }
 }

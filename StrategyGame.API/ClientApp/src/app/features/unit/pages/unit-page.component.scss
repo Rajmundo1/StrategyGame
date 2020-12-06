@@ -1,0 +1,59 @@
+$light-brown:  rgba(225, 198, 153, 0.8);
+$dark-brown: #764b1c;
+$dark-dark-brown: #001234;
+
+h2{
+    color: white;
+}
+
+.mat-divider.my-divider{
+    width: 65vw;
+}
+
+.mat-card.mat-card-main {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: none;
+    padding: 30px;
+    max-width: 70vw;
+    max-height: 35vw;
+    margin: 2vw;
+}
+
+.color-button{
+    margin-top: 1vw;
+}
+
+.slider {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;  
+    padding-right: 5px;
+    position: relative;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $dark-brown;
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: $dark-dark-brown;
+  }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

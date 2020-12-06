@@ -1,0 +1,11 @@
+<div class="flex-box" style="justify-content: center; align-items: center; background:transparent; color:blanchedalmond; margin-top: 10vh;">
+    <div class="buildingslider" style="flex-direction: row;">
+        <div class="flex-box">
+            <div  class="flex-box" style="flex-wrap: wrap;">
+                <div *ngFor="let building of mainPageData.buildings" style="align-items: center;">
+                    <img (click) = "navToBuilding(building.id)" [src] = "baseUrl + building.imageUrl" alt = ""style="cursor: pointer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

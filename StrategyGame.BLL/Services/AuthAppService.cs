@@ -8,6 +8,7 @@ using StrategyGame.MODEL.Exceptions;
 using StrategyGame.MODEL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Model;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -23,13 +24,15 @@ namespace StrategyGame.BLL.Services
         private readonly IUnitOfWork unitOfWork;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
+        private readonly IIdentityService identityService;
 
         public AuthAppService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
                                 ITokenAppService tokenService,
                                 IUnitOfWork unitOfWork,
                                 IUserRepository userRepository,
-                                IMapper mapper)
+                                IMapper mapper,
+                                IIdentityService identityService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -37,6 +40,7 @@ namespace StrategyGame.BLL.Services
             this.unitOfWork = unitOfWork;
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.identityService = identityService;
         }
 
         public async Task<TokenDto> Login(LoginDto loginDto)
@@ -47,7 +51,8 @@ namespace StrategyGame.BLL.Services
                 var user = await userManager.FindByNameAsync(loginDto.UserName);
                 return new TokenDto
                 {
-                    AccessToken = await tokenService.CreateNormalAccessToken(user)
+                    AccessToken = await tokenService.CreateNormalAccessToken(user),
+                    RefreshToken = await tokenService.CreateNormalRefreshTokenAsync(user)
                 };
             }
             throw new AppException("Wrong username or password");
@@ -55,7 +60,9 @@ namespace StrategyGame.BLL.Services
 
         public async Task Logout()
         {
+            var userId = await identityService.GetCurrentUserId();
             await signInManager.SignOutAsync();
+            await userRepository.RemoveRefreshToken(userId.ToString());
         }
 
         public async Task<TokenDto> Register(RegisterDto registerDto)
@@ -65,12 +72,27 @@ namespace StrategyGame.BLL.Services
 
             var storedUser = await userManager.FindByNameAsync(registerDto.UserName);
 
-            var token = new TokenDto
-                {
-                    AccessToken = await tokenService.CreateNormalAccessToken(storedUser) 
-                };
-
-            return token;
+            return new TokenDto
+            {
+                AccessToken = await tokenService.CreateNormalAccessToken(storedUser),
+                RefreshToken = await tokenService.CreateNormalRefreshTokenAsync(storedUser)
+            };
         }
+
+        public async Task<TokenDto> RenewToken(string refreshToken)
+        {
+            var user = await userRepository.GetUserByRefreshToken(refreshToken);
+
+            if(user == null)
+            {
+                throw new AppException("There is no user with that specific refresh token");
+            }
+            return new TokenDto
+            {
+                AccessToken = await tokenService.CreateNormalAccessToken(user),
+                RefreshToken = await tokenService.CreateNormalRefreshTokenAsync(user)
+            };
+        }
+
     }
 }

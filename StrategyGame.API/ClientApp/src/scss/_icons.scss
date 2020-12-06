@@ -1,0 +1,42 @@
+$light-brown:  rgba(225, 198, 153, 0.8);
+$dark-brown: #764b1c;
+$dark-dark-brown: #001234;
+
+.rectangle{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 4vh;
+    width: 4vh;
+    border: 2px;
+    border-style: solid;
+    border-color: $dark-brown;
+    border-radius: 14px;
+    background-color: $light-brown;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.rectangle.attack{
+    margin-bottom: 10px;
+}
+
+.rectangle-big{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 6vh;
+    width: 6vh;
+    border: 2px;
+    border-style: solid;
+    border-color: $dark-brown;
+    border-radius: 14px;
+    background-color: $light-brown;
+    padding: 10px;
+}
+
+img{
+    width: 100%;
+}

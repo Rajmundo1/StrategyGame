@@ -43,5 +43,12 @@ namespace StrategyGame.API.Controllers
         {
             await authService.Logout();
         }
+
+        [HttpPost("renew")]
+        [AllowAnonymous]
+        public Task<TokenDto> RenewToken([FromQuery] string refreshToken)
+        {
+            return authService.RenewToken(refreshToken);
+        }
     }
 }

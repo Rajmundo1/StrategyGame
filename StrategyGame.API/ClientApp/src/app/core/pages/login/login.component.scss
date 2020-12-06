@@ -1,0 +1,90 @@
+$light-blue: #9FFFF0;
+$second-blue: #6BEEE9;
+$third-blue: #0FCFDE;
+$dark-brown: #764b1c;
+$dark-dark-brown: #001234;
+$baloo-font: 'baloo', regular;
+
+
+
+h1{
+    font-size: 85px;
+    text-align: center;
+    padding-top: 40px;
+    height: 5vw;
+}
+
+.flex-box {
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.mat-card{
+    background-color: rgba(white, 0.2);
+    border-radius: 16px;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-width: 20vw;
+}
+
+.mat-card-title{
+    color: $dark-brown;
+    font-family: $baloo-font;
+    padding-bottom: 1vw;
+}
+
+.login-full-width {
+    //width: 100%;
+    min-width: 18vw;
+    border-radius: 20px;
+    background-color: rgba(white, 0.39);
+    //margin-bottom: 20px;
+}
+
+.mat-input-element{
+    width: calc(18vw - 12px);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: $dark-brown !important;
+}
+
+::ng-deep input.mat-input-element {
+    color: $dark-brown;
+  }
+
+::ng-deep .mat-form-field-infix{
+    border: 40px;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding: 2px;
+}
+
+::ng-deep .mat-form-field-label{
+    color: $dark-brown !important;
+    font-family: 'open-sans', sans-serif;
+    font-size: 16px;
+    padding-left: 10px;
+    
+}
+::ng-deep.mat-form-field-underline {
+    display: none;
+} 
+::ng-deep.mat-error {
+    padding-top: 1vw;
+} 
+
+::ng-deep .mat-card-actions{
+    margin-bottom: 0px !important;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+

@@ -183,5 +183,12 @@ namespace StrategyGame.DAL.Repositories
 
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<UnitSpecifics>> GetAllUnitSpecificsAsync()
+        {
+            return await dbContext.UnitSpecifics
+                .Include(u => u.UnitLevels)
+                .ToListAsync();
+        }
     }
 }

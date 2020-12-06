@@ -1,0 +1,10 @@
+<div class="attack-one-unit">
+    <div class="rectangle attack">
+        <img [src]="baseUrl + unit.imageUrl" alt="">
+    </div>
+    <div>
+        <h4 class="attack-unit-name">{{ unit.name }} : {{ matslider.value }} / {{unit.availableCount}} count</h4>
+        <h4 class="attack-unit-name">Level: {{unit.level}}</h4>
+        <mat-slider [disabled]="unit.availableCount === 0" [min]=0 [max]="unit.availableCount" #matslider (change)="addValue()" ></mat-slider>
+    </div>
+</div>

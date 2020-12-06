@@ -20,6 +20,7 @@ namespace StrategyGame.BLL.Dtos
         public double ResearchBonus { get; set; }
         public double AttackPowerBonus { get; set; }
         public double DefensePowerBonus { get; set; }
+        public int ResearchPointCost { get; set; }
         public ResearchStatus Status { get; set; }
     }
 }

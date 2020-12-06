@@ -1,0 +1,28 @@
+.search-form{
+    width: 80%;
+}
+
+.search-full-width {
+    width: 80%;
+    min-width: 1.5vw;
+    border-radius: 20px;
+    background-color: rgba(white, 0.39);
+    padding-left: 0.5vw;
+    
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.color-button {
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+
+.divider{
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}

@@ -54,6 +54,51 @@ namespace StrategyGame.BLL.Services
             this.identityService = identityService;
         }
 
+        public async Task<IEnumerable<CountyDto>> GetAllCounties()
+        {
+            var currentUser = await identityService.GetCurrentUser();
+
+            var counties = await countyRepository.GetAllCounties();
+
+            var result = new List<CountyDto>();
+
+            foreach(var county in counties)
+            {
+                if (!currentUser.KingdomId.Equals(county.KingdomId))
+                {
+                    var dummy = mapper.Map<CountyDto>(county);
+                    dummy.Username = (await userRepository.GetUserByKingdomId(county.KingdomId)).UserName;
+                    result.Add(dummy);
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<CountyDto>> GetAllFilteredCounties(string userName)
+        {
+            var currentUser = await identityService.GetCurrentUser();
+
+            var counties = await countyRepository.GetAllCounties();
+
+            var result = new List<CountyDto>();
+
+            foreach (var county in counties)
+            {
+                if (!currentUser.KingdomId.Equals(county.KingdomId))
+                {
+                    var dummy = mapper.Map<CountyDto>(county);
+                    dummy.Username = (await userRepository.GetUserByKingdomId(county.KingdomId)).UserName;
+                    if (dummy.Username.ToUpper().Contains(userName.ToUpper()))
+                    {
+                        result.Add(dummy);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task<IEnumerable<CountyDto>> GetCounties(Guid kingdomId)
         {
             var currentUser = await identityService.GetCurrentUser();
@@ -68,7 +113,9 @@ namespace StrategyGame.BLL.Services
 
             foreach(var county in counties)
             {
-                result.Add(mapper.Map<CountyDto>(county));
+                var dummy = mapper.Map<CountyDto>(county);
+                dummy.Username = currentUser.UserName;
+                result.Add(dummy);
             }
 
             return result;
@@ -108,19 +155,17 @@ namespace StrategyGame.BLL.Services
             result.TechnologyPictureUrl = game.TechnologyPictureUrl;
             result.WinePictureUrl = game.WinePictureUrl;
             result.WoodPictureUrl = game.WoodPictureUrl;
+            result.ForceLimitPictureUrl = game.ForceLimitPictureUrl;
+            result.Username = currentUser.UserName;
 
             return result;
         }
 
-        public async Task<MainPageDto> GetMainPage(Guid kingdomId)
+        public async Task<MainPageDto> GetMainPage()
         {
             var currentUser = await identityService.GetCurrentUser();
-            if (!(await kingdomRepository.IsOwner(kingdomId, currentUser.Id)))
-            {
-                throw new AppException("You aren't the owner of that kingdom");
-            }
 
-            var kingdom = await kingdomRepository.GetKingdomAsync(kingdomId);
+            var kingdom = await kingdomRepository.GetKingdomAsync(currentUser.KingdomId);
             var countiesOfKingdom = kingdom.Counties.ToList();
             var county = await countyRepository.GetCountyAsync(countiesOfKingdom[0].Id);
 
@@ -146,7 +191,9 @@ namespace StrategyGame.BLL.Services
             result.SulfurPictureUrl = game.SulfurPictureUrl;
             result.TechnologyPictureUrl = game.TechnologyPictureUrl;
             result.WinePictureUrl = game.WinePictureUrl;
-            result.WoodPictureUrl = game.WoodPictureUrl; 
+            result.WoodPictureUrl = game.WoodPictureUrl;
+            result.ForceLimitPictureUrl = game.ForceLimitPictureUrl;
+            result.Username = currentUser.UserName;
 
             return result;
         }

@@ -19,5 +19,7 @@ namespace StrategyGame.MODEL.Entities
 
         [ForeignKey("Game")]
         public Guid GameId { get; set; }
+
+        public string RefreshToken { get; set; }
     }
 }

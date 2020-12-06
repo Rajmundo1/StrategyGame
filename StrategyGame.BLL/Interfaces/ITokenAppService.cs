@@ -9,5 +9,7 @@ namespace StrategyGame.BLL.Interfaces
     public interface ITokenAppService
     {
         Task<string> CreateNormalAccessToken(User user);
+        Task<string> CreateNormalRefreshTokenAsync(User user);
+        Task RemoveRefreshToken(string userId);
     }
 }

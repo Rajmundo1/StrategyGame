@@ -8,8 +8,8 @@ namespace StrategyGame.BLL.Interfaces
 {
     public interface IUserAppService
     {
-        Task<PagedListDto<UserDto>> GetUsersAsync(PagingParametersDto pagingParametersDto);
-        Task<PagedListDto<UserDto>> GetFilteredUsersAsync(UserParametersDto parameters);
+        Task<IEnumerable<UserDto>> GetUsersAsync();
+        Task<IEnumerable<UserDto>> GetFilteredUsersAsync(string userName);
         Task<UserDto> GetUserAsync(Guid id);
     }
 }

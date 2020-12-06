@@ -31,13 +31,9 @@ namespace StrategyGame.BLL.Services
             this.mapper = mapper;
         }
 
-        public async Task<PagedListDto<UserDto>> GetFilteredUsersAsync(UserParametersDto parameters)
+        public async Task<IEnumerable<UserDto>> GetFilteredUsersAsync(string userName)
         {
-            var pagingParameters = mapper.Map<PagingParameters>(parameters);
-            var userParameters = mapper.Map<UserParameters>(parameters);
-            var filter = BuildFilterExpression(userParameters);
-
-            var result = await userRepository.GetFilteredPagedUsersAsync(filter, pagingParameters);
+            var result = await userRepository.GetFilteredUsersAsync(userName);
 
             var list = new List<UserDto>();
             foreach (var item in result)
@@ -45,19 +41,7 @@ namespace StrategyGame.BLL.Services
                 list.Add(mapper.Map<UserDto>(item));
             }
 
-            return new PagedListDto<UserDto>
-            {
-                Items = list,
-                PaginationHeader = new PaginationHeader
-                {
-                    TotalCount = result.TotalCount,
-                    CurrentPage = result.CurrentPage,
-                    PageSize = result.PageSize,
-                    TotalPages = result.TotalPages,
-                    HasNext = result.HasNext,
-                    HasPrevious = result.HasPrevious
-                }
-            };
+            return list;
         }
 
         public async Task<UserDto> GetUserAsync(Guid id)
@@ -66,11 +50,9 @@ namespace StrategyGame.BLL.Services
             return mapper.Map<UserDto>(userToReturn);
         }
 
-        public async Task<PagedListDto<UserDto>> GetUsersAsync(PagingParametersDto pagingParametersDto)
+        public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var pagingParameters = mapper.Map<PagingParameters>(pagingParametersDto);
-
-            var result = await userRepository.GetPagedUsersAsync(pagingParameters);
+            var result = await userRepository.GetAllUsersAsync();
 
             var list = new List<UserDto>();
             foreach(var item in result)
@@ -78,35 +60,23 @@ namespace StrategyGame.BLL.Services
                 list.Add(mapper.Map<UserDto>(item));
             }
 
-            return new PagedListDto<UserDto>
-            {
-                Items = list,
-                PaginationHeader = new PaginationHeader
-                {
-                    TotalCount = result.TotalCount,
-                    CurrentPage = result.CurrentPage,
-                    PageSize = result.PageSize,
-                    TotalPages = result.TotalPages,
-                    HasNext = result.HasNext,
-                    HasPrevious = result.HasPrevious
-                }
-            };
+            return list;
         }
 
-        private Expression<Func<User, bool>> BuildFilterExpression (UserParameters userParameters)
-        {
-            Expression<Func<User, bool>> filter = user => true;
+        //private Expression<Func<User, bool>> BuildFilterExpression (UserParameters userParameters)
+        //{
+        //    Expression<Func<User, bool>> filter = user => true;
 
-            if (!string.IsNullOrEmpty(userParameters.Name))
-            {
-                filter = filter.And(user => user.UserName.Contains(userParameters.Name));
-            }
-            if(userParameters.ScoreboardPlace != null)
-            {
-                filter = filter.And(user => user.ScoreboardPlace == userParameters.ScoreboardPlace);
-            }
+        //    if (!string.IsNullOrEmpty(userParameters.Name))
+        //    {
+        //        filter = filter.And(user => user.UserName.Contains(userParameters.Name));
+        //    }
+        //    if(userParameters.ScoreboardPlace != null)
+        //    {
+        //        filter = filter.And(user => user.ScoreboardPlace == userParameters.ScoreboardPlace);
+        //    }
 
-            return filter;
-        }
+        //    return filter;
+        //}
     }
 }

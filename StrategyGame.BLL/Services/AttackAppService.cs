@@ -47,7 +47,7 @@ namespace StrategyGame.BLL.Services
             //check if county has enough units
 
             var availableUnits = new List<Unit> (await unitRepository.GetUnitsAsync(attackerCountyId));
-            var unitDic = new List<UnitSpecificAndLevel>();
+            var unitDic = new List<UnitSpecificIdAndLevelWithCount>();
             var neededUnits = new List<Unit>();
             var unitsToSend = new List<Unit>();
 
@@ -115,7 +115,6 @@ namespace StrategyGame.BLL.Services
 
             var attacks = await attackRepository.GetAttacks(countyId);
             var result = new List<AttackDto>();
-            var unitDic = new List<UnitSpecificAndLevel>();
 
             foreach (var attack in attacks)
             {
@@ -123,9 +122,11 @@ namespace StrategyGame.BLL.Services
 
                 var unitDtos = new List<UnitDto>();
 
+                var unitDic = new List<UnitSpecificIdAndLevelWithCount>();
+
                 foreach (var unit in attack.AttackerUnits.Units)
                 {
-                    var dummy = new UnitSpecificAndLevel();
+                    var dummy = new UnitSpecificIdAndLevelWithCount();
                     dummy.Level = unit.Level;
                     dummy.UnitSpecificsId = unit.UnitSpecificsId;
 
@@ -141,11 +142,13 @@ namespace StrategyGame.BLL.Services
                     }
                 }
 
+                var resultUnits = new List<UnitDto>();
+
                 foreach (var element in unitDic)
                 {
                     var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(element.UnitSpecificsId);
 
-                    unitDtos.Add(new UnitDto
+                    resultUnits.Add(new UnitDto
                     {
                         UnitSpecificsId = element.UnitSpecificsId,
                         Count = element.Count,
@@ -156,9 +159,47 @@ namespace StrategyGame.BLL.Services
                     });
                 }
 
-                attackDto.Units = unitDtos;
+                attackDto.Units = resultUnits;
 
                 result.Add(attackDto);
+
+                //foreach (var unit in attack.AttackerUnits.Units)
+                //{
+
+                //    var dummy = new UnitSpecificIdAndLevelWithCount();
+                //    dummy.Level = unit.Level;
+                //    dummy.UnitSpecificsId = unit.UnitSpecificsId;
+
+                //    var special = unitDic.SingleOrDefault(x => x.Level == dummy.Level && x.UnitSpecificsId.Equals(dummy.UnitSpecificsId));
+                //    if (special != null)
+                //    {
+                //        special.Count += 1;
+                //    }
+                //    else
+                //    {
+                //        dummy.Count = 1;
+                //        unitDic.Add(dummy);
+                //    }
+                //}
+
+                //foreach (var element in unitDic)
+                //{
+                //    var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(element.UnitSpecificsId);
+
+                //    unitDtos.Add(new UnitDto
+                //    {
+                //        UnitSpecificsId = element.UnitSpecificsId,
+                //        Count = element.Count,
+                //        ImageUrl = unitSpecifics.ImageUrl,
+                //        MaxLevel = unitSpecifics.MaxLevel,
+                //        Name = unitSpecifics.Name,
+                //        Level = element.Level
+                //    });
+                //}
+
+                //attackDto.Units = unitDtos;
+
+                //result.Add(attackDto);
             }
 
 

@@ -1,0 +1,58 @@
+<div class="flex-box-features">
+    <mat-card class="mat-card-main">
+        <mat-card-content>
+            <h1 class="main-card-title"> {{buildingDetail.name}} </h1>
+            <h2 class="main-card-title"> {{buildingDetail.description}} </h2>
+            <div class="img-container">
+                <img [src]= "baseUrl + buildingDetail.imageUrl" alt="">
+                <h2 class="main-card-title" *ngIf="buildingDetail.status.toString() == 'Built'">Level: {{buildingDetail.level}} / {{buildingDetail.maxLevel}} </h2>
+                <h2 class="main-card-title" *ngIf="buildingDetail.status.toString() == 'NotBuilt'">Level: 0 / {{buildingDetail.maxLevel}} </h2>
+            </div>
+
+            <div  class="flex-box">
+                <h4 *ngIf="buildingDetail.populationBonus > 0 && buildingDetail.level != buildingDetail.maxLevel"> Population Bonus: {{ buildingDetail.populationBonus }} -> {{ buildingNextDetail.populationBonus }} </h4>
+                <h4 *ngIf="buildingDetail.forceLimitBonus > 0 && buildingDetail.level != buildingDetail.maxLevel"> Forcelimit Bonus: {{ buildingDetail.forceLimitBonus }} -> {{ buildingNextDetail.forceLimitBonus }} </h4> 
+                <h4 *ngIf="buildingDetail.researchOutPut > 0 && buildingDetail.level != buildingDetail.maxLevel"> Research Output: {{ buildingDetail.researchOutPut }} -> {{ buildingNextDetail.researchOutPut }} </h4> 
+                <h4 *ngIf="buildingDetail.woodProduction > 0 && buildingDetail.level != buildingDetail.maxLevel"> Wood Production: {{ buildingDetail.woodProduction }} -> {{ buildingNextDetail.woodProduction }} </h4> 
+                <h4 *ngIf="buildingDetail.marbleProduction > 0 && buildingDetail.level != buildingDetail.maxLevel"> Marble Production: {{ buildingDetail.marbleProduction }} -> {{ buildingNextDetail.marbleProduction }} </h4> 
+                <h4 *ngIf="buildingDetail.wineProduction > 0 && buildingDetail.level != buildingDetail.maxLevel"> Wine Production: {{ buildingDetail.wineProduction }} -> {{ buildingNextDetail.wineProduction }} </h4>
+                <h4 *ngIf="buildingDetail.sulfurProduction > 0 && buildingDetail.level != buildingDetail.maxLevel"> Sulfur Production: {{ buildingDetail.sulfurProduction }} -> {{ buildingNextDetail.sulfurProduction }} </h4> 
+
+                <h4 *ngIf="buildingDetail.populationBonus > 0 && buildingDetail.level == buildingDetail.maxLevel"> Population Bonus: {{ buildingDetail.populationBonus }} </h4> 
+                <h4 *ngIf="buildingDetail.forceLimitBonus > 0 && buildingDetail.level == buildingDetail.maxLevel"> Forcelimit Bonus: {{ buildingDetail.forceLimitBonus }} </h4> 
+                <h4 *ngIf="buildingDetail.researchOutPut > 0 && buildingDetail.level == buildingDetail.maxLevel"> Research Output: {{ buildingDetail.researchOutPut }} </h4> 
+                <h4 *ngIf="buildingDetail.woodProduction > 0 && buildingDetail.level == buildingDetail.maxLevel"> Wood Production: {{ buildingDetail.woodProduction }} </h4> 
+                <h4 *ngIf="buildingDetail.marbleProduction > 0 && buildingDetail.level == buildingDetail.maxLevel"> Marble Production: {{ buildingDetail.marbleProduction }} </h4> 
+                <h4 *ngIf="buildingDetail.wineProduction > 0 && buildingDetail.level == buildingDetail.maxLevel"> Wine Production: {{ buildingDetail.wineProduction }} </h4> 
+                <h4 *ngIf="buildingDetail.sulfurProduction > 0 && buildingDetail.level == buildingDetail.maxLevel"> Sulfur Production: {{ buildingDetail.sulfurProduction }} </h4> 
+            </div>
+
+            <br>
+
+            <div *ngIf = "buildingDetail.level == buildingDetail.maxLevel">
+                <h3>This Building is already on the maximum level</h3>
+            </div>
+
+            <div *ngIf = "buildingDetail.level != buildingDetail.maxLevel">
+                <div class="divider">
+                    <mat-divider class="my-divider"></mat-divider>
+                </div>
+
+                <h2 class="main-card-title"> Development Cost: </h2>
+                <div  class="flex-box">
+                    <h4 *ngIf="buildingNextDetail.woodCost != 0">Wood cost: {{ buildingNextDetail.woodCost }} </h4> 
+                    <h4 *ngIf="buildingNextDetail.marbleCost != 0">Marble cost: {{ buildingNextDetail.marbleCost }} </h4>
+                    <h4 *ngIf="buildingNextDetail.wineCost != 0">Wine cost: {{ buildingNextDetail.wineCost }} </h4> 
+                    <h4 *ngIf="buildingNextDetail.sulfurCost != 0">Sulfur cost: {{ buildingNextDetail.sulfurCost }} </h4> 
+                    <h4 *ngIf="buildingNextDetail.goldCost != 0">Gold cost: {{ buildingNextDetail.goldCost }} </h4> 
+                </div>
+
+                <div class="button">
+                    <button mat-flat-button class="color-button" (click)="developBuilding()"> Develop </button>
+                </div>
+
+            </div>
+                
+        </mat-card-content>
+    </mat-card>
+</div>

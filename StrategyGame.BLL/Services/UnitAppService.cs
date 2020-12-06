@@ -111,11 +111,11 @@ namespace StrategyGame.BLL.Services
             }
 
             var units = await unitRepository.GetUnitsAsync(countyId);
-            var unitDic = new List<UnitSpecificAndLevel>();
+            var unitDic = new List<UnitSpecificIdAndLevelWithCount>();
 
             foreach(var unit in units)
             {
-                var dummy = new UnitSpecificAndLevel();
+                var dummy = new UnitSpecificIdAndLevelWithCount();
                 dummy.Level = unit.Level;
                 dummy.UnitSpecificsId = unit.UnitSpecificsId;
 
@@ -146,6 +146,30 @@ namespace StrategyGame.BLL.Services
                     Name = unitSpecifics.Name,
                     Level = element.Level
                 });
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<UnitSpecificsDto>> GetUnitSpecifics()
+        {
+            var specs = await unitRepository.GetAllUnitSpecificsAsync();
+
+            var result = new List<UnitSpecificsDto>();
+
+            var dummy = new List<UnitSpecificsAndLevel>();
+
+            foreach(var spec in specs)
+            {
+                foreach(var lvl in spec.UnitLevels)
+                {
+                    dummy.Add(new UnitSpecificsAndLevel { Level = lvl.Level, UnitSpecifics = spec });
+                }
+            }
+
+            foreach(var element in dummy)
+            {
+                result.Add(mapper.Map<UnitSpecificsDto>(element));
             }
 
             return result;

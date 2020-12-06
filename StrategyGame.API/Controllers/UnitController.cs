@@ -58,5 +58,11 @@ namespace StrategyGame.API.Controllers
         {
             await unitAppService.HireUnitsAsync(count, countyId, unitSpecificsId);
         }
+
+        [HttpGet("unispecifics")]
+        public async Task<IEnumerable<UnitSpecificsDto>> GetUnitSpecifics()
+        {
+            return await unitAppService.GetUnitSpecifics();
+        }
     }
 }

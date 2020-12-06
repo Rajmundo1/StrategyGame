@@ -1,0 +1,109 @@
+<div class="flex-box">
+    <mat-card class="mat-card-main">
+        <mat-card-content>
+            <h1 class="main-card-title">Units To Hire</h1>
+            <div class="flex-box">
+                <div>
+                    <div *ngFor="let unit of hireUnitSpecifics">
+                        <div class="attack-one-unit">
+                            <div class="rectangle attack">
+                                <img [src]="baseUrl + unit.imageUrl" alt="" (click)="selectUnitSpecifics(unit.id, unit.level)">
+                            </div>
+                            <div>
+                                <h4 class="attack-unit-name">{{ unit.name }}    A: {{ unit.attackPower }}| D: {{ unit.defensePower }}</h4>
+                                <form onsubmit="return false;">
+                                    <mat-form-field class="search-full-width" floatLabel="never">
+                                        <mat-label>Number of units to hire</mat-label>
+                                        <input matInput type="number" #hire (input)="setHireCount(hire.value, unit.id)" autocomplete="off">
+                                    </mat-form-field>
+                                </form>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="divider">
+                <mat-divider class="my-divider"></mat-divider>
+            </div>
+
+            <div class="button">
+                <button mat-flat-button class="color-button" (click)="hireUnits()">Hire</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-card-main" *ngIf="units.length != 0">
+        <mat-card-content>
+            <h1 class="main-card-title">Available Units</h1>
+            <div class="flex-box">
+                <div>
+                    <div *ngFor="let unit of units">
+                        <div class="attack-one-unit">
+                            <div class="rectangle attack">
+                                <img [src]="baseUrl + unit.imageUrl" alt="" (click)="selectUnitSpecifics(unit.unitSpecificsId, unit.level)">
+                            </div>
+                            <div>
+                                <h4 class="attack-unit-name">{{ unit.name }}</h4>
+                                <h5 class="attack-unit-name">Count: {{ unit.count }} </h5>
+                                <h4 class="attack-unit-name">Current Level: {{ unit.level }}</h4>
+                                <form onsubmit="return false;" *ngIf="unit.level != unit.maxLevel">
+                                    <mat-form-field class="search-full-width" floatLabel="never">
+                                        <mat-label>Number of units to level up</mat-label>
+                                        <input matInput type="number" #upgrade (input)="setUpgradeCount(upgrade.value, unit.unitSpecificsId)" autocomplete="off">
+                                    </mat-form-field>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="divider">
+                            <mat-divider class="my-divider"></mat-divider>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divider">
+                <mat-divider class="my-divider"></mat-divider>
+            </div>
+
+            <div class="button">
+                <button mat-flat-button class="color-button" (click)="upgradeUnits()">Upgrade</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-card-main" *ngIf="selectedUnitSpecifics">
+        <mat-card-content>
+            <div class="slider">
+                <h1 class="main-card-title">Details</h1>
+                <div class="flex-box" style="flex-direction: column;">
+                    <img [src]="baseUrl + selectedUnitSpecifics.imageUrl" alt="">
+                    <h4>Name: {{ selectedUnitSpecifics.name }}</h4>
+                    <h4>Level: {{ selectedUnitSpecifics.level }}</h4>
+                    <h4>AttackPower: {{ selectedUnitSpecifics.attackPower }}</h4>
+                    <h4>DefensePower: {{ selectedUnitSpecifics.defensePower }}</h4>
+                    <h4>ForceLimit: {{ selectedUnitSpecifics.forceLimit }}</h4>
+    
+                    <div class="divider">
+                        <mat-divider class="my-divider"></mat-divider>
+                    </div>
+                    <h2>Costs: </h2>
+                    <h4 *ngIf="selectedUnitSpecifics.woodCost != 0">WoodCost: {{ selectedUnitSpecifics.woodCost }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.marbleCost != 0">MarbleCost: {{ selectedUnitSpecifics.marbleCost }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.wineCost != 0">WineCost: {{ selectedUnitSpecifics.wineCost }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.sulfurCost != 0">SulfurCost: {{ selectedUnitSpecifics.sulfurCost }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.goldCost != 0">GoldCost: {{ selectedUnitSpecifics.goldCost }}</h4>
+    
+                    <div class="divider">
+                        <mat-divider class="my-divider"></mat-divider>
+                    </div>
+                    <h2>Upkeeps: </h2>
+                    <h4 *ngIf="selectedUnitSpecifics.woodUpkeep != 0">WoodUpkeep: {{ selectedUnitSpecifics.woodUpkeep }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.marbleUpkeep != 0">MarbleUpkeep: {{ selectedUnitSpecifics.marbleUpkeep }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.wineUpkeep != 0">WineUpkeep: {{ selectedUnitSpecifics.wineUpkeep }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.sulfurUpkeep != 0">SulfurUpkeep: {{ selectedUnitSpecifics.sulfurUpkeep }}</h4>
+                    <h4 *ngIf="selectedUnitSpecifics.goldUpkeep != 0">GoldUpkeep: {{ selectedUnitSpecifics.goldUpkeep }}</h4>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
