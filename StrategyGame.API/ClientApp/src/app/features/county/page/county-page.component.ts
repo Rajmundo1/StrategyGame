@@ -7,6 +7,7 @@ import { MatSlider } from '@angular/material/slider';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CountyServiceService } from '../services/county-service.service';
 import { Observable, of } from 'rxjs';
+import { SharedService } from 'src/app/core/services/shared-service.service';
 
 @Component({
   selector: 'app-county-page',
@@ -28,7 +29,8 @@ export class CountyPageComponent implements OnInit {
     private snackbar: MatSnackBar,
     private refreshService: RefreshDataService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private sharedService: SharedService,) { }
 
   ngOnInit(): void {
     this.kingdomId = this.route.snapshot.paramMap.get('kingdomId');
@@ -51,6 +53,8 @@ export class CountyPageComponent implements OnInit {
           tap(res => this.getData()),
           catchError(this.handleError<CountyDto[]>('Loading counties was unsuccessful', []))
         ).subscribe();
+
+        this.sharedService.refreshHeader.next(null);
       }
     );
   }

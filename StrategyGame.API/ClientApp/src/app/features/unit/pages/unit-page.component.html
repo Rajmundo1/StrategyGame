@@ -96,7 +96,8 @@
                     <div class="divider">
                         <mat-divider class="my-divider"></mat-divider>
                     </div>
-                    <h2>Upkeeps: </h2>
+                    <h2 *ngIf="selectedUnitSpecifics.woodUpkeep != 0 || selectedUnitSpecifics.marbleUpkeep != 0 || selectedUnitSpecifics.wineUpkeep != 0 || selectedUnitSpecifics.sulfurUpkeep != 0 || selectedUnitSpecifics.goldUpkeep != 0">
+                        Upkeeps: </h2>
                     <h4 *ngIf="selectedUnitSpecifics.woodUpkeep != 0">WoodUpkeep: {{ selectedUnitSpecifics.woodUpkeep }}</h4>
                     <h4 *ngIf="selectedUnitSpecifics.marbleUpkeep != 0">MarbleUpkeep: {{ selectedUnitSpecifics.marbleUpkeep }}</h4>
                     <h4 *ngIf="selectedUnitSpecifics.wineUpkeep != 0">WineUpkeep: {{ selectedUnitSpecifics.wineUpkeep }}</h4>

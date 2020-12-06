@@ -10,6 +10,7 @@ import { of, Observable } from 'rxjs';
 import { MainPageDto } from 'src/app/shared/clients';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SharedService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-header',
@@ -27,9 +28,19 @@ export class HeaderComponent implements OnInit {
     private gameService: GameService,
     private authService: AuthService,
     private snackbar: MatSnackBar,
+    private sharedService: SharedService,
     public refreshService: RefreshDataService,
     private router: Router
-    ) { }
+    ) { 
+      this.sharedService.countyIdUpdated.subscribe((countyId) => {
+        this.countyId = countyId;
+        this.getData();
+      });
+
+      this.sharedService.refreshHeader.subscribe(() =>{
+        this.getData();
+      })
+    }
 
   ngOnInit(): void {
 

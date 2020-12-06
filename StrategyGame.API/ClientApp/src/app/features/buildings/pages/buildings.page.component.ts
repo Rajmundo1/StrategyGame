@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { BuildingDetailDto, BuildingNextLevelDto, BuildingStatus } from 'src/app/shared/clients';
 import { Route } from '@angular/compiler/src/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from 'src/app/core/services/shared-service.service';
 
 @Component({
   selector: 'app-buildings-page',
@@ -27,7 +28,8 @@ export class BuildingsPageComponent implements OnInit {
     private service: BuildingsService,
     private snackbar: MatSnackBar,
     private refreshService: RefreshDataService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private sharedService: SharedService,) { }
 
   ngOnInit(): void {
     this.getData();
@@ -65,7 +67,11 @@ export class BuildingsPageComponent implements OnInit {
           this.refreshService.refresh(true);
         }),
         catchError(this.handleError('The upgrade was unsuccessful'))
-      ).subscribe();
+      ).subscribe(
+        res =>{
+          this.sharedService.refreshHeader.next(null);
+        }
+      );
   }
 
 

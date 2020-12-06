@@ -9,6 +9,7 @@ import { UnitService } from '../services/unit.service';
 import { MyUnitDto } from '../models/unit.model';
 import { environment } from 'src/environments/environment';
 import { MyUnitSpecificsDto } from '../models/unitspecifics.model';
+import { SharedService } from 'src/app/core/services/shared-service.service';
 
 @Component({
   selector: 'app-unit-page',
@@ -34,7 +35,8 @@ export class UnitPageComponent implements OnInit {
     private snackbar: MatSnackBar,
     private refreshService: RefreshDataService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private sharedService: SharedService,) { }
 
   ngOnInit(): void {
     this.countyId = this.route.snapshot.paramMap.get('countyId');
@@ -68,15 +70,20 @@ export class UnitPageComponent implements OnInit {
     
     this.units.forEach(u =>{
       this.service.developUnits(this.countyId, u.unitSpecificsId, u.level, u.desiredCount).pipe().subscribe(
-        res => this.getData()
-      )
+        res => {
+          this.getData();
+          this.sharedService.countyIdUpdated.next(this.countyId);
+        })
     });
+
+
 
   }
 
   hireUnits(){
     this.hireUnitSpecifics.forEach(u => {
-      this.service.hireUnits(this.countyId, u.id, u.desiredCount).pipe().subscribe(
+      this.service.hireUnits(this.countyId, u.id, u.desiredCount).pipe()
+      .subscribe(
         res => {
           this.hireUnitSpecifics.forEach(u => u.desiredCount = 0);
           this.getData();
@@ -85,6 +92,8 @@ export class UnitPageComponent implements OnInit {
             tap(res => this.getData()),
             catchError(this.handleError<MyUnitDto[]>('Loading units was unsuccessful', []))
           ).subscribe();
+
+          this.sharedService.countyIdUpdated.next(this.countyId);
         }
       );
     });

@@ -10,6 +10,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { LayoutComponent } from '../../components/layout/layout.component';
 import { GameService } from '../../services/game.service';
 import { RefreshDataService } from '../../services/refresh-data.service';
+import { SharedService } from '../../services/shared-service.service';
 
 @Component({
   selector: 'app-main-page',
@@ -28,6 +29,7 @@ export class MainPageComponent implements OnInit {
               public header: HeaderComponent,
               private router: Router,
               private refreshService: RefreshDataService,
+              private sharedService: SharedService,
               private gameService: GameService,
               private snackbar: MatSnackBar,
               private route: ActivatedRoute) { }
@@ -41,14 +43,11 @@ export class MainPageComponent implements OnInit {
 
     this.getData();
     this.layout.getData();
-    this.header.getData();
+
+    this.sharedService.countyIdUpdated.next(this.countyIdParam);
     this.refreshService.data.subscribe(res => {
       this.getData();
       this.layout.getData();
-    });
-
-    this.header.refreshService.data.subscribe(res =>{
-      this.header.getData();
     });
   }
 

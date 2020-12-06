@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { catchError, tap } from 'rxjs/operators';
 import { RefreshDataService } from 'src/app/core/services/refresh-data.service';
+import { SharedService } from 'src/app/core/services/shared-service.service';
 import { TechnologyDetailDto, TechnologyDto } from 'src/app/shared/clients';
 import { environment } from 'src/environments/environment';
 import { TechnologyService } from '../services/technology.service';
@@ -26,7 +27,8 @@ export class TechnologyPageComponent implements OnInit {
   constructor(private service: TechnologyService,
               private refreshService: RefreshDataService,
               private snackbar: MatSnackBar,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private sharedService: SharedService,) { }
 
   ngOnInit(): void {
     this.kingdomId = this.route.snapshot.paramMap.get('kingdomId');
@@ -65,6 +67,7 @@ export class TechnologyPageComponent implements OnInit {
       this.getData();
       this.selectedTechnology = undefined;
       this.selectedTechnologyId = undefined;
+      this.sharedService.refreshHeader.next(null);
     });
 
     console.log(this.technologies);

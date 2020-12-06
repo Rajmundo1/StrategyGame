@@ -40,7 +40,11 @@ namespace StrategyGame.API.Controllers
         [HttpGet("countyPage/{countyId}")]
         public async Task<MainPageDto> GetCountyPage([FromRoute]Guid countyId)
         {
+            var st = new System.Diagnostics.Stopwatch();
+            st.Start();
             return await gameAppService.GetCountyPage(countyId);
+            st.Stop();
+            Console.WriteLine(st.ElapsedMilliseconds);
         }
 
         [HttpPut("wineCons/{countyId}")]

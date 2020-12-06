@@ -8,6 +8,7 @@ import { RefreshDataService } from 'src/app/core/services/refresh-data.service';
 import { AttackDto, AttackUnitDto, CountyDto, UnitDto } from 'src/app/shared/clients';
 import { IAttackViewModel } from '../models/attack.model';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from 'src/app/core/services/shared-service.service';
 
 @Component({
   selector: 'app-attack-page',
@@ -37,7 +38,8 @@ export class AttackPageComponent implements OnInit {
     private service: AttackService,
     private snackbar: MatSnackBar,
     private refreshService: RefreshDataService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sharedService: SharedService,
     ) { }
 
   ngOnInit(): void {
@@ -104,6 +106,7 @@ export class AttackPageComponent implements OnInit {
           ).subscribe(res => {
             this.attackData.defenderCountyId = undefined;
             this.clicked = false;
+            this.sharedService.countyIdUpdated.next(this.attackData.attackerCountyId);
           });
         }
       );
