@@ -118,6 +118,11 @@ namespace StrategyGame.BLL
                 .ForMember(dest => dest.WineUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).WineUpkeep))
                 .ForMember(dest => dest.SulfurUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).SulfurUpkeep))
                 .ForMember(dest => dest.GoldUpkeep, opt => opt.MapFrom(src => src.UnitSpecifics.UnitLevels.Single(u => u.Level == src.Level).GoldUpkeep));
+
+            CreateMap<Unit, UnitDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UnitSpecifics.Name))
+                .ForMember(dest => dest.MaxLevel, opt => opt.MapFrom(src => src.UnitSpecifics.MaxLevel))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.UnitSpecifics.ImageUrl));
         }
     }
 }

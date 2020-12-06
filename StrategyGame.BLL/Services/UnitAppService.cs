@@ -52,8 +52,8 @@ namespace StrategyGame.BLL.Services
                 throw new AppException("Unavailable LVL");
             }
 
-            var unitsToDevelop = await unitRepository.GetUnitsBySpecificsAndLevelAsync(countyId, unitSpecificsId, currentLvl);
-            if(unitsToDevelop.Count() < count)
+            var unitToDevelop = await unitRepository.GetUnitBySpecificsAndLevelAsync(countyId, unitSpecificsId, currentLvl);
+            if(unitToDevelop.Count < count)
             {
                 throw new AppException("You don't have enough units for that upgrade");
             }
@@ -111,41 +111,12 @@ namespace StrategyGame.BLL.Services
             }
 
             var units = await unitRepository.GetUnitsAsync(countyId);
-            var unitDic = new List<UnitSpecificIdAndLevelWithCount>();
-
-            foreach(var unit in units)
-            {
-                var dummy = new UnitSpecificIdAndLevelWithCount();
-                dummy.Level = unit.Level;
-                dummy.UnitSpecificsId = unit.UnitSpecificsId;
-
-                var special = unitDic.SingleOrDefault(x => x.Level == dummy.Level && x.UnitSpecificsId.Equals(dummy.UnitSpecificsId));
-                if (special != null)
-                {
-                    special.Count += 1;
-                }
-                else
-                {
-                    dummy.Count = 1;
-                    unitDic.Add(dummy);
-                }
-            }
 
             var result = new List<UnitDto>();
 
-            foreach(var element in unitDic)
+            foreach(var unit in units)
             {
-                var unitSpecifics = await unitRepository.GetUnitSpecificsAsync(element.UnitSpecificsId);
-
-                result.Add(new UnitDto
-                {
-                    UnitSpecificsId = element.UnitSpecificsId,
-                    Count = element.Count,
-                    ImageUrl = unitSpecifics.ImageUrl,
-                    MaxLevel = unitSpecifics.MaxLevel,
-                    Name = unitSpecifics.Name,
-                    Level = element.Level
-                });
+                result.Add(mapper.Map<UnitDto>(unit));
             }
 
             return result;
@@ -217,11 +188,11 @@ namespace StrategyGame.BLL.Services
             var unitLvl = unitSpecific.UnitLevels.Single(x => x.Level == lvl);
 
             //resource check
-            if (unitLvl.GoldCost >= kingdom.Gold ||
-                unitLvl.WoodCost >= county.Wood ||
-                unitLvl.MarbleCost >= county.Marble ||
-                unitLvl.WineCost >= county.Wine ||
-                unitLvl.SulfurCost >= county.Sulfur)
+            if (unitLvl.GoldCost * count >= kingdom.Gold ||
+                unitLvl.WoodCost * count >= county.Wood ||
+                unitLvl.MarbleCost * count >= county.Marble ||
+                unitLvl.WineCost * count >= county.Wine ||
+                unitLvl.SulfurCost * count >= county.Sulfur)
             {
                 throw new AppException("You don't have enough resources for the units");
             }
@@ -233,13 +204,13 @@ namespace StrategyGame.BLL.Services
                 throw new AppException("You don't have enough room for the units");
             }
 
-            await kingdomRepository.SpendGoldAsync(kingdom.Id, unitLvl.GoldCost);
+            await kingdomRepository.SpendGoldAsync(kingdom.Id, unitLvl.GoldCost * count);
             await countyRepository.SpendResourcesAsync(countyId, new ResourcesDto
             {
-                Wood = unitLvl.WoodCost,
-                Marble = unitLvl.MarbleCost,
-                Wine = unitLvl.WineCost,
-                Sulfur = unitLvl.SulfurCost
+                Wood = unitLvl.WoodCost * count,
+                Marble = unitLvl.MarbleCost * count,
+                Wine = unitLvl.WineCost * count,
+                Sulfur = unitLvl.SulfurCost * count
             });
 
             return true;

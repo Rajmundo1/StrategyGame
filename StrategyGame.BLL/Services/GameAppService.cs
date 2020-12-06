@@ -272,7 +272,12 @@ namespace StrategyGame.BLL.Services
                 for(int i = attack.AttackerUnits.Units.Count() - 1; i >= 0; i--)
                 //foreach(var unit in attack.AttackerUnits.Units)
                 {
-                    await unitRepository.MoveToUnitGroup(attack.AttackerUnits.Units.ElementAt(i).Id, attack.Attacker.Units.Id);
+                    await unitRepository.MoveToUnitGroup(attack.AttackerUnits.Units.ElementAt(i).UnitSpecificsId,
+                                                        attack.AttackerUnits.Units.ElementAt(i).Level,
+                                                        attack.AttackerUnits.Units.ElementAt(i).Count,
+                                                        attack.Attacker.Units.Id);
+
+                    await unitRepository.RemoveUnitEntityByIdAsync(attack.AttackerUnits.Units.ElementAt(i).Id);
                 }
 
                 await unitRepository.RemoveUnitGroup(attack.AttackerUnits.Id);

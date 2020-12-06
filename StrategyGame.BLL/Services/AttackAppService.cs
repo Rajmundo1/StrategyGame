@@ -47,58 +47,39 @@ namespace StrategyGame.BLL.Services
             //check if county has enough units
 
             var availableUnits = new List<Unit> (await unitRepository.GetUnitsAsync(attackerCountyId));
-            var unitDic = new List<UnitSpecificIdAndLevelWithCount>();
-            var neededUnits = new List<Unit>();
-            var unitsToSend = new List<Unit>();
+            var unitsNeeded = new List<AttackUnitDto>(units);
 
-            foreach(var unit in units)
+            foreach(var avUnit in availableUnits)
             {
-                for(int i = 0; i<unit.Count; i++)
+                foreach(var nUnit in unitsNeeded)
                 {
-                    neededUnits.Add(new Unit
+                    if (nUnit.UnitSpecificsId.Equals(avUnit.UnitSpecificsId) &&
+                    nUnit.Level == avUnit.Level)
                     {
-                        Level = unit.Level,
-                        UnitSpecificsId = unit.UnitSpecificsId,
-                    });
-                }
-            }
-
-
-            for(int j = availableUnits.Count - 1; j >= 0 ; j--)
-            {
-                foreach(var unit in units)
-                {
-                    if (unit.UnitSpecificsId.Equals(availableUnits[j].UnitSpecificsId) &&
-                    unit.Level == availableUnits[j].Level)
-                    {
-                        if(unit.Count - 1 < 0)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            unitsToSend.Add(new Unit
-                            {
-                                Id = availableUnits[j].Id,
-                                UnitSpecificsId = availableUnits[j].UnitSpecificsId,
-                                UnitGroupId = availableUnits[j].UnitGroupId,
-                                Level = availableUnits[j].Level,
-                                UnitSpecifics = availableUnits[j].UnitSpecifics
-                            });
-                            unit.Count--;
-                            break;
-                        }
+                        avUnit.Count -= nUnit.Count;
+                        nUnit.Count = 0;
                     }
                 }
-                availableUnits.RemoveAt(j);
             }
 
-            foreach(var unit in units)
+            foreach(var avUnit in availableUnits)
             {
-                if (unit.Count > 0)
+                if (avUnit.Count < 0)
                 {
                     throw new AppException("You don't have enough units for this attack");
                 }
+            }
+
+            var unitsToSend = new List<Unit>();
+            foreach(var unit in units)
+            {
+                unitsToSend.Add(new Unit
+                {
+                    Count = unit.Count,
+                    Level = unit.Level,
+                    UnitGroupId = availableUnits[0].UnitGroupId,
+                    UnitSpecificsId = unit.UnitSpecificsId,
+                });
             }
 
 
