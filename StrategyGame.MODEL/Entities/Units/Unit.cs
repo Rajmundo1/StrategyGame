@@ -14,7 +14,6 @@ namespace StrategyGame.MODEL.Entities.Units
         [ForeignKey("UnitSpecifics")]
         public Guid UnitSpecificsId { get; set; }
         public int Level { get; set; }
-        public int Count { get; set; }
         [NotMapped]
         public UnitLevel CurrentLevel => UnitSpecifics.UnitLevels.First(x => x.Level == Level);
         public UnitSpecifics UnitSpecifics { get; set; }
